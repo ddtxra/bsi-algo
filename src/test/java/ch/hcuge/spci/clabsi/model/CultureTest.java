@@ -4,15 +4,13 @@ import ch.hcuge.spci.clabsi.AlgoConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public class CultureTest {
 
     @Test
-    public void testModel(){
+    public void shouldGiveDifferentResultsForNosocomialWhenTheHemocultureIsMoreThan24ButLessThan48(){
 
-        System.out.print(ZoneId.systemDefault());
         ZonedDateTime beginDateStay = ZonedDateTime.parse("2023-04-15T20:00:00.000Z");
         ZonedDateTime sampleDate = ZonedDateTime.parse("2023-04-17T08:00:00.000Z");
 

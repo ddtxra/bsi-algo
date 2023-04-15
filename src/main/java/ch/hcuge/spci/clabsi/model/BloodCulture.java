@@ -1,5 +1,8 @@
 package ch.hcuge.spci.clabsi.model;
 
+import ch.hcuge.spci.clabsi.model.Culture;
+import ch.hcuge.spci.clabsi.model.GermType;
+
 import java.time.ZonedDateTime;
 import java.util.Map;
 

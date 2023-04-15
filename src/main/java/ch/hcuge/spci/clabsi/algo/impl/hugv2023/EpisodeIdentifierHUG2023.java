@@ -1,4 +1,4 @@
-package ch.hcuge.spci.clabsi.algo.impl;
+package ch.hcuge.spci.clabsi.algo.impl.hugv2023;
 
 import ch.hcuge.spci.clabsi.algo.EpisodeIdentifier;
 import ch.hcuge.spci.clabsi.model.BloodCulture;

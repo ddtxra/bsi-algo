@@ -1,7 +1,6 @@
 package ch.hcuge.spci.clabsi.model;
 
-
-enum GermType {
+public enum GermType {
 
     TRUE_PATHOGEN,
     COMMENSAL,

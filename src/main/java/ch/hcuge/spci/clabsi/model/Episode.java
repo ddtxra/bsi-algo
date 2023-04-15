@@ -1,9 +1,9 @@
 package ch.hcuge.spci.clabsi.model;
 
-import java.util.List;
+public interface Episode {
 
-public class Episode {
+    Boolean isNosocomial();
 
-    List<Culture> evidences;
+    String getClassification();
 
 }

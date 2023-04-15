@@ -16,6 +16,30 @@ abstract class Culture {
     protected GermType laboCommensal;
     protected Map<String, String> specificInfo;
 
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public ZonedDateTime getStayBeginDate() {
+        return stayBeginDate;
+    }
+
+    public ZonedDateTime getLaboSampleDate() {
+        return laboSampleDate;
+    }
+
+    public String getLaboGermName() {
+        return laboGermName;
+    }
+
+    public GermType getLaboCommensal() {
+        return laboCommensal;
+    }
+
+    public Map<String, String> getSpecificInfo() {
+        return specificInfo;
+    }
+
     protected Culture (String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal, Map<String, String> specificInfo) {
         this.patientId = patientId;
         this.stayBeginDate = stayBeginDate;
@@ -46,4 +70,6 @@ abstract class Culture {
             return getNumberOfDaysSinceAdmission() >= 2;
         }
     }
+
+
 }

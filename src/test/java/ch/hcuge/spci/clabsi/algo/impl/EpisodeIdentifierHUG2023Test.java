@@ -1,5 +1,6 @@
 package ch.hcuge.spci.clabsi.algo.impl;
 import ch.hcuge.spci.clabsi.algo.EpisodeIdentifier;
+import ch.hcuge.spci.clabsi.algo.impl.hugv2023.EpisodeIdentifierHUG2023;
 import ch.hcuge.spci.clabsi.model.Episode;
 import org.junit.Assert;
 import org.junit.Test;
