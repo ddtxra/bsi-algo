@@ -4,6 +4,8 @@ import java.util.Set;
 
 public interface Episode {
 
+    String getPatientId();
+
     Boolean isNosocomial();
 
     Boolean isPolymicrobial();

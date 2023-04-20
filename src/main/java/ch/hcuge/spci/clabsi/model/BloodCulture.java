@@ -12,7 +12,7 @@ public class BloodCulture extends Culture {
         super(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal, specificInfo);
     }
 
-    protected BloodCulture(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
+    public BloodCulture(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
         super(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal);
     }
 }

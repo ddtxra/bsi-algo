@@ -61,6 +61,11 @@ public class EpisodeHUG2023 implements Episode {
     }
 
     @Override
+    public String getPatientId() {
+        return this.patientId;
+    }
+
+    @Override
     public Boolean isNosocomial() {
         return this.firstEvidence.isNosocomial();
     }
