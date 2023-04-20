@@ -1,6 +1,6 @@
 package ch.hcuge.spci.clabsi.algo.impl;
-import ch.hcuge.spci.clabsi.algo.EpisodeIdentifier;
-import ch.hcuge.spci.clabsi.algo.impl.hugv2023.EpisodeIdentifierHUG2023;
+import ch.hcuge.spci.clabsi.algo.BSIClassifier;
+import ch.hcuge.spci.clabsi.algo.impl.hugv2023.BSIClassifierHUGv2023;
 import ch.hcuge.spci.clabsi.model.Episode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,8 +13,8 @@ public class EpisodeIdentifierHUG2023Test {
     @Test
     public void testAlgo(){
 
-        EpisodeIdentifier episodeIdentifier = new EpisodeIdentifierHUG2023();
-        List<Episode> episodes = episodeIdentifier.identifyFromBloodCultures(Arrays.asList());
+        BSIClassifier bsiClassifier = new BSIClassifierHUGv2023();
+        List<Episode> episodes = bsiClassifier.processPositiveBloodCultures(Arrays.asList());
 
         Assert.assertEquals(episodes, null);
 

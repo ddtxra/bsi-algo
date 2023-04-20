@@ -31,7 +31,7 @@ public class EpisodeHUG2023 implements Episode {
 
         this.patientId = culture.getPatientId();
 
-        this.evidences = new ArrayList();
+        this.evidences = new ArrayList<>();
         this.polyMicrobialEvidences = new ArrayList<>();
         this.copyStrainEvidences = new ArrayList<>();
         this.evidenceBasedOnNonRepeatInterval = new ArrayList<>(); //FIXME what is this? not the same as copy strain?
@@ -65,16 +65,26 @@ public class EpisodeHUG2023 implements Episode {
         return this.firstEvidence.isNosocomial();
     }
 
+    @Override
+    public Boolean isPolymicrobial() {
+        return this.polymicrobial;
+    }
+
     public String getClassification() {
         //If only 1 commensal
         if (this.evidences.stream().filter(e -> e.getLaboCommensal().equals(GermType.COMMENSAL)).count() == 1) {
             return "[C]"; //contamination
         }
-        if (this.evidences.stream().filter(e -> e.getLaboCommensal().name() != GermType.COMMENSAL.name()).count() > 0 && this.getDistinctGermNames().size() > 1) {
+        if (this.evidences.stream().filter(e -> e.getLaboCommensal().name() != GermType.COMMENSAL.name()).count() > 0 && this.getDistinctGerms().size() > 1) {
             //what if 2 contaminations in same day? is it a polymicrobial or 2 contaminations?
             return "[P]"; //contamination
         }
         return "";
+    }
+
+    @Override
+    public Set<String> getDistinctGerms() {
+        return this.evidences.stream().map(e -> e.getLaboGermName()).collect(Collectors.toSet());
     }
 
     /** Takes the first episode from the evidences, since they are always sorted from the method addEvidence */
@@ -83,32 +93,31 @@ public class EpisodeHUG2023 implements Episode {
     }
 
     /** Takes the first episode from the evidences */
-    ZonedDateTime getEpisodeDate(){
+    public ZonedDateTime getEpisodeDate(){
         return this.firstEvidence.getLaboSampleDate();
-    }
-
-    Set<String> getDistinctGermNames() {
-        return this.evidences.stream().map(e -> e.getLaboGermName()).collect(Collectors.toSet());
     }
 
     boolean containsGerm(String germ_name) {
         return this.evidences.stream().anyMatch(e -> e.getLaboGermName().equalsIgnoreCase(germ_name));
     }
 
-    private void addPolymicrobialEvidence(BloodCulture culture) {
+    public void addPolymicrobialEvidence(BloodCulture culture) {
         this.addEvidence(culture);
         this.polymicrobial = true;
         this.polyMicrobialEvidences.add(culture);
     }
 
-    private void addCopyStrainEvidence(BloodCulture culture) {
+    public void addCopyStrainEvidence(BloodCulture culture) {
         this.copyStrainEvidences.add(culture);
         this.addEvidence(culture);
     }
 
-    private void addEvidenceBasedOnNonRepeatInterval(BloodCulture culture)  {
+    public void addEvidenceBasedOnNonRepeatInterval(BloodCulture culture)  {
         this.evidenceBasedOnNonRepeatInterval.add(culture);
         this.addEvidence(culture);
     }
 
+    public List<BloodCulture> getEvidences() {
+        return this.evidences;
+    }
 }

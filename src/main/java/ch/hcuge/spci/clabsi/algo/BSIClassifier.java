@@ -5,8 +5,8 @@ import ch.hcuge.spci.clabsi.model.Episode;
 
 import java.util.List;
 
-public interface EpisodeIdentifier {
+public interface BSIClassifier {
 
-    List<Episode> identifyFromBloodCultures(List<BloodCulture> positiveBloodCultures);
+    List<Episode> processPositiveBloodCultures(List<BloodCulture> positiveBloodCultures);
 
 }

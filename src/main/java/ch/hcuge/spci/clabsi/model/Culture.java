@@ -3,11 +3,14 @@ package ch.hcuge.spci.clabsi.model;
 import ch.hcuge.spci.clabsi.AlgoConstants;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 abstract class Culture {
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     protected String patientId;
     protected ZonedDateTime stayBeginDate;
@@ -32,6 +35,12 @@ abstract class Culture {
         return laboGermName;
     }
 
+    public String getStayBeginCalendarDayISO() {
+        return formatter.format(stayBeginDate);
+    }
+    public String getLaboCalendarDayISO() {
+        return formatter.format(laboSampleDate);
+    }
     public GermType getLaboCommensal() {
         return laboCommensal;
     }
