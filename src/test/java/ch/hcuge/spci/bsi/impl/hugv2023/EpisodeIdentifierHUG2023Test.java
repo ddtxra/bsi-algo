@@ -16,7 +16,7 @@ public class EpisodeIdentifierHUG2023Test {
         BSIClassifier bsiClassifier = new BSIClassifierHUGv2023();
         List<Episode> episodes = bsiClassifier.processCultures(Arrays.asList());
 
-        Assert.assertEquals(episodes, null);
+        Assert.assertEquals(episodes, List.of());
 
     }
 
