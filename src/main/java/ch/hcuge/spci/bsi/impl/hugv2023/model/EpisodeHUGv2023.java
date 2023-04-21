@@ -1,22 +1,24 @@
-package ch.hcuge.spci.clabsi.model.impl;
+package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
-import ch.hcuge.spci.clabsi.exception.BSIException;
-import ch.hcuge.spci.clabsi.model.BloodCulture;
-import ch.hcuge.spci.clabsi.model.Episode;
-import ch.hcuge.spci.clabsi.model.GermType;
+import ch.hcuge.spci.bsi.BSIException;
+import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.constants.GermType;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EpisodeHUG2023 implements Episode {
+public class EpisodeHUGv2023 implements Episode {
 
-    private List<BloodCulture> evidences;
-    private List<BloodCulture> polyMicrobialEvidences;
-    private List<BloodCulture> copyStrainEvidences;
-    private List<BloodCulture> evidenceBasedOnNonRepeatInterval;
+    private List<PositiveHemoCultureHUGv2023> evidences;
+    private List<PositiveHemoCultureHUGv2023> polyMicrobialEvidences;
+    private List<PositiveHemoCultureHUGv2023> copyStrainEvidences;
+    private List<PositiveHemoCultureHUGv2023> evidenceBasedOnNonRepeatInterval;
 
-    private BloodCulture firstEvidence;
+    private PositiveHemoCultureHUGv2023 firstEvidence;
     private String patientId;
     private String laboGermName;
     private GermType laboCommensal;
@@ -27,7 +29,7 @@ public class EpisodeHUG2023 implements Episode {
     private ZonedDateTime laboSampleDate;
 
 
-    public EpisodeHUG2023(BloodCulture culture) {
+    public EpisodeHUGv2023(PositiveHemoCultureHUGv2023 culture) {
 
         this.patientId = culture.getPatientId();
 
@@ -47,9 +49,9 @@ public class EpisodeHUG2023 implements Episode {
     }
 
     //private adds an evidence and ensures the array is sorted
-    public void addEvidence(BloodCulture culture) {
+    public void addEvidence(PositiveHemoCultureHUGv2023 culture) {
 
-        if(culture.getPatientId() != this.patientId){
+        if (culture.getPatientId() != this.patientId) {
             throw new BSIException("Not allowed to add an evidence of another patient");
         }
 
@@ -92,13 +94,17 @@ public class EpisodeHUG2023 implements Episode {
         return this.evidences.stream().map(e -> e.getLaboGermName()).collect(Collectors.toSet());
     }
 
-    /** Takes the first episode from the evidences, since they are always sorted from the method addEvidence */
-    public BloodCulture getFirstEvidence(){
+    /**
+     * Takes the first episode from the evidences, since they are always sorted from the method addEvidence
+     */
+    public PositiveHemoCultureHUGv2023 getFirstEvidence() {
         return this.firstEvidence;
     }
 
-    /** Takes the first episode from the evidences */
-    public ZonedDateTime getEpisodeDate(){
+    /**
+     * Takes the first episode from the evidences
+     */
+    public ZonedDateTime getEpisodeDate() {
         return this.firstEvidence.getLaboSampleDate();
     }
 
@@ -106,23 +112,23 @@ public class EpisodeHUG2023 implements Episode {
         return this.evidences.stream().anyMatch(e -> e.getLaboGermName().equalsIgnoreCase(germ_name));
     }
 
-    public void addPolymicrobialEvidence(BloodCulture culture) {
+    public void addPolymicrobialEvidence(PositiveHemoCultureHUGv2023 culture) {
         this.addEvidence(culture);
         this.polymicrobial = true;
         this.polyMicrobialEvidences.add(culture);
     }
 
-    public void addCopyStrainEvidence(BloodCulture culture) {
+    public void addCopyStrainEvidence(PositiveHemoCultureHUGv2023 culture) {
         this.copyStrainEvidences.add(culture);
         this.addEvidence(culture);
     }
 
-    public void addEvidenceBasedOnNonRepeatInterval(BloodCulture culture)  {
+    public void addEvidenceBasedOnNonRepeatInterval(PositiveHemoCultureHUGv2023 culture) {
         this.evidenceBasedOnNonRepeatInterval.add(culture);
         this.addEvidence(culture);
     }
 
-    public List<BloodCulture> getEvidences() {
+    public List<PositiveHemoCultureHUGv2023> getEvidences() {
         return this.evidences;
     }
 }

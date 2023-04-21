@@ -1,6 +1,8 @@
-package ch.hcuge.spci.clabsi.model;
+package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
-import ch.hcuge.spci.clabsi.AlgoConstants;
+import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.constants.GermType;
+import ch.hcuge.spci.bsi.constants.GlobalParameters;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class Culture {
+public class PositiveHemoCultureHUGv2023 implements Culture {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -49,7 +51,7 @@ abstract class Culture {
         return specificInfo;
     }
 
-    protected Culture (String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal, Map<String, String> specificInfo) {
+    public PositiveHemoCultureHUGv2023(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal, Map<String, String> specificInfo) {
         this.patientId = patientId;
         this.stayBeginDate = stayBeginDate;
         this.laboSampleDate = laboSampleDate;
@@ -58,10 +60,9 @@ abstract class Culture {
         this.specificInfo = specificInfo;
     }
 
-    protected Culture (String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
+    public PositiveHemoCultureHUGv2023(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
         this(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal, new HashMap<>());
     }
-
 
     private long getNumberOfCalendarDaysSinceAdmission(){
         return ChronoUnit.DAYS.between(this.stayBeginDate.toLocalDate(), this.laboSampleDate.toLocalDate());
@@ -73,7 +74,7 @@ abstract class Culture {
 
     //FIXME should be at the level of the episode
     public boolean isNosocomial(){
-        if(AlgoConstants.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL){
+        if(GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL){
             return getNumberOfCalendarDaysSinceAdmission() >= 2;
         }else {
             return getNumberOfDaysSinceAdmission() >= 2;

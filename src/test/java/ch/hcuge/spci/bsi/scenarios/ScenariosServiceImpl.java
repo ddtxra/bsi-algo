@@ -1,19 +1,40 @@
-package ch.hcuge.spci.clabsi;
+package ch.hcuge.spci.bsi.scenarios;
 
-import ch.hcuge.spci.clabsi.model.BloodCulture;
-import ch.hcuge.spci.clabsi.model.Episode;
-import org.junit.Test;
+import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
+import ch.hcuge.spci.bsi.scenarios.model.Scenario;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BSIClassifierHUGv2023Test {
+public class ScenariosServiceImpl implements ScenariosService {
 
+    private List<Culture> cultures;
+
+    public ScenariosServiceImpl() {
+
+    }
+
+    public void loadContent(String fileName) throws IOException, URISyntaxException {
+        String content = this.readContent(fileName);
+        System.err.println(content);
+    }
+
+
+    private String readContent(String file) throws IOException, URISyntaxException {
+        Path path = Paths.get(ScenariosServiceImpl.class.getClassLoader().getResource(file).toURI());
+        byte[] fileBytes = Files.readAllBytes(path);
+        String fileContent = new String(fileBytes);
+        return fileContent;
+    }
 
     private void verifyHeader(String line) {
-
         List<String> expectedHeaders = List.of("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal");
         //Verify
     }
@@ -83,7 +104,7 @@ public class BSIClassifierHUGv2023Test {
             }
         } else {
             boolean expected_line = false;
-            List<BloodCulture> data = new ArrayList<>();
+            List<PositiveHemoCultureHUGv2023> data = new ArrayList<>();
 
             for (int current_line = 1; current_line < lines.size(); current_line++) {
                 String content = lines.get(current_line).trim();
@@ -96,7 +117,7 @@ public class BSIClassifierHUGv2023Test {
                 //FIXME data.add(new BloodCulture(object.get("patient_id"), object.get("stay_begin_date"), object.get("labo_sample_date"), object.get("labo_germ_name"), object.get("labo_commensal")));
             }
 
-            Map<String, List<BloodCulture>> dataGroupedByStays = data.stream().collect(Collectors.groupingBy(BloodCulture::getPatientId));
+            Map<String, List<PositiveHemoCultureHUGv2023>> dataGroupedByStays = data.stream().collect(Collectors.groupingBy(PositiveHemoCultureHUGv2023::getPatientId));
 
             dataGroupedByStays.forEach((key, value) -> {
                 Scenario scenario = new Scenario();
@@ -111,9 +132,9 @@ public class BSIClassifierHUGv2023Test {
     }
 
 
-    @Test
-    public void read() throws URISyntaxException, IOException {
-        //parseTSVAndConvertToJSON();
-        System.err.println("paf");
+    @Override
+    public List<Culture> loadCulturesForPatient(String patient_id) {
+        return null;
     }
+
 }

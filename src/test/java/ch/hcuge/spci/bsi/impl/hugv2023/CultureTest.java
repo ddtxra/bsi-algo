@@ -1,6 +1,9 @@
-package ch.hcuge.spci.clabsi.model;
+package ch.hcuge.spci.bsi.impl.hugv2023;
 
-import ch.hcuge.spci.clabsi.AlgoConstants;
+import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.constants.GlobalParameters;
+import ch.hcuge.spci.bsi.constants.GermType;
+import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,15 +20,15 @@ public class CultureTest {
         ZonedDateTime beginDateStay = ZonedDateTime.parse("2023-04-15T20:00:00.000Z");
         ZonedDateTime sampleDate = ZonedDateTime.parse("2023-04-17T08:00:00.000Z");
 
-        Culture culture = new BloodCulture("1", beginDateStay, sampleDate, "E.Coli", GermType.TRUE_PATHOGEN);
+        Culture culture = new PositiveHemoCultureHUGv2023("1", beginDateStay, sampleDate, "E.Coli", GermType.TRUE_PATHOGEN);
 
-        AlgoConstants.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = true;
+        GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = true;
         Assert.assertTrue(culture.isNosocomial());
 
-        AlgoConstants.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = false;
+        GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = false;
         Assert.assertFalse(culture.isNosocomial());
 
-        AlgoConstants.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = true;
+        GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = true;
         Assert.assertTrue(culture.isNosocomial());
 
     }
@@ -39,9 +42,9 @@ public class CultureTest {
         ZonedDateTime beginDateStay2 = ZonedDateTime.parse("2023-04-15T23:38:00.000Z"); //Sun Apr 16 2023 01:38:00 GMT+0200 (Central European Summer Time)
         ZonedDateTime beginDateStay3 = ZonedDateTime.parse("2023-04-15T00:38:00.000Z"); // Sat Apr 15 2023 02:38:00 GMT+0200 (Central European Summer Time)
 
-        Culture culture1 = new BloodCulture("1", beginDateStay1, beginDateStay1, "E.Coli", GermType.TRUE_PATHOGEN);
-        Culture culture2 = new BloodCulture("1", beginDateStay2, beginDateStay2, "E.Coli", GermType.TRUE_PATHOGEN);
-        Culture culture3 = new BloodCulture("1", beginDateStay3, beginDateStay3, "E.Coli", GermType.TRUE_PATHOGEN);
+        PositiveHemoCultureHUGv2023 culture1 = new PositiveHemoCultureHUGv2023("1", beginDateStay1, beginDateStay1, "E.Coli", GermType.TRUE_PATHOGEN);
+        PositiveHemoCultureHUGv2023 culture2 = new PositiveHemoCultureHUGv2023("1", beginDateStay2, beginDateStay2, "E.Coli", GermType.TRUE_PATHOGEN);
+        PositiveHemoCultureHUGv2023 culture3 = new PositiveHemoCultureHUGv2023("1", beginDateStay3, beginDateStay3, "E.Coli", GermType.TRUE_PATHOGEN);
 
         Assert.assertEquals(culture1.getStayBeginCalendarDayISO(), "15/04/2023");
         Assert.assertEquals(culture2.getStayBeginCalendarDayISO(), "15/04/2023");

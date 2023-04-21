@@ -1,6 +1,6 @@
-package ch.hcuge.spci.clabsi;
+package ch.hcuge.spci.bsi.scenarios.model;
 
-import ch.hcuge.spci.clabsi.model.Episode;
+import ch.hcuge.spci.bsi.Episode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

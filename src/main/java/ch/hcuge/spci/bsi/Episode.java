@@ -1,4 +1,4 @@
-package ch.hcuge.spci.clabsi.model;
+package ch.hcuge.spci.bsi;
 
 import java.util.Set;
 
@@ -13,4 +13,5 @@ public interface Episode {
     String getClassification();
 
     Set<String> getDistinctGerms();
+
 }

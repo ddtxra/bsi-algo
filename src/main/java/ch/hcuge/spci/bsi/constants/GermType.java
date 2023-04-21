@@ -1,4 +1,4 @@
-package ch.hcuge.spci.clabsi.model;
+package ch.hcuge.spci.bsi.constants;
 
 public enum GermType {
 
