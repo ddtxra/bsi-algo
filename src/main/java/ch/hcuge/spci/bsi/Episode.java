@@ -1,5 +1,9 @@
 package ch.hcuge.spci.bsi;
 
+import ch.hcuge.spci.bsi.constants.BSIClassificationL1;
+import ch.hcuge.spci.bsi.constants.BSIClassificationL2;
+import ch.hcuge.spci.bsi.constants.BSIClassificationL3;
+
 import java.util.Set;
 
 public interface Episode {
@@ -8,9 +12,13 @@ public interface Episode {
 
     Boolean isNosocomial();
 
-    Boolean isPolymicrobial();
+    BSIClassificationL1 getBSIClassificationL1();
 
-    String getClassification();
+    BSIClassificationL2 getBSIClassificationL2();
+
+    BSIClassificationL3 getBSIClassificationL3();
+
+    Boolean isPolymicrobial();
 
     Set<String> getDistinctGerms();
 

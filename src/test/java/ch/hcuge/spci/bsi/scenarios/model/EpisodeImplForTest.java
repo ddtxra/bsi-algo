@@ -3,7 +3,7 @@ package ch.hcuge.spci.bsi.scenarios.model;
 import ch.hcuge.spci.bsi.Episode;
 import java.util.Set;
 
-public class BaseEpisode implements Episode {
+public class EpisodeImplForTest implements Episode {
 
     private String patientId;
     private String episodeDate;
@@ -15,7 +15,7 @@ public class BaseEpisode implements Episode {
 
     private String testAlgoName;
 
-    public BaseEpisode(String testAlgoName, String patientId, String episodeDate, String germs){
+    public EpisodeImplForTest(String testAlgoName, String patientId, String episodeDate, String germs){
         this.testAlgoName = testAlgoName;
         this.patientId = patientId;
         this.episodeDate = episodeDate;

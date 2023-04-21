@@ -3,7 +3,7 @@ package ch.hcuge.spci.bsi.scenarios;
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
-import ch.hcuge.spci.bsi.scenarios.model.BaseEpisode;
+import ch.hcuge.spci.bsi.scenarios.model.EpisodeImplForTest;
 import ch.hcuge.spci.bsi.scenarios.model.Scenario;
 
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class ScenariosServiceImpl implements ScenariosService {
                         expected_line = true;
                     } else if (comment.startsWith("expected")) {
                         String[] expectedValues = comment.split("\t");
-                        Episode expected_epi = new BaseEpisode(expectedValues[0].split("\\.")[1],
+                        Episode expected_epi = new EpisodeImplForTest(expectedValues[0].split("\\.")[1],
                                                     expectedValues[1], expectedValues[2], expectedValues[3]);
 
                         if (expected_epi.getPatientId() != null) {
@@ -97,7 +97,7 @@ public class ScenariosServiceImpl implements ScenariosService {
                         }
 
                         Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream()
-                                .collect(Collectors.groupingBy(e2 -> ((BaseEpisode)e2).getTestAlgoName()));
+                                .collect(Collectors.groupingBy(e2 -> ((EpisodeImplForTest)e2).getTestAlgoName()));
 
                         current_scenario.setExpectedEpisodes(expected_episodes_by_algo);
 
