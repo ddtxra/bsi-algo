@@ -3,6 +3,7 @@ package ch.hcuge.spci.bsi.scenarios;
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
+import ch.hcuge.spci.bsi.scenarios.model.BaseEpisode;
 import ch.hcuge.spci.bsi.scenarios.model.Scenario;
 
 import java.io.IOException;
@@ -34,42 +35,48 @@ public class ScenariosServiceImpl implements ScenariosService {
         return fileContent;
     }
 
-    private void verifyHeader(String line) {
+    private void verifyHeader(List<String> columnNames) {
         List<String> expectedHeaders = List.of("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal");
-        //Verify
-    }
-
-    public List<Scenario> parseTSVAndConvertToJSON(String cases_tsv, String separator) {
-        separator = separator != null ? separator : "\t";
-        List<String> lines = Arrays.asList(cases_tsv.replaceAll("\r", "").split("\n")).stream()
-                .filter(l -> l.trim().length() != 0)
-                .collect(Collectors.toList());
-        List<String> column_names = Arrays.asList(lines.get(0).split(separator));
-
-        List<String> expectedCols = Arrays.asList("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal");
-        for (String col : expectedCols) {
-            if (!column_names.contains(col)) {
-                String msg = "Can't find " + col + " in tsv file";
-                throw new Error(msg);
-            }
+        if(columnNames.size() != expectedHeaders.size()) {
+            throw new RuntimeException("Can't find same headers");
         }
 
+        for(var i=0; i<expectedHeaders.size(); i++){
+            if(!expectedHeaders.get(0).equalsIgnoreCase(columnNames.get(0))){
+                throw new RuntimeException("Failed");
+            }
+        }
+    }
+
+    private List<Scenario> readContent(String content_tsv, String separator) throws IOException, URISyntaxException {
+
+        var sep = separator != null ? separator : "\t";
+        List<String> lines = Arrays.asList(content_tsv.replaceAll("\r", "")
+                        .split("\n")).stream()
+                .filter(l -> l.trim().length() != 0)
+                .toList();
+
+        List<String> column_names = Arrays.asList(lines.get(0).split(sep));
+
+        verifyHeader(column_names);
+
+
         List<Scenario> scenarios = new ArrayList<>();
-        if (cases_tsv.contains(">")) {
+        if (content_tsv.contains(">")) {
             Scenario current_scenario = new Scenario();
             scenarios.add(current_scenario);
             List<Episode> expected_episodes = new ArrayList<>();
 
             for (int current_line = 1; current_line < lines.size(); current_line++) {
-                String content = lines.get(current_line).trim();
-                if (content.startsWith(">")) {
+                String line_content = lines.get(current_line).trim();
+                if (line_content.startsWith(">")) {
                     boolean expected_line = false;
                     expected_episodes = new ArrayList<>();
                     current_scenario = new Scenario();
                     scenarios.add(current_scenario);
-                } else if (content.startsWith("#")) {
+                } else if (line_content.startsWith("#")) {
                     boolean expected_line = false;
-                    String comment = content.replace("#", "").trim();
+                    String comment = line_content.replace("#", "").trim();
                     if (comment.startsWith("!")) {
                         expected_line = false;
                         comment = "<span style='color:red'>" + comment.substring(1).trim() + "</span>";
@@ -82,22 +89,24 @@ public class ScenariosServiceImpl implements ScenariosService {
                         expected_line = true;
                     } else if (comment.startsWith("expected")) {
                         String[] expectedValues = comment.split("\t");
-                        //FIXME Episode expected_epi = new Episode(expectedValues[1], expectedValues[2], expectedValues[3]);
-                        //FIXME ?
-                        /*if (expectedValues.length > 4) {
-                            expected_epi.setDistinct_germs_label(expectedValues[4]);
-                        }*/
-                        //FIXMEif (expected_epi.getPatientId() != null) {
-                        //FIXME    expected_episodes.add(expected_epi);
-                        //FIXME}
-                        //FIXME Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream().collect(Collectors.groupingBy(Episode::getAlgo));
-                        //FIXME current_scenario.setEpisodesExpectedByAlgo(expected_episodes_by_algo);
+                        Episode expected_epi = new BaseEpisode(expectedValues[0].split("\\.")[1],
+                                                    expectedValues[1], expectedValues[2], expectedValues[3]);
+
+                        if (expected_epi.getPatientId() != null) {
+                            expected_episodes.add(expected_epi);
+                        }
+
+                        Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream()
+                                .collect(Collectors.groupingBy(e2 -> ((BaseEpisode)e2).getTestAlgoName()));
+
+                        current_scenario.setExpectedEpisodes(expected_episodes_by_algo);
+
                     } else {
-                        current_scenario.addDescription(comment);
+                        current_scenario.addToDescription(comment);
                     }
                 } else {
                     boolean expected_line = false;
-                    String[] values = content.split(separator);
+                    String[] values = line_content.split(separator);
                     //FIXME BloodCulture ph = new BloodCulture(values[0], values[1], values[2], values[3], values[4]);
                     //FIXME current_scenario.addPositiveHemoculture(ph);
                 }
@@ -121,7 +130,7 @@ public class ScenariosServiceImpl implements ScenariosService {
 
             dataGroupedByStays.forEach((key, value) -> {
                 Scenario scenario = new Scenario();
-                scenario.addDescription(key);
+                scenario.addToDescription(key);
                 //FIXME value.forEach(ph -> scenario.addPositiveHemoculture(ph));
                 scenarios.add(scenario);
             });
@@ -133,8 +142,7 @@ public class ScenariosServiceImpl implements ScenariosService {
 
 
     @Override
-    public List<Culture> loadCulturesForPatient(String patient_id) {
+    public Scenario getScenario(String scenarioId) {
         return null;
     }
-
 }

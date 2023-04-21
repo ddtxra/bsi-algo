@@ -1,11 +1,9 @@
 package ch.hcuge.spci.bsi.scenarios;
 
-import ch.hcuge.spci.bsi.Culture;
-
-import java.util.List;
+import ch.hcuge.spci.bsi.scenarios.model.Scenario;
 
 public interface ScenariosService {
 
-    List<Culture> loadCulturesForPatient(String patientId);
+    Scenario getScenario(String scenarioId);
 
 }

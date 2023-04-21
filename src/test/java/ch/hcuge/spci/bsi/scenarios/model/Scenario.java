@@ -1,5 +1,6 @@
 package ch.hcuge.spci.bsi.scenarios.model;
 
+import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
 
 import java.util.ArrayList;
@@ -8,32 +9,44 @@ import java.util.List;
 import java.util.Map;
 
 public class Scenario {
+
+    private ArrayList<Culture> cultures;
+    private Map<String, List<Episode>> expectedEpisodesForAlgo;
     private String description;
-    private ArrayList<String> positive_hemocultures;
-    private Map<String, List<Episode>> episodes_computed;
-    private Map<String, List<Episode>> episodes_expected;
+
+    public Scenario(String description) {
+        this.description = description;
+        this.cultures = new ArrayList<>();
+    }
 
     public Scenario() {
-        this.description = "";
-        this.positive_hemocultures = new ArrayList<>();
-        this.episodes_computed = new HashMap<>();
-        this.episodes_expected = new HashMap<>();
+        this("");
     }
 
-    public int addPositiveHemoculture(String positive_hemoculture) {
-        this.positive_hemocultures.add(positive_hemoculture);
-        return this.positive_hemocultures.size();
+    public ArrayList<Culture> getCultures() {
+        return cultures;
     }
 
-    public void addDescription(String description) {
-        this.description += description + "<br>";
+    public String getDescription() {
+        return description;
     }
 
-    public void addEpisodeComputation(String algo_name, List<Episode> episodes) {
-        this.episodes_computed.put(algo_name, episodes);
+    public int addPositiveHemoculture(Culture culture) {
+        this.cultures.add(culture);
+        return this.cultures.size();
     }
 
-    public void setEpisodesExpectedByAlgo(Map<String, List<Episode>> episodes_by_algo) {
-        this.episodes_expected = episodes_by_algo;
+
+    public void addToDescription(String comment) {
+        this.description += comment;
+    }
+
+    public List<Episode> getListOfExpectedEpisodesForAlgo(String algoName) {
+        return expectedEpisodesForAlgo.get(algoName);
+    }
+
+
+    public void setExpectedEpisodes(Map<String, List<Episode>> expectedEpisodesForAlgo) {
+        this.expectedEpisodesForAlgo = expectedEpisodesForAlgo;
     }
 }
