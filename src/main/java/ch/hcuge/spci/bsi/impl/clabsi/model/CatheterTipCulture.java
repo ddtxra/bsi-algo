@@ -1,5 +1,5 @@
 package ch.hcuge.spci.bsi.impl.clabsi.model;
 
-public class CatheterTipCulture extends CLABSICulture {
+public class CatheterTipCulture extends CultureBase {
 
 }

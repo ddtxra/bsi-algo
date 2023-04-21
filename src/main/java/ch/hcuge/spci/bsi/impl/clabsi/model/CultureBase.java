@@ -5,8 +5,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.time.ZonedDateTime;
 
-public abstract class CLABSICulture implements Culture {
-
+public abstract class CultureBase implements Culture {
 
     @Override
     public String getPatientId() {

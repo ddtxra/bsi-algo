@@ -1,6 +1,9 @@
 package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
-import ch.hcuge.spci.bsi.BSIException;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL1;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL2;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL3;
+import ch.hcuge.spci.bsi.exception.BSIException;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.constants.GermType;
 
@@ -72,6 +75,7 @@ public class EpisodeHUGv2023 implements Episode {
         return this.firstEvidence.isNosocomial();
     }
 
+
     @Override
     public Boolean isPolymicrobial() {
         return this.polymicrobial;
@@ -130,5 +134,21 @@ public class EpisodeHUGv2023 implements Episode {
 
     public List<PositiveHemoCultureHUGv2023> getEvidences() {
         return this.evidences;
+    }
+
+
+    @Override
+    public BSIClassificationL1 getBSIClassificationL1() {
+        return null;
+    }
+
+    @Override
+    public BSIClassificationL2 getBSIClassificationL2() {
+        return null;
+    }
+
+    @Override
+    public BSIClassificationL3 getBSIClassificationL3() {
+        return null;
     }
 }

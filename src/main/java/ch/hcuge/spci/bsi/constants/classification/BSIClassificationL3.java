@@ -1,4 +1,4 @@
-package ch.hcuge.spci.bsi.constants;
+package ch.hcuge.spci.bsi.constants.classification;
 
 /** Requires cath information */
 public enum BSIClassificationL3 {

@@ -1,10 +1,10 @@
 package ch.hcuge.spci.bsi.impl.hugv2023;
 
 import ch.hcuge.spci.bsi.BSIClassifier;
+import ch.hcuge.spci.bsi.impl.hugv2023.model.EpisodeHUGv2023;
+import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.constants.GlobalParameters;
-import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
-import ch.hcuge.spci.bsi.impl.hugv2023.model.EpisodeHUGv2023;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;

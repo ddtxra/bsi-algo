@@ -1,6 +1,10 @@
 package ch.hcuge.spci.bsi.scenarios.model;
 
 import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL1;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL2;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL3;
+
 import java.util.Set;
 
 public class EpisodeImplForTest implements Episode {
@@ -44,7 +48,17 @@ public class EpisodeImplForTest implements Episode {
     }
 
     @Override
-    public String getClassification() {
+    public BSIClassificationL1 getBSIClassificationL1() {
+        return null;
+    }
+
+    @Override
+    public BSIClassificationL2 getBSIClassificationL2() {
+        return null;
+    }
+
+    @Override
+    public BSIClassificationL3 getBSIClassificationL3() {
         return null;
     }
 }

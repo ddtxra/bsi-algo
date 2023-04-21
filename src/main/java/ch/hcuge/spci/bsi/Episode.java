@@ -1,8 +1,8 @@
 package ch.hcuge.spci.bsi;
 
-import ch.hcuge.spci.bsi.constants.BSIClassificationL1;
-import ch.hcuge.spci.bsi.constants.BSIClassificationL2;
-import ch.hcuge.spci.bsi.constants.BSIClassificationL3;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL1;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL2;
+import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL3;
 
 import java.util.Set;
 

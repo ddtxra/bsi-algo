@@ -1,4 +1,4 @@
-package ch.hcuge.spci.bsi;
+package ch.hcuge.spci.bsi.exception;
 
 public class BSIException extends RuntimeException{
 
