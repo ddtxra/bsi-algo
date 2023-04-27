@@ -13,7 +13,6 @@ import java.util.Map;
 public class PositiveHemoCultureHUGv2023 implements Culture {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     protected String patientId;
     protected ZonedDateTime stayBeginDate;
     protected ZonedDateTime laboSampleDate;
