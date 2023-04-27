@@ -1,5 +1,6 @@
 package ch.hcuge.spci.bsi.scenarios;
 
+import ch.hcuge.spci.bsi.impl.hugv2023.BSIClassifierHUGv2023;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,9 +15,10 @@ public class ScenariosServiceTest {
         ScenariosService scenariosService = new ScenariosServiceImpl();
         ((ScenariosServiceImpl)scenariosService).loadContent("cases.tsv");
 
+        BSIClassifierHUGv2023 classifier = new BSIClassifierHUGv2023();
+        classifier.processCultures(scenariosService.getScenario())
+
         //List<Culture> cultures = scenariosService.loadCulturesForPatient("patient_1002");
-
-
 
     }
 

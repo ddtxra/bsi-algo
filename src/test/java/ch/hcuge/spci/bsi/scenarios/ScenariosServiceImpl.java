@@ -21,23 +21,22 @@ public class ScenariosServiceImpl implements ScenariosService {
     private List<Culture> cultures;
     private String separator = "\t";
 
+    private List<Scenario> scenarios;
+
     public ScenariosServiceImpl() {
 
     }
 
     public void loadContent(String fileName) throws IOException, URISyntaxException {
         String content = this.readContent(fileName);
-        List<Scenario> scenarios = this.parseContent(content);
-
-        System.err.println(scenarios.size());
+        this.scenarios = this.parseContent(content);
     }
 
 
     private String readContent(String file) throws IOException, URISyntaxException {
         Path path = Paths.get(ScenariosServiceImpl.class.getClassLoader().getResource(file).toURI());
         byte[] fileBytes = Files.readAllBytes(path);
-        String fileContent = new String(fileBytes);
-        return fileContent;
+        return new String(fileBytes);
     }
 
     private void verifyHeader(List<String> columnNames) {
@@ -130,20 +129,12 @@ public class ScenariosServiceImpl implements ScenariosService {
             List<Culture> data = new ArrayList<>();
             for (int current_line = 1; current_line < lines.size(); current_line++) {
                 String content = lines.get(current_line).trim();
-                /*String[] values = content.split(separator);
-                Map<String, String> object = new HashMap<>();
-                for (int c = 0; c < column_names.size(); c++) {
-                    String col_name = column_names.get(c);
-                    object.put(col_name, values[c]);
-                }*/
-
                 Culture culture = convertLineToCulture(content);
                 data.add(culture);
             }
 
-            Map<String, List<Culture>> dataGroupedByStays = data.stream().collect(Collectors.groupingBy(Culture::getPatientId));
-
-            dataGroupedByStays.forEach((key, value) -> {
+            Map<String, List<Culture>> dataGroupedByPatient = data.stream().collect(Collectors.groupingBy(Culture::getPatientId));
+            dataGroupedByPatient.forEach((key, value) -> {
                 Scenario scenario = new Scenario();
                 scenario.addToDescription(key);
                 value.forEach(scenario::addPositiveHemoculture);
@@ -158,6 +149,6 @@ public class ScenariosServiceImpl implements ScenariosService {
 
     @Override
     public Scenario getScenario(String scenarioId) {
-        return null;
+        return scenarios;
     }
 }
