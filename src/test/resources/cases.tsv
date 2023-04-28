@@ -302,15 +302,6 @@ patient_1018	20210101	2021-01-16	pathC	0
 >
 # ok?
 #! check with marie-no
-patient_1019	20210101	2021-01-01	pathA	0
-patient_1019	20210101	2021-01-02	pathA	0
-patient_1019	20210101	2021-01-02	pathB	0
-patient_1019	20210101	2021-01-05	pathB	0
-patient_1019	20210101	2021-01-05	comA	1
-
->
-# ok?
-#! check with marie-no
 patient_1020	20210101	2021-01-01	pathA	0
 patient_1020	20210101	2021-01-02	pathA	0
 patient_1020	20210101	2021-01-02	pathB	0
@@ -414,3 +405,13 @@ patient_1034	20210101	2021-01-06	comA	1
 #seven case e-mail
 patient_1035	20210101	2021-01-03	pathA	0
 patient_1035	20210101	2021-01-05	pathB	0
+
+
+>
+# ok?
+#! check with marie-no
+patient_10199	20210101	2021-01-01	pathA	0
+patient_10199	20210101	2021-01-02	pathA	0
+patient_10199	20210101	2021-01-02	pathB	0
+patient_10199	20210101	2021-01-05	pathB	0
+patient_10199	20210101	2021-01-05	comA	1

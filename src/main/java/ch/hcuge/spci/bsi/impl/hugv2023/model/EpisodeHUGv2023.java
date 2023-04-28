@@ -1,18 +1,16 @@
 package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
+import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.constants.GermType;
 import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL1;
 import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL2;
 import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL3;
 import ch.hcuge.spci.bsi.exception.BSIException;
-import ch.hcuge.spci.bsi.Episode;
-import ch.hcuge.spci.bsi.constants.GermType;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EpisodeHUGv2023 implements Episode {
 
@@ -21,7 +19,6 @@ public class EpisodeHUGv2023 implements Episode {
     private List<PositiveHemoCultureHUGv2023> copyStrainEvidences;
     private List<PositiveHemoCultureHUGv2023> evidenceBasedOnNonRepeatInterval;
 
-    private PositiveHemoCultureHUGv2023 firstEvidence;
     private String patientId;
     private String laboGermName;
     private GermType laboCommensal;
@@ -43,8 +40,6 @@ public class EpisodeHUGv2023 implements Episode {
         this.polymicrobial = false; // by default it is false
 
         this.evidences.add(culture);
-        this.firstEvidence = culture;
-
         this.stayBeginDate = culture.getStayBeginDate();
         this.laboSampleDate = culture.getLaboSampleDate();
         this.laboGermName = culture.getLaboGermName();
@@ -54,15 +49,13 @@ public class EpisodeHUGv2023 implements Episode {
     //private adds an evidence and ensures the array is sorted
     public void addEvidence(PositiveHemoCultureHUGv2023 culture) {
 
-        if (culture.getPatientId() != this.patientId) {
-            throw new BSIException("Not allowed to add an evidence of another patient");
+        if (!culture.getPatientId().equals(this.patientId)) {
+            throw new BSIException("Not allowed to add an evidence of another patient" + culture.getPatientId() + " than the original " + this.patientId);
         }
 
         this.evidences.add(culture);
-        /* FIXME make sure they are sorted! should all be the same date btw!
-        this.evidences = this.evidences.sort(e -> (e1, e2){
-            return e1.labo_sample_datetime_moment.valueOf() - e2.labo_sample_datetime_moment.valueOf()
-        })*/
+        this.evidences.sort(Comparator.comparing(PositiveHemoCultureHUGv2023::getLaboSampleDate));
+
     }
 
     @Override
@@ -72,7 +65,7 @@ public class EpisodeHUGv2023 implements Episode {
 
     @Override
     public Boolean isNosocomial() {
-        return this.firstEvidence.isNosocomial();
+        return this.getFirstEvidence().isNosocomial();
     }
 
 
@@ -102,14 +95,14 @@ public class EpisodeHUGv2023 implements Episode {
      * Takes the first episode from the evidences, since they are always sorted from the method addEvidence
      */
     public PositiveHemoCultureHUGv2023 getFirstEvidence() {
-        return this.firstEvidence;
+        return this.evidences.get(0);
     }
 
     /**
      * Takes the first episode from the evidences
      */
     public ZonedDateTime getEpisodeDate() {
-        return this.firstEvidence.getLaboSampleDate();
+        return this.getFirstEvidence().getLaboSampleDate();
     }
 
     boolean containsGerm(String germ_name) {
@@ -151,4 +144,10 @@ public class EpisodeHUGv2023 implements Episode {
     public BSIClassificationL3 getBSIClassificationL3() {
         return null;
     }
+
+
+    public String toString() {
+        return Stream.of(this.patientId, this.getFirstEvidence().getLaboSampleDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
+    }
+
 }

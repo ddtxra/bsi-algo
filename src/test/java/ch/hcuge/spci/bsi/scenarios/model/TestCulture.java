@@ -36,6 +36,16 @@ public class TestCulture implements Culture {
     }
 
     @Override
+    public GermType getGermType() {
+        return this.culture.getGermType();
+    }
+
+    @Override
+    public boolean isLabGermCommensal() {
+        return this.culture.getGermType().equals(GermType.COMMENSAL);
+    }
+
+    @Override
     public boolean isNosocomial() {
         return this.culture.isNosocomial();
     }

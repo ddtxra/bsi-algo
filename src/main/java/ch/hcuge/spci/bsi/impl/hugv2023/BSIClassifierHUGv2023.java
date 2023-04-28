@@ -1,6 +1,8 @@
 package ch.hcuge.spci.bsi.impl.hugv2023;
 
 import ch.hcuge.spci.bsi.BSIClassifier;
+import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.impl.hugv2023.mapper.CultureToEpisodeHUGv2023Mapper;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.EpisodeHUGv2023;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
 import ch.hcuge.spci.bsi.Episode;
@@ -17,13 +19,13 @@ import java.util.stream.Collectors;
 /**
  * Based on https://github.com/ddtxra/hob/blob/gh-pages/js/impl/hug-v2023.js
  */
-public class BSIClassifierHUGv2023 implements BSIClassifier<PositiveHemoCultureHUGv2023> {
+public class BSIClassifierHUGv2023 implements BSIClassifier {
 
     @Override
-    public List<Episode> processCultures(List<PositiveHemoCultureHUGv2023> positiveBloodCultures) {
+    public List<Episode> processCultures(List<Culture> positiveBloodCultures) {
         var VALID_NEW_CASES_DAYS = GlobalParameters.NUMBER_DAYS_FOR_NON_REPEATED_INTERVAL;
         if (positiveBloodCultures.size() > 0) {
-            return identifiyEpisodes(positiveBloodCultures);
+            return identifiyEpisodes(positiveBloodCultures.stream().map(CultureToEpisodeHUGv2023Mapper::mapCulture).collect(Collectors.toList()));
         }
         return List.of();
     }

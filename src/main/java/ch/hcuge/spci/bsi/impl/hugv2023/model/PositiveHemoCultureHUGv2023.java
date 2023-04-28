@@ -36,12 +36,24 @@ public class PositiveHemoCultureHUGv2023 implements Culture {
         return laboGermName;
     }
 
+    @Override
+    public GermType getGermType() {
+        return this.laboCommensal;
+    }
+
+    @Override
+    public boolean isLabGermCommensal() {
+        return (this.laboCommensal.equals(GermType.COMMENSAL));
+    }
+
     public String getStayBeginCalendarDayISO() {
         return formatter.format(stayBeginDate);
     }
+
     public String getLaboCalendarDayISO() {
         return formatter.format(laboSampleDate);
     }
+
     public GermType getLaboCommensal() {
         return laboCommensal;
     }
@@ -63,19 +75,19 @@ public class PositiveHemoCultureHUGv2023 implements Culture {
         this(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal, new HashMap<>());
     }
 
-    private long getNumberOfCalendarDaysSinceAdmission(){
+    private long getNumberOfCalendarDaysSinceAdmission() {
         return ChronoUnit.DAYS.between(this.stayBeginDate.toLocalDate(), this.laboSampleDate.toLocalDate());
     }
 
-    private long getNumberOfDaysSinceAdmission(){
+    private long getNumberOfDaysSinceAdmission() {
         return ChronoUnit.DAYS.between(this.stayBeginDate, this.laboSampleDate);
     }
 
     //FIXME should be at the level of the episode
-    public boolean isNosocomial(){
-        if(GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL){
+    public boolean isNosocomial() {
+        if (GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL) {
             return getNumberOfCalendarDaysSinceAdmission() >= 2;
-        }else {
+        } else {
             return getNumberOfDaysSinceAdmission() >= 2;
         }
     }

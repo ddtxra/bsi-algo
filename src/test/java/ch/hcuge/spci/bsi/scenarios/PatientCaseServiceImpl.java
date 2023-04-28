@@ -4,7 +4,7 @@ import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.constants.GermType;
 import ch.hcuge.spci.bsi.scenarios.model.EpisodeImplForTest;
-import ch.hcuge.spci.bsi.scenarios.model.Scenario;
+import ch.hcuge.spci.bsi.scenarios.model.PatientCase;
 import ch.hcuge.spci.bsi.scenarios.model.TestCulture;
 
 import java.io.IOException;
@@ -16,25 +16,23 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ScenariosServiceImpl implements ScenariosService {
+public class PatientCaseServiceImpl implements PatientCaseService {
 
-    private List<Culture> cultures;
     private String separator = "\t";
+    private List<PatientCase> patientCases;
 
-    private List<Scenario> scenarios;
-
-    public ScenariosServiceImpl() {
+    public PatientCaseServiceImpl() {
 
     }
 
     public void loadContent(String fileName) throws IOException, URISyntaxException {
         String content = this.readContent(fileName);
-        this.scenarios = this.parseContent(content);
+        this.patientCases = this.parseContent(content);
     }
 
 
     private String readContent(String file) throws IOException, URISyntaxException {
-        Path path = Paths.get(ScenariosServiceImpl.class.getClassLoader().getResource(file).toURI());
+        Path path = Paths.get(PatientCaseServiceImpl.class.getClassLoader().getResource(file).toURI());
         byte[] fileBytes = Files.readAllBytes(path);
         return new String(fileBytes);
     }
@@ -64,7 +62,7 @@ public class ScenariosServiceImpl implements ScenariosService {
         return new TestCulture(values[0], beginDateStay, laboSampleDate, germName, commensal);
     }
 
-    private List<Scenario> parseContent(String content_tsv) {
+    private List<PatientCase> parseContent(String content_tsv) {
 
         var sep = separator != null ? separator : "\t";
         List<String> lines = Arrays.asList(content_tsv.replaceAll("\r", "")
@@ -75,9 +73,9 @@ public class ScenariosServiceImpl implements ScenariosService {
         List<String> column_names = Arrays.asList(lines.get(0).split(sep));
         verifyHeader(column_names);
 
-        List<Scenario> scenarios = new ArrayList<>();
+        List<PatientCase> scenarios = new ArrayList<>();
         if (content_tsv.contains(">")) {
-            Scenario current_scenario = new Scenario();
+            PatientCase current_scenario = new PatientCase();
             scenarios.add(current_scenario);
             List<Episode> expected_episodes = new ArrayList<>();
 
@@ -86,7 +84,7 @@ public class ScenariosServiceImpl implements ScenariosService {
                 if (line_content.startsWith(">")) {
                     boolean expected_line = false;
                     expected_episodes = new ArrayList<>();
-                    current_scenario = new Scenario();
+                    current_scenario = new PatientCase();
                     scenarios.add(current_scenario);
                 } else if (line_content.startsWith("#")) {
                     boolean expected_line = false;
@@ -126,6 +124,7 @@ public class ScenariosServiceImpl implements ScenariosService {
                 }
             }
         } else {
+
             List<Culture> data = new ArrayList<>();
             for (int current_line = 1; current_line < lines.size(); current_line++) {
                 String content = lines.get(current_line).trim();
@@ -135,7 +134,7 @@ public class ScenariosServiceImpl implements ScenariosService {
 
             Map<String, List<Culture>> dataGroupedByPatient = data.stream().collect(Collectors.groupingBy(Culture::getPatientId));
             dataGroupedByPatient.forEach((key, value) -> {
-                Scenario scenario = new Scenario();
+                PatientCase scenario = new PatientCase();
                 scenario.addToDescription(key);
                 value.forEach(scenario::addPositiveHemoculture);
                 scenarios.add(scenario);
@@ -143,12 +142,19 @@ public class ScenariosServiceImpl implements ScenariosService {
 
         }
 
-        return scenarios;
+        return scenarios.stream().filter(s -> s.getCultures().size() > 0).collect(Collectors.toList());
     }
 
 
     @Override
-    public Scenario getScenario(String scenarioId) {
-        return scenarios;
+    public List<Culture> getCulturesForPatient(String patientId) {
+        return this.patientCases.stream().filter(s -> s.getCultures().get(0).getPatientId().equals(patientId)).findAny().get().getCultures();
     }
+
+    @Override
+    public List<String> getPatientsIds() {
+        return this.patientCases.stream().map(PatientCase::getPatientId).collect(Collectors.toList());
+    }
+
+
 }

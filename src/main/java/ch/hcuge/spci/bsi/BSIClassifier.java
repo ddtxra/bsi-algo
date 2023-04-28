@@ -3,8 +3,8 @@ package ch.hcuge.spci.bsi;
 
 import java.util.List;
 
-public interface BSIClassifier<T extends Culture> {
+public interface BSIClassifier{
 
-    List<Episode> processCultures(List<T> cultures);
+    List<Episode> processCultures(List<Culture> cultures);
 
 }
