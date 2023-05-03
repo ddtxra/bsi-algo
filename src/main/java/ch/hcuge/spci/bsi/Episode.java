@@ -4,6 +4,7 @@ import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL1;
 import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL2;
 import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL3;
 
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 public interface Episode {
@@ -11,6 +12,8 @@ public interface Episode {
     String getPatientId();
 
     Boolean isNosocomial();
+
+    ZonedDateTime getEpisodeDate();
 
     BSIClassificationL1 getBSIClassificationL1();
 

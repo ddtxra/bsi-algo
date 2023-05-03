@@ -59,7 +59,11 @@ public class PatientCase {
     }
 
     public List<Episode> getListOfExpectedEpisodesForAlgo(String algoName) {
-        return expectedEpisodesForAlgo.get(algoName);
+        if(expectedEpisodesForAlgo != null && expectedEpisodesForAlgo.containsKey(algoName)){
+            return expectedEpisodesForAlgo.get(algoName);
+        }else {
+            return List.of();
+        }
     }
 
     public void setExpectedEpisodes(Map<String, List<Episode>> expectedEpisodesForAlgo) {

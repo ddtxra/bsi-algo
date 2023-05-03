@@ -74,6 +74,8 @@ public class PatientCaseServiceImpl implements PatientCaseService {
         verifyHeader(column_names);
 
         List<PatientCase> scenarios = new ArrayList<>();
+        boolean expected_line = false;
+
         if (content_tsv.contains(">")) {
             PatientCase current_scenario = new PatientCase();
             scenarios.add(current_scenario);
@@ -82,12 +84,11 @@ public class PatientCaseServiceImpl implements PatientCaseService {
             for (int current_line = 1; current_line < lines.size(); current_line++) {
                 String line_content = lines.get(current_line).trim();
                 if (line_content.startsWith(">")) {
-                    boolean expected_line = false;
+                    expected_line = false;
                     expected_episodes = new ArrayList<>();
                     current_scenario = new PatientCase();
                     scenarios.add(current_scenario);
                 } else if (line_content.startsWith("#")) {
-                    boolean expected_line = false;
                     String comment = line_content.replace("#", "").trim();
                     if (comment.startsWith("!")) {
                         expected_line = false;
@@ -101,26 +102,26 @@ public class PatientCaseServiceImpl implements PatientCaseService {
                         expected_line = true;
                     } else if (comment.startsWith("expected")) {
                         String[] expectedValues = comment.split("\t");
-                        Episode expected_epi = new EpisodeImplForTest(expectedValues[0].split("\\.")[1],
-                                expectedValues[1], expectedValues[2], expectedValues[3]);
 
-                        if (expected_epi.getPatientId() != null) {
-                            expected_episodes.add(expected_epi);
+                        if(expectedValues.length >= 4){
+
+                            Episode expected_epi = new EpisodeImplForTest(expectedValues[0].split("\\.")[1],
+                                    expectedValues[1], expectedValues[2], expectedValues[3]);
+                            if (expected_epi.getPatientId() != null) {
+                                expected_episodes.add(expected_epi);
+                            }
+
+                            Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream()
+                                    .collect(Collectors.groupingBy(e2 -> ((EpisodeImplForTest) e2).getTestAlgoName()));
+
+                            current_scenario.setExpectedEpisodes(expected_episodes_by_algo);
                         }
-
-                        Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream()
-                                .collect(Collectors.groupingBy(e2 -> ((EpisodeImplForTest) e2).getTestAlgoName()));
-
-                        current_scenario.setExpectedEpisodes(expected_episodes_by_algo);
-
                     } else {
                         current_scenario.addToDescription(comment);
                     }
                 } else {
-
                     Culture tc = convertLineToCulture(line_content);
                     current_scenario.addPositiveHemoculture(tc);
-
                 }
             }
         } else {
@@ -149,6 +150,12 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     @Override
     public List<Culture> getCulturesForPatient(String patientId) {
         return this.patientCases.stream().filter(s -> s.getCultures().get(0).getPatientId().equals(patientId)).findAny().get().getCultures();
+    }
+
+
+    @Override
+    public List<Episode> getExpectedEpisodesForPatientAndAlgo(String patientId, String algo) {
+        return this.patientCases.stream().filter(s -> s.getCultures().get(0).getPatientId().equals(patientId)).findAny().get().getListOfExpectedEpisodesForAlgo(algo);
     }
 
     @Override

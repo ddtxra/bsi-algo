@@ -46,9 +46,9 @@ public class CultureTest {
         PositiveHemoCultureHUGv2023 culture2 = new PositiveHemoCultureHUGv2023("1", beginDateStay2, beginDateStay2, "E.Coli", GermType.TRUE_PATHOGEN);
         PositiveHemoCultureHUGv2023 culture3 = new PositiveHemoCultureHUGv2023("1", beginDateStay3, beginDateStay3, "E.Coli", GermType.TRUE_PATHOGEN);
 
-        Assert.assertEquals(culture1.getStayBeginCalendarDayISO(), "15/04/2023");
-        Assert.assertEquals(culture2.getStayBeginCalendarDayISO(), "15/04/2023");
-        Assert.assertEquals(culture3.getStayBeginCalendarDayISO(), "15/04/2023");
+        Assert.assertEquals(culture1.getStayBeginFormatted("yyyyMMdd"), "20230415");
+        Assert.assertEquals(culture2.getStayBeginFormatted("yyyyMMdd"), "20230415");
+        Assert.assertEquals(culture3.getStayBeginFormatted("yyyyMMdd"), "20230415");
 
     }
 }

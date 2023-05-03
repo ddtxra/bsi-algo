@@ -21,9 +21,10 @@ import java.util.stream.Collectors;
  */
 public class BSIClassifierHUGv2023 implements BSIClassifier {
 
+    private Integer VALID_NEW_CASES_DAYS = GlobalParameters.NUMBER_DAYS_FOR_NON_REPEATED_INTERVAL;
+
     @Override
     public List<Episode> processCultures(List<Culture> positiveBloodCultures) {
-        var VALID_NEW_CASES_DAYS = GlobalParameters.NUMBER_DAYS_FOR_NON_REPEATED_INTERVAL;
         if (positiveBloodCultures.size() > 0) {
             return identifiyEpisodes(positiveBloodCultures.stream().map(CultureToEpisodeHUGv2023Mapper::mapCulture).collect(Collectors.toList()));
         }
@@ -41,9 +42,9 @@ public class BSIClassifierHUGv2023 implements BSIClassifier {
         pos_hemocultures_by_patient_stay.keySet().forEach(patient_stay -> {
             List<EpisodeHUGv2023> episodesForPatient = new ArrayList<>();
             List<PositiveHemoCultureHUGv2023> pos_hemocultures_for_patient_stay = pos_hemocultures_by_patient_stay.get(patient_stay);
-            Map<String, List<PositiveHemoCultureHUGv2023>> pos_hemocultures_for_patient_stay_by_calendarday = pos_hemocultures_for_patient_stay.stream().collect(Collectors.groupingBy(bc -> bc.getLaboCalendarDayISO()));
-
-            pos_hemocultures_for_patient_stay_by_calendarday.keySet().forEach(calendar_day -> {
+            String formatToBeSorted = "yyyyMMdd";
+            Map<String, List<PositiveHemoCultureHUGv2023>> pos_hemocultures_for_patient_stay_by_calendarday = pos_hemocultures_for_patient_stay.stream().collect(Collectors.groupingBy(ph -> ph.getLaboCalendarFormatted(formatToBeSorted)));
+            pos_hemocultures_for_patient_stay_by_calendarday.keySet().stream().sorted().forEach(calendar_day -> {
                 List<PositiveHemoCultureHUGv2023> pos_hemocultures_for_patient_for_single_days = pos_hemocultures_for_patient_stay_by_calendarday.get(calendar_day);
                 var first_pos_hemoculture_for_day = pos_hemocultures_for_patient_for_single_days.get(0);
 
@@ -53,12 +54,10 @@ public class BSIClassifierHUGv2023 implements BSIClassifier {
                 if (pos_hemocultures_for_patient_for_single_days.size() > 1) {
                     // si ces 2 germes sont des germes différents il y a des polymicrobiens
                     var posHemoDifferentGerm = pos_hemocultures_for_patient_for_single_days.stream().filter(ph -> !Objects.equals(ph.getLaboGermName(), first_pos_hemoculture_for_day.getLaboGermName()));
-                    posHemoDifferentGerm.forEach(phdg -> {
-                        episode.addPolymicrobialEvidence(phdg);
-                    });
+                    posHemoDifferentGerm.forEach(episode::addPolymicrobialEvidence);
 
                     //si il y a le meme germe le meme jour on le rajoute comme copy strain
-                    var posHemoSameGerm = pos_hemocultures_for_patient_for_single_days.stream().filter(ph -> ph.getLaboGermName() == first_pos_hemoculture_for_day.getLaboGermName());
+                    var posHemoSameGerm = pos_hemocultures_for_patient_for_single_days.stream().filter(ph -> Objects.equals(ph.getLaboGermName(), first_pos_hemoculture_for_day.getLaboGermName()));
                     posHemoSameGerm.forEach(phsg -> {
                         if (phsg != first_pos_hemoculture_for_day) {
                             episode.addCopyStrainEvidence(phsg);
@@ -117,12 +116,10 @@ public class BSIClassifierHUGv2023 implements BSIClassifier {
 
                         //si on a un episode consolidé avec le meme germe dans l'interval de temps des 14 jours
                         if (!processedEpisode.get() && consolidated_episode.getDistinctGerms().contains(germ) &&
-                                Math.abs(ChronoUnit.DAYS.between(current_episode.getEpisodeDate(), consolidated_episode.getEpisodeDate())) < GlobalParameters.NUMBER_DAYS_FOR_NON_REPEATED_INTERVAL) {
+                                Math.abs(ChronoUnit.DAYS.between(current_episode.getEpisodeDate(), consolidated_episode.getEpisodeDate())) < VALID_NEW_CASES_DAYS) {
                             // add all evidences from the current episode to the consolidated (even the ones with different germ)
                             processedEpisode.set(true);
-                            current_episode.getEvidences().forEach(epi -> {
-                                consolidated_episode.addEvidenceBasedOnNonRepeatInterval(epi);
-                            });
+                            current_episode.getEvidences().forEach(consolidated_episode::addEvidenceBasedOnNonRepeatInterval);
                         }
                     });
                 });

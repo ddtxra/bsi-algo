@@ -7,9 +7,6 @@ import java.net.URISyntaxException;
 
 public class BSIClassifierHUGv2023Test {
 
-
-
-
     @Test
     public void read() throws URISyntaxException, IOException {
         //parseTSVAndConvertToJSON();

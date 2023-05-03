@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PositiveHemoCultureHUGv2023 implements Culture {
-
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     protected String patientId;
     protected ZonedDateTime stayBeginDate;
     protected ZonedDateTime laboSampleDate;
@@ -46,12 +44,12 @@ public class PositiveHemoCultureHUGv2023 implements Culture {
         return (this.laboCommensal.equals(GermType.COMMENSAL));
     }
 
-    public String getStayBeginCalendarDayISO() {
-        return formatter.format(stayBeginDate);
+    public String getStayBeginFormatted(String format) {
+        return DateTimeFormatter.ofPattern(format).format(stayBeginDate);
     }
 
-    public String getLaboCalendarDayISO() {
-        return formatter.format(laboSampleDate);
+    public String getLaboCalendarFormatted(String format) {
+        return DateTimeFormatter.ofPattern(format).format(laboSampleDate);
     }
 
     public GermType getLaboCommensal() {
