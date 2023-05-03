@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PatientCaseServiceTest {
 
@@ -20,7 +21,7 @@ public class PatientCaseServiceTest {
         if (episodes_expected.size() != episodes_computed.size()) {
             same = false;
 
-            System.err.println("Size of expected episodes " + episodes_expected.size()  + " is not the same as computed episodes " +  episodes_computed.size());
+            System.err.println("Size of expected episodes " + episodes_expected.size() + " is not the same as computed episodes " + episodes_computed.size());
             System.err.println("Expected episodes: ");
             episodes_expected.forEach(System.err::println);
             System.err.println("Computed episodes: ");
@@ -55,18 +56,22 @@ public class PatientCaseServiceTest {
         Assert.assertEquals(patientIdsSetSize, patientIdsListSize);
         BSIClassifier classifier = new BSIClassifierHUGv2023();
 
+        AtomicReference<Integer> casesNotTested = new AtomicReference<>(0);
+
         AtomicBoolean same = new AtomicBoolean(true);
         testCulturesServices.getPatientsIds().forEach(pId -> {
             System.out.println("Testing for " + pId);
+            System.out.println("\t" + testCulturesServices.getDescription(pId));
 
             List<Culture> cultures = testCulturesServices.getCulturesForPatient(pId);
             List<Episode> computedEpisodes = classifier.processCultures(cultures);
             List<Episode> expectedEpisodes = testCulturesServices.getExpectedEpisodesForPatientAndAlgo(pId, "HUG_v2023");
 
-            if(expectedEpisodes.isEmpty()){
+            if (expectedEpisodes.isEmpty()) {
                 System.err.println("No expected tests for patient " + pId);
-            }else {
-                if(!compareEpisodes(expectedEpisodes, computedEpisodes)){
+                casesNotTested.getAndSet(casesNotTested.get() + 1);
+            } else {
+                if (!compareEpisodes(expectedEpisodes, computedEpisodes)) {
                     System.out.println("Comparison failed for patient " + pId);
                     same.set(false);
                 } else {
@@ -75,6 +80,12 @@ public class PatientCaseServiceTest {
             }
 
         });
+
+        if (casesNotTested.get() > 0) {
+            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0))*100) + " %");
+        }
+
+        System.out.println(testCulturesServices.getPatientsIds().size() + " cases in total");
 
         Assert.assertTrue(same.get());
 

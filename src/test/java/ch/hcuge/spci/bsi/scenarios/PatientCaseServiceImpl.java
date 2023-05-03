@@ -90,13 +90,11 @@ public class PatientCaseServiceImpl implements PatientCaseService {
                     scenarios.add(current_scenario);
                 } else if (line_content.startsWith("#")) {
                     String comment = line_content.replace("#", "").trim();
-                    if (comment.startsWith("!")) {
+                    if (comment.startsWith("⚠️")) {
                         expected_line = false;
-                        comment = "<span style='color:red'>" + comment.substring(1).trim() + "</span>";
                     }
-                    if (comment.startsWith("?")) {
+                    if (comment.startsWith("❓")) {
                         expected_line = false;
-                        comment = "<span style='color:orange'>" + comment.substring(1).trim() + "</span>";
                     }
                     if (!expected_line && comment.startsWith("expected")) {
                         expected_line = true;
@@ -144,6 +142,11 @@ public class PatientCaseServiceImpl implements PatientCaseService {
         }
 
         return scenarios.stream().filter(s -> s.getCultures().size() > 0).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getDescription(String patientId) {
+        return this.patientCases.stream().filter(s -> s.getCultures().get(0).getPatientId().equals(patientId)).findAny().get().getDescription();
     }
 
 

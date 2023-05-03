@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface PatientCaseService {
 
+    String getDescription(String patientId);
+
     List<Culture> getCulturesForPatient(String patientId);
 
     List<Episode> getExpectedEpisodesForPatientAndAlgo(String patientId, String algo);

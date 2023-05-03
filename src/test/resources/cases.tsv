@@ -15,7 +15,7 @@ patient_1001	20210101	2021-01-16	pathA	0
 
 >
 # If the two positive hemocultures appear in different stays for the same patient it should count as 2 episodes to investigate for HUG
-#! Only 1 for PRAISE
+#⚠️ Only 1 for PRAISE
 patient_1002	20210101	2021-01-01	pathA	0
 patient_1002	20210103	2021-01-05	pathA	0
 
@@ -39,7 +39,7 @@ patient_1003	20210101	2021-01-05	pathB	0
 
 >
 # Two positive hemocultures with a different pathogene in two different days should count as 2 episodes for HUG because there is no link between pathogenes
-#! Only 1 for PRAISE because they are within the 3 days time window
+#⚠️ Only 1 for PRAISE because they are within the 3 days time window
 
 patient_1004	20210101	2021-01-04	pathA	0
 patient_1004	20210101	2021-01-05	pathB	0
@@ -76,7 +76,7 @@ patient_10042	20210101	2021-01-04	pathC	0
 #For HUG there is 1 polymicrobial episode (pathA + pathC) and 1 mono episode (pathB): pathC and pathA is a polymicrobial on day 4.
 #For PRAISE there is only 1 polymicrobial episode because they are grouped together.
 
-#!Tricky but working now with V2
+#⚠️Tricky but working now with V2
 
 patient_10043	20210101	2021-01-04	pathA	0
 patient_10043	20210101	2021-01-05	pathB	0
@@ -90,7 +90,7 @@ patient_10043	20210101	2021-01-06	pathA	0
 
 >
 #This one is an extreme case: 1 polymicrobial episode on day 1 (pathA+pathC) because less than 14 days. And 1 mono episode on day 15.
-#!Tricky but working now with V2
+#⚠️Tricky but working now with V2
 
 patient_10044	20210101	2021-01-01	pathA	0
 patient_10044	20210101	2021-01-14	pathC	0
@@ -128,7 +128,7 @@ patient_1007	20210101	2021-01-04	pathA	0
 
 >
 #poly (fake2)
-#! CHECK THIS ONE WITH MARIE-NO !!!!!!!!!!!!!
+#⚠️ CHECK THIS ONE WITH MARIE-NO !!!!!!!!!!!!!
 patient_1071	20210101	2021-01-01	pathA	1
 patient_1071	20210101	2021-01-02	pathB	1
 patient_1071	20210101	2021-01-06	pathA	1
@@ -183,7 +183,7 @@ patient_1009	20210101	2021-01-29	pathA	0
 
 >
 # 14 days
-#! FIXME does not work if we add a new pathogene v2023, should be polymicrobial
+#⚠️ FIXME does not work if we add a new pathogene v2023, should be polymicrobial
 patient_1019	20210101	2021-01-01	pathA	0
 patient_1019	20210101	2021-01-02	pathA	0
 patient_1019	20210101	2021-01-03	pathA	0
@@ -227,7 +227,7 @@ patient_1011	20210101	2021-01-02	comB	1
 
 >
 #HUG: 1 episode on day 1 (comA) and 1 episode on day 22 (comB)
-#? 1 polymicrobial contaminant or 2 contaminations? (mnco)
+#❓ 1 polymicrobial contaminant or 2 contaminations? (mnco)
 patient_1111	20210101	2021-01-01	comA	1
 patient_1111	20210101	2021-01-01	comB	1
 
@@ -253,7 +253,7 @@ patient_1012	20210101	2021-01-17	comA	1
 
 >
 #HUG: Expect 1 episode on day 1 and one on day 17
-#? What about the classification? in BSI vs contaminent
+#❓ What about the classification? in BSI vs contaminent
 
 patient_1013	20210101	2021-01-01	comA	1
 patient_1013	20210101	2021-01-05	comA	1
@@ -282,7 +282,7 @@ patient_1016	20210101	2021-01-02	pathB	0
 
 >
 # ok?
-#! check with marie-no
+#⚠️ check with marie-no
 patient_1017	20210101	2021-01-01	pathA	0
 patient_1017	20210101	2021-01-02	pathA	0
 patient_1017	20210101	2021-01-02	pathB	0
@@ -290,8 +290,8 @@ patient_1017	20210101	2021-01-05	pathB	0
 patient_1017	20210101	2021-01-05	pathC	0
 
 >
-# ok?
-#! check with marie-no
+# ok
+#⚠️ check with marie-no
 patient_1018	20210101	2021-01-01	pathA	0
 patient_1018	20210101	2021-01-02	pathA	0
 patient_1018	20210101	2021-01-02	pathB	0
@@ -301,7 +301,7 @@ patient_1018	20210101	2021-01-16	pathC	0
 
 >
 # ok?
-#! check with marie-no
+#⚠️ check with marie-no
 patient_1020	20210101	2021-01-01	pathA	0
 patient_1020	20210101	2021-01-02	pathA	0
 patient_1020	20210101	2021-01-02	pathB	0
@@ -322,7 +322,7 @@ patient_1023	20210101	2021-01-09	pathC	0
 
 >
 #hob case vignettes (case 3)
-#! FIXME not working version 2022
+#⚠️ FIXME not working version 2022
 patient_1024	20210101	2021-01-05	pathA	0
 patient_1024	20210101	2021-01-05	comA	1
 patient_1024	20210101	2021-01-06	pathA	0
@@ -364,7 +364,7 @@ patient_1029	20210101	2021-01-02	comA	1
 
 >
 #poly commensals (fake2)
-#! CHECK THIS ONE WITH MARIE-NO !!!!!!!!!!!!!
+#⚠️ CHECK THIS ONE WITH MARIE-NO !!!!!!!!!!!!!
 patient_1030	20210101	2021-01-01	comA	1
 patient_1030	20210101	2021-01-02	comB	1
 patient_1030	20210101	2021-01-06	comA	1
@@ -409,7 +409,7 @@ patient_1035	20210101	2021-01-05	pathB	0
 
 >
 # ok?
-#! check with marie-no
+#⚠️ check with marie-no
 patient_10199	20210101	2021-01-01	pathA	0
 patient_10199	20210101	2021-01-02	pathA	0
 patient_10199	20210101	2021-01-02	pathB	0
