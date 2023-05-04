@@ -1,7 +1,7 @@
 package ch.hcuge.spci.bsi.scenarios.model;
 
 import ch.hcuge.spci.bsi.Culture;
-import ch.hcuge.spci.bsi.constants.GermType;
+import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
 
 import java.time.ZonedDateTime;
@@ -35,13 +35,12 @@ public class TestCulture implements Culture {
         return this.culture.getLaboGermName();
     }
 
-    @Override
     public GermType getGermType() {
         return this.culture.getGermType();
     }
 
     @Override
-    public boolean isLabGermCommensal() {
+    public Boolean isLabGermCommensal() {
         return this.culture.getGermType().equals(GermType.COMMENSAL);
     }
 

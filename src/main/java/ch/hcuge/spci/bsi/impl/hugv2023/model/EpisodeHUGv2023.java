@@ -1,11 +1,8 @@
 package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
 import ch.hcuge.spci.bsi.Episode;
-import ch.hcuge.spci.bsi.constants.GermType;
-import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL1;
-import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL2;
-import ch.hcuge.spci.bsi.constants.classification.BSIClassificationL3;
 import ch.hcuge.spci.bsi.exception.BSIException;
+import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -128,23 +125,6 @@ public class EpisodeHUGv2023 implements Episode {
     public List<PositiveHemoCultureHUGv2023> getEvidences() {
         return this.evidences;
     }
-
-
-    @Override
-    public BSIClassificationL1 getBSIClassificationL1() {
-        return null;
-    }
-
-    @Override
-    public BSIClassificationL2 getBSIClassificationL2() {
-        return null;
-    }
-
-    @Override
-    public BSIClassificationL3 getBSIClassificationL3() {
-        return null;
-    }
-
 
     public String toString() {
         return Stream.of(this.patientId, this.getFirstEvidence().getLaboSampleDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));

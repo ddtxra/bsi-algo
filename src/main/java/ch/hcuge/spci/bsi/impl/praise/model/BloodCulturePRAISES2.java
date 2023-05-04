@@ -12,4 +12,5 @@ public interface BloodCulturePRAISES2 {
     String getSampleDate();
     String getIsolateNumber();
     Boolean getPosNeg();
+
 }

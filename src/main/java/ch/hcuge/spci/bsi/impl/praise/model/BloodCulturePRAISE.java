@@ -1,13 +1,17 @@
 package ch.hcuge.spci.bsi.impl.praise.model;
 
+import ch.hcuge.spci.bsi.Culture;
+
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * The sender (participant hospital) can’t deliver the information about the attributable ward for the blood cultures.
  * In this scenario, the sender must send the patients’ movements blocks of all the patients with at least one blood culture.
  * If the variable "admissionDate" of a blood culture is empty, then the algorithm will use the patients' movements blocks to find this data: It is important to send all the stay related movement blocks.
  */
-public class BloodCulturePRAISE{
+public class BloodCulturePRAISE implements Culture {
 
     /**
      * A unique identifier of BC micro-organism. Example compound sampleId+isolateNr. Must add isoNr for unique identification purpuses
@@ -87,4 +91,41 @@ public class BloodCulturePRAISE{
      */
     public LocalDate admissionDate;
 
+    @Override
+    public String getPatientId() {
+        return this.patientId;
+    }
+
+    @Override
+    public ZonedDateTime getStayBeginDate() {
+        return this.admissionDate.atStartOfDay(ZoneId.of("UTC"));
+    }
+
+    @Override
+    public ZonedDateTime getLaboSampleDate() {
+        return this.sampleDate.atStartOfDay(ZoneId.of("UTC"));
+    }
+
+    @Override
+    public String getLaboGermName() {
+        if(microorgSnomedCTCode != null){
+            return this.microorgSnomedCTCode;
+        }
+
+        if(microorgLocalId != null){
+            return this.microorgLocalId;
+        }
+
+        else return "unknown";
+    }
+
+    @Override
+    public Boolean isLabGermCommensal() {
+        return this.isCommensal;
+    }
+
+    @Override
+    public boolean isNosocomial() {
+        return false;
+    }
 }

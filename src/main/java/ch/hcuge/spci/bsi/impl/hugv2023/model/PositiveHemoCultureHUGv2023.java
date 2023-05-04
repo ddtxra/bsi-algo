@@ -1,7 +1,7 @@
 package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
 import ch.hcuge.spci.bsi.Culture;
-import ch.hcuge.spci.bsi.constants.GermType;
+import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
 import ch.hcuge.spci.bsi.constants.GlobalParameters;
 
 import java.time.ZonedDateTime;
@@ -34,13 +34,12 @@ public class PositiveHemoCultureHUGv2023 implements Culture {
         return laboGermName;
     }
 
-    @Override
     public GermType getGermType() {
         return this.laboCommensal;
     }
 
     @Override
-    public boolean isLabGermCommensal() {
+    public Boolean isLabGermCommensal() {
         return (this.laboCommensal.equals(GermType.COMMENSAL));
     }
 

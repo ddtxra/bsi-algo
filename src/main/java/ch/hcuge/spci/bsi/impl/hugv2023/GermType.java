@@ -1,4 +1,4 @@
-package ch.hcuge.spci.bsi.constants;
+package ch.hcuge.spci.bsi.impl.hugv2023;
 
 public enum GermType {
 

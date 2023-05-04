@@ -11,10 +11,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,7 +45,7 @@ public class PatientCaseServiceTest {
             }
         }
 
-        if(same){
+        if (same) {
             System.out.println("Comparison OK\n");
         }
 
@@ -96,7 +94,7 @@ public class PatientCaseServiceTest {
         });
 
         if (casesNotTested.get() > 0) {
-            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0))*100) + " %");
+            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
         }
 
         System.out.println(testCulturesServices.getPatientsIds().size() + " cases in total");
@@ -144,7 +142,7 @@ public class PatientCaseServiceTest {
         });
 
         if (casesNotTested.get() > 0) {
-            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0))*100) + " %");
+            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
         }
 
         System.out.println(testCulturesServices.getPatientsIds().size() + " cases in total");
