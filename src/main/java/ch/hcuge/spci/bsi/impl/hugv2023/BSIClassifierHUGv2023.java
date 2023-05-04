@@ -2,11 +2,10 @@ package ch.hcuge.spci.bsi.impl.hugv2023;
 
 import ch.hcuge.spci.bsi.BSIClassifier;
 import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.impl.hugv2023.mapper.CultureToEpisodeHUGv2023Mapper;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.EpisodeHUGv2023;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
-import ch.hcuge.spci.bsi.Episode;
-import ch.hcuge.spci.bsi.constants.GlobalParameters;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -20,8 +19,6 @@ import java.util.stream.Collectors;
  * Based on https://github.com/ddtxra/hob/blob/gh-pages/js/impl/hug-v2023.js
  */
 public class BSIClassifierHUGv2023 implements BSIClassifier {
-
-    private Integer VALID_NEW_CASES_DAYS = GlobalParameters.NUMBER_DAYS_FOR_NON_REPEATED_INTERVAL;
 
     @Override
     public List<Episode> processCultures(List<Culture> positiveBloodCultures) {
@@ -116,7 +113,7 @@ public class BSIClassifierHUGv2023 implements BSIClassifier {
 
                         //si on a un episode consolidé avec le meme germe dans l'interval de temps des 14 jours
                         if (!processedEpisode.get() && consolidated_episode.getDistinctGerms().contains(germ) &&
-                                Math.abs(ChronoUnit.DAYS.between(current_episode.getEpisodeDate(), consolidated_episode.getEpisodeDate())) < VALID_NEW_CASES_DAYS) {
+                                Math.abs(ChronoUnit.DAYS.between(current_episode.getEpisodeDate(), consolidated_episode.getEpisodeDate())) < HUGv2023Parameters.VALID_NEW_CASES_DAYS) {
                             // add all evidences from the current episode to the consolidated (even the ones with different germ)
                             processedEpisode.set(true);
                             current_episode.getEvidences().forEach(consolidated_episode::addEvidenceBasedOnNonRepeatInterval);
