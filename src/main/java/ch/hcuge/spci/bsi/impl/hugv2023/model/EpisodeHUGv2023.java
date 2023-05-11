@@ -1,10 +1,13 @@
 package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
+import ch.hcuge.spci.BSIUtils;
 import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.constants.GlobalParameters;
 import ch.hcuge.spci.bsi.exception.BSIException;
 import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,7 +65,7 @@ public class EpisodeHUGv2023 implements Episode {
 
     @Override
     public Boolean isNosocomial() {
-        return this.getFirstEvidence().isNosocomial();
+        return BSIUtils.isNosocomial(this.stayBeginDate, this.laboSampleDate);
     }
 
 
@@ -85,7 +88,7 @@ public class EpisodeHUGv2023 implements Episode {
 
     @Override
     public Set<String> getDistinctGerms() {
-        return this.evidences.stream().map(e -> e.getLaboGermName()).collect(Collectors.toSet());
+        return this.evidences.stream().map(PositiveHemoCultureHUGv2023::getLaboGermName).collect(Collectors.toSet());
     }
 
     /**

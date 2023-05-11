@@ -105,7 +105,6 @@ public class PatientCaseServiceTest {
 
 
     @Test
-    @Ignore
     public void shouldTestAllCasesForPRAISE() throws IOException, URISyntaxException {
 
         String algo = "PRAISE";

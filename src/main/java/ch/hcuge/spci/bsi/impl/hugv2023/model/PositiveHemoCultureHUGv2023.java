@@ -2,11 +2,9 @@ package ch.hcuge.spci.bsi.impl.hugv2023.model;
 
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
-import ch.hcuge.spci.bsi.constants.GlobalParameters;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,23 +68,6 @@ public class PositiveHemoCultureHUGv2023 implements Culture {
 
     public PositiveHemoCultureHUGv2023(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
         this(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal, new HashMap<>());
-    }
-
-    private long getNumberOfCalendarDaysSinceAdmission() {
-        return ChronoUnit.DAYS.between(this.stayBeginDate.toLocalDate(), this.laboSampleDate.toLocalDate());
-    }
-
-    private long getNumberOfDaysSinceAdmission() {
-        return ChronoUnit.DAYS.between(this.stayBeginDate, this.laboSampleDate);
-    }
-
-    //FIXME should be at the level of the episode
-    public boolean isNosocomial() {
-        if (GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL) {
-            return getNumberOfCalendarDaysSinceAdmission() >= 2;
-        } else {
-            return getNumberOfDaysSinceAdmission() >= 2;
-        }
     }
 
 

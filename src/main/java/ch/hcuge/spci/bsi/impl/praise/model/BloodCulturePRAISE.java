@@ -5,6 +5,7 @@ import ch.hcuge.spci.bsi.Culture;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * The sender (participant hospital) can’t deliver the information about the attributable ward for the blood cultures.
@@ -23,6 +24,9 @@ public class BloodCulturePRAISE implements Culture {
      */
     public String sampleId;
 
+    public String getSampleId() {
+        return sampleId;
+    }
 
     public String patientId;
 
@@ -124,8 +128,9 @@ public class BloodCulturePRAISE implements Culture {
         return this.isCommensal;
     }
 
-    @Override
-    public boolean isNosocomial() {
-        return false;
+
+    public String getLaboCalendarFormatted(String format) {
+        return DateTimeFormatter.ofPattern(format).format(this.getLaboSampleDate());
     }
+
 }

@@ -1,4 +1,4 @@
-patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal
+patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample
 
 >
 # Two positive hemocultures with a same pathogene should not be repeated within 14 days from the first episode
@@ -12,6 +12,10 @@ patient_1001	20210101	2021-01-16	pathA	0
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1001	2021-01-01	pathA
 #expected.HUG_v2023	patient_1001	2021-01-15	pathA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1001	2021-01-01	pathA
+#expected.PRAISE	patient_1001	2021-01-15	pathA
 
 >
 # If the two positive hemocultures appear in different stays for the same patient it should count as 2 episodes to investigate for HUG
@@ -415,3 +419,32 @@ patient_10199	20210101	2021-01-02	pathA	0
 patient_10199	20210101	2021-01-02	pathB	0
 patient_10199	20210101	2021-01-05	pathB	0
 patient_10199	20210101	2021-01-05	comA	1
+
+
+
+>
+# Two positive hemocultures with a same pathogene should not be repeated within 14 days from the first episode. But in case of commensals???
+# ⚠️ CHECK WITH PRAISE
+patient_c001	20210101	2021-01-05	comA	1
+patient_c001	20210101	2021-01-15	comA	1
+
+
+>
+# Two positive hemocultures with 2 CSC from 2 different germs count as true pathogen or contamination?
+# ⚠️ CHECK WITH PRAISE
+patient_c002	20210101	2021-01-05	comA	1
+patient_c002	20210101	2021-01-06	comB	1
+
+
+
+>
+# Two BC from the sample sample counts as 1 contaminant or a TRUE bsi?
+# ⚠️ CHECK WITH PRAISE
+patient_c003	20210101	2021-01-05	comA	1   sample_a
+patient_c003	20210101	2021-01-05	comA	1   sample_a
+
+>
+# Two positive hemocultures from the sample sample counts as 1 contaminant or a TRUE bsi?
+# ⚠️ CHECK WITH PRAISE
+patient_c004	20210101	2021-01-05	comA	1   sample_a
+patient_c004	20210101	2021-01-05	comA	1   sample_b

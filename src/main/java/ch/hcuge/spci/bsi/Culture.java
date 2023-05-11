@@ -14,5 +14,4 @@ public interface Culture {
 
     Boolean isLabGermCommensal();
 
-    boolean isNosocomial();
 }

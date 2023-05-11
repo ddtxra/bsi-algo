@@ -1,5 +1,6 @@
 package ch.hcuge.spci.bsi.impl.hugv2023;
 
+import ch.hcuge.spci.BSIUtils;
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.constants.GlobalParameters;
 import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
@@ -22,13 +23,13 @@ public class CultureTest {
         Culture culture = new PositiveHemoCultureHUGv2023("1", beginDateStay, sampleDate, "E.Coli", GermType.TRUE_PATHOGEN);
 
         GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = true;
-        Assert.assertTrue(culture.isNosocomial());
+        Assert.assertTrue(BSIUtils.isNosocomial(beginDateStay, sampleDate));
 
         GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = false;
-        Assert.assertFalse(culture.isNosocomial());
+        Assert.assertFalse(BSIUtils.isNosocomial(beginDateStay, sampleDate));
 
         GlobalParameters.USE_CALENDAR_DAY_TO_COMPUTE_NOSOCOMIAL = true;
-        Assert.assertTrue(culture.isNosocomial());
+        Assert.assertTrue(BSIUtils.isNosocomial(beginDateStay, sampleDate));
 
     }
 

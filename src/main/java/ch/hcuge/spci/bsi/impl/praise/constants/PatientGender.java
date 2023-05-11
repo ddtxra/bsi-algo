@@ -1,4 +1,4 @@
-package ch.hcuge.spci.bsi.impl.praise.model;
+package ch.hcuge.spci.bsi.impl.praise.constants;
 
 import java.time.LocalDate;
 
