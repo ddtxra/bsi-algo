@@ -146,7 +146,7 @@ public class EpisodePRAISE implements Episode {
     }
 
     public String toString() {
-        return Stream.of(this.patientId, this.getEpisodeDate().toLocalDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
+        return Stream.of(this.patientId, this.getEpisodeDate().toLocalDate(), this.getDistinctGerms(), this.getClassification()).map(Object::toString).collect(Collectors.joining("\t"));
     }
 
 }

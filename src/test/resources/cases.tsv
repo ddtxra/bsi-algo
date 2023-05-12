@@ -14,8 +14,8 @@ patient_1001	20210101	2021-01-16	pathA	0
 #expected.HUG_v2023	patient_1001	2021-01-15	pathA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1001	2021-01-01	pathA
-#expected.PRAISE	patient_1001	2021-01-15	pathA
+#expected.PRAISE	patient_1001	2021-01-01	pathA   NOT-HOB
+#expected.PRAISE	patient_1001	2021-01-15	pathA   HOB
 
 >
 # If the two positive hemocultures appear in different stays for the same patient it should count as 2 episodes to investigate for HUG

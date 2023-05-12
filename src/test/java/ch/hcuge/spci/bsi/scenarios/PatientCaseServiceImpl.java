@@ -104,12 +104,16 @@ public class PatientCaseServiceImpl implements PatientCaseService {
 
                         if(expectedValues.length >= 4){
 
-                            Episode expected_epi = new EpisodeImplForTest(expectedValues[0].split("\\.")[1],
+                            EpisodeImplForTest expected_epi = new EpisodeImplForTest(expectedValues[0].split("\\.")[1],
                                     expectedValues[1], expectedValues[2], expectedValues[3]);
+
+                            if(expectedValues.length > 4){
+                                expected_epi.setClassification(expectedValues[4]);
+                            }
+
                             if (expected_epi.getPatientId() != null) {
                                 expected_episodes.add(expected_epi);
                             }
-
 
                             Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream()
                                     .collect(Collectors.groupingBy(e2 -> ((EpisodeImplForTest) e2).getTestAlgoName()));

@@ -3,6 +3,8 @@ package ch.hcuge.spci.bsi.scenarios.model;
 import ch.hcuge.spci.bsi.Episode;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,6 +20,12 @@ public class EpisodeImplForTest implements Episode {
     }
 
     private String testAlgoName;
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
+    private String classification;
 
     public EpisodeImplForTest(String testAlgoName, String patientId, String episodeDate, String germs) {
         this.testAlgoName = testAlgoName;
@@ -54,10 +62,19 @@ public class EpisodeImplForTest implements Episode {
 
     @Override
     public String getClassification() {
-        return null;
+        return this.classification;
     }
 
     public String toString() {
-        return Stream.of(this.patientId, this.getEpisodeDate().toLocalDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
+        var elements = new ArrayList<String>();
+        elements.add(this.patientId);
+        elements.add(this.getEpisodeDate().toLocalDate().toString());
+        elements.add(this.getDistinctGerms().toString());
+
+        if(this.classification != null || this.classification != "") {
+            elements.add(this.getClassification());
+        }
+
+        return String.join("\t", elements);
     }
 }
