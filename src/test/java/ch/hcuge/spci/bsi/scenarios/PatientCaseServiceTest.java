@@ -53,7 +53,7 @@ public class PatientCaseServiceTest {
     }
 
     private boolean compareEpisode(Episode episode1, Episode episode2) {
-        return episode1.getPatientId().equals(episode2.getPatientId()) && episode1.getEpisodeDate().equals(episode2.getEpisodeDate()) && episode1.getDistinctGerms().equals(episode2.getDistinctGerms());
+        return episode1.getPatientId().equals(episode2.getPatientId()) && episode1.getEpisodeDate().toLocalDate().equals(episode2.getEpisodeDate().toLocalDate()) && episode1.getDistinctGerms().equals(episode2.getDistinctGerms());
     }
 
 

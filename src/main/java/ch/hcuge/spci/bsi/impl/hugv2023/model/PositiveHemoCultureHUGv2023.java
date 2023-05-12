@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PositiveHemoCultureHUGv2023 implements Culture {
+
     protected String patientId;
     protected ZonedDateTime stayBeginDate;
     protected ZonedDateTime laboSampleDate;
@@ -16,8 +17,28 @@ public class PositiveHemoCultureHUGv2023 implements Culture {
     protected GermType laboCommensal;
     protected Map<String, String> specificInfo;
 
+    @Override
+    public String getId() {
+        return null;
+    }
+
     public String getPatientId() {
         return patientId;
+    }
+
+    @Override
+    public String getSampleId() {
+        return null;
+    }
+
+    @Override
+    public String getStayId() {
+        return null;
+    }
+
+    @Override
+    public String getWard() {
+        return null;
     }
 
     public ZonedDateTime getStayBeginDate() {

@@ -2,6 +2,7 @@ package ch.hcuge.spci.bsi.scenarios;
 
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.exception.BSIException;
 import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
 import ch.hcuge.spci.bsi.scenarios.model.EpisodeImplForTest;
 import ch.hcuge.spci.bsi.scenarios.model.PatientCase;
@@ -38,7 +39,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     }
 
     private void verifyHeader(List<String> columnNames) {
-        List<String> expectedHeaders = List.of("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal");
+        List<String> expectedHeaders = List.of("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal", "sample");
         if (columnNames.size() != expectedHeaders.size()) {
             throw new RuntimeException("Can't find same headers");
         }
@@ -109,6 +110,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
                                 expected_episodes.add(expected_epi);
                             }
 
+
                             Map<String, List<Episode>> expected_episodes_by_algo = expected_episodes.stream()
                                     .collect(Collectors.groupingBy(e2 -> ((EpisodeImplForTest) e2).getTestAlgoName()));
 
@@ -120,6 +122,11 @@ public class PatientCaseServiceImpl implements PatientCaseService {
                 } else {
                     Culture tc = convertLineToCulture(line_content);
                     current_scenario.addPositiveHemoculture(tc);
+
+                    String patientId = current_scenario.getPatientId();
+                    if(scenarios.stream().filter(s -> Objects.equals(s.getPatientId(), patientId)).count() > 1){
+                        throw new BSIException("Patient " + patientId + "  already defined in " + patientId);
+                    }
                 }
             }
         } else {

@@ -31,7 +31,7 @@ patient_1002	20210103	2021-01-05	pathA	0
 #expected.PRAISE	patient_1002	2021-01-01	pathA
 
 >
-# Two positive hemocultures with a different pathogene should count as 2 episodes
+# Two positive hemocultures with a different pathogene more than 3 days should count as 2 episodes
 
 patient_1003	20210101	2021-01-01	pathA	0
 patient_1003	20210101	2021-01-05	pathB	0
@@ -39,6 +39,10 @@ patient_1003	20210101	2021-01-05	pathB	0
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1003	2021-01-01	pathA
 #expected.HUG_v2023	patient_1003	2021-01-05	pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1003	2021-01-01	pathA
+#expected.PRAISE	patient_1003	2021-01-05	pathB
 
 
 >
@@ -55,7 +59,7 @@ patient_1004	20210101	2021-01-05	pathB	0
 
 
 #expected.PRAISE
-#expected.PRAISE	patient_1004	2021-01-04	pathA
+#expected.PRAISE	patient_1004	2021-01-04	pathA+pathB
 
 >
 #Two positive hemocultures with a different pathogene in the same day counts as 1 polymicrobial episode for both HUG and PRAISE
@@ -64,6 +68,9 @@ patient_10041	20210101	2021-01-04	pathB	0
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_10041	2021-01-04	pathA+pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_10041	2021-01-04	pathA+pathB
 
 >
 #Three or more positive hemocultures with a different pathogene in the same day counts as 1 polymicrobial episode for both HUG and PRAISE
@@ -74,6 +81,9 @@ patient_10042	20210101	2021-01-04	pathC	0
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_10042	2021-01-04	pathA+pathB+pathC
+
+#expected.PRAISE
+#expected.PRAISE	patient_10042	2021-01-04	pathA+pathB+pathC
 
 
 >
@@ -92,6 +102,9 @@ patient_10043	20210101	2021-01-06	pathA	0
 #expected.HUG_v2023	patient_10043	2021-01-04	pathA+pathC
 #expected.HUG_v2023	patient_10043	2021-01-05	pathB
 
+#expected.PRAISE
+#expected.PRAISE	patient_10043	2021-01-04	pathA+pathB+pathC
+
 >
 #This one is an extreme case: 1 polymicrobial episode on day 1 (pathA+pathC) because less than 14 days. And 1 mono episode on day 15.
 #⚠️Tricky but working now with V2
@@ -104,6 +117,10 @@ patient_10044	20210101	2021-01-15	pathC	0
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_10044	2021-01-01	pathA+pathC
 #expected.HUG_v2023	patient_10044	2021-01-15	pathC
+
+#expected.PRAISE
+#expected.PRAISE	patient_10044	2021-01-01	pathA
+#expected.PRAISE	patient_10044	2021-01-14	pathC
 
 >
 #1 HUG: 2 episodes (1 pathA and 1 pathB)
@@ -435,8 +452,6 @@ patient_c001	20210101	2021-01-15	comA	1
 patient_c002	20210101	2021-01-05	comA	1
 patient_c002	20210101	2021-01-06	comB	1
 
-
-
 >
 # Two BC from the sample sample counts as 1 contaminant or a TRUE bsi?
 # ⚠️ CHECK WITH PRAISE
@@ -448,3 +463,23 @@ patient_c003	20210101	2021-01-05	comA	1   sample_a
 # ⚠️ CHECK WITH PRAISE
 patient_c004	20210101	2021-01-05	comA	1   sample_a
 patient_c004	20210101	2021-01-05	comA	1   sample_b
+
+
+>
+# Do we apply the 14 days rules for commmensals as well?
+# ⚠️ CHECK WITH PRAISE
+patient_c005	20210101	2021-01-05	comA	1
+patient_c005	20210101	2021-01-06	comA	1
+patient_c005	20210101	2021-01-10	comA	1
+
+>
+# Do we apply the 14 days rules for commmensals as well?
+# ⚠️ CHECK WITH PRAISE
+patient_c006	20210101	2021-01-05	comA	1
+patient_c006	20210101	2021-01-10	comA	1
+
+>
+# If 2 commensals are followed by 24 hours, but are not the same germ. Should it be 1 or 2 episodes?
+# ⚠️ CHECK WITH PRAISE
+patient_c007	20210101	2021-01-05	comA	1
+patient_c007	20210101	2021-01-06	comB	1

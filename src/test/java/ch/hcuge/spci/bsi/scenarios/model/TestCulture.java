@@ -6,18 +6,45 @@ import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestCulture implements Culture {
 
+    private static final AtomicInteger ID_SEQUENCE = new AtomicInteger();
+
     private PositiveHemoCultureHUGv2023 culture;
 
+    private String id;
+
+
     public TestCulture(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
+        this.id = patientId + "_" +ID_SEQUENCE.incrementAndGet();
         this.culture = new PositiveHemoCultureHUGv2023(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal, new HashMap<>());
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 
     @Override
     public String getPatientId() {
         return this.culture.getPatientId();
+    }
+
+    @Override
+    public String getSampleId() {
+        return null;
+    }
+
+    @Override
+    public String getStayId() {
+        return null;
+    }
+
+    @Override
+    public String getWard() {
+        return null;
     }
 
     @Override
@@ -44,8 +71,4 @@ public class TestCulture implements Culture {
         return this.culture.getGermType().equals(GermType.COMMENSAL);
     }
 
-    @Override
-    public boolean isNosocomial() {
-        return this.culture.isNosocomial();
-    }
 }

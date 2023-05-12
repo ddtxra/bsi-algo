@@ -28,14 +28,28 @@ public class BloodCulturePRAISE implements Culture {
         return sampleId;
     }
 
+    @Override
+    public String getStayId() {
+        return null;
+    }
+
+    @Override
+    public String getWard() {
+        return null;
+    }
+
     public String patientId;
 
 
-    /** optional if this is incorporated reliably in hospital system //FIXME confusing definition */
+    /**
+     * optional if this is incorporated reliably in hospital system //FIXME confusing definition
+     */
     public String episodeOfCareId;
 
 
-    /** LocalDate **/
+    /**
+     * LocalDate
+     **/
     public LocalDate sampleDate;
 
     public String sampleWardId;
@@ -43,7 +57,6 @@ public class BloodCulturePRAISE implements Culture {
     /**
      * ECDC ward type where culture was taken
      * Optional: Not mandatory, if intelligence is not available; then include movement data for pos cultures
-     *
      */
     public String sampleWardECDCWardClassification;
 
@@ -96,6 +109,11 @@ public class BloodCulturePRAISE implements Culture {
     public LocalDate admissionDate;
 
     @Override
+    public String getId() {
+        return this.id;
+    }
+
+    @Override
     public String getPatientId() {
         return this.patientId;
     }
@@ -112,15 +130,31 @@ public class BloodCulturePRAISE implements Culture {
 
     @Override
     public String getLaboGermName() {
-        if(microorgSnomedCTCode != null){
+        if (microorgSnomedCTCode != null) {
             return this.microorgSnomedCTCode;
         }
 
-        if(microorgLocalId != null){
+        if (microorgLocalId != null) {
             return this.microorgLocalId;
-        }
+        } else return "unknown";
+    }
 
-        else return "unknown";
+    public BloodCulturePRAISE(String id, String sampleId, String patientId, String episodeOfCareId, LocalDate sampleDate, String sampleWardId, String sampleWardECDCWardClassification, Integer isolateNumber, String microorgSnomedCTCode, String microorgLocalId, Boolean isCommensal, Boolean pos_neg, String attributableWardId, String attributableWardECDCWardClassification, LocalDate admissionDate) {
+        this.id = id;
+        this.sampleId = sampleId;
+        this.patientId = patientId;
+        this.episodeOfCareId = episodeOfCareId;
+        this.sampleDate = sampleDate;
+        this.sampleWardId = sampleWardId;
+        this.sampleWardECDCWardClassification = sampleWardECDCWardClassification;
+        this.isolateNumber = isolateNumber;
+        this.microorgSnomedCTCode = microorgSnomedCTCode;
+        this.microorgLocalId = microorgLocalId;
+        this.isCommensal = isCommensal;
+        this.pos_neg = pos_neg;
+        this.attributableWardId = attributableWardId;
+        this.attributableWardECDCWardClassification = attributableWardECDCWardClassification;
+        this.admissionDate = admissionDate;
     }
 
     @Override

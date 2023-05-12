@@ -3,8 +3,6 @@ package ch.hcuge.spci.bsi.impl.praise.model;
 import ch.hcuge.spci.BSIUtils;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.exception.BSIException;
-import ch.hcuge.spci.bsi.impl.hugv2023.GermType;
-import ch.hcuge.spci.bsi.impl.hugv2023.model.PositiveHemoCultureHUGv2023;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -73,30 +71,30 @@ public class EpisodePRAISE implements Episode {
 
     public String getClassification() {
 
-        if(!this.isNosocomial()){
+        if (!this.isNosocomial()) {
             return "NOT-HOB";
-        }else {
+        } else {
             //If there is at least one BC that is not a commensal (true pathogen), then it is a HOB
-            if (this.evidences.stream().anyMatch(e -> !e.isCommensal)){
+            if (this.evidences.stream().anyMatch(e -> !e.isCommensal)) {
                 return "HOB";
             } else { //no true pathogenes = only commensals
                 //If there is only one commensal, then it is a contamination
-                if(this.evidences.size() == 1){
+                if (this.evidences.size() == 1) {
                     return "CONTAMINATION";
-                }else {
+                } else {
                     long smallestTimeWindow = Long.MAX_VALUE;
-                    for(var i=0; i< this.evidences.size(); i++){
-                        for(var j=0; j< this.evidences.size(); j++){
+                    for (var i = 0; i < this.evidences.size(); i++) {
+                        for (var j = 0; j < this.evidences.size(); j++) {
                             var evi1 = this.evidences.get(i);
                             var evi2 = this.evidences.get(j);
                             //FIXME for different samples? (this is not defined on the specs)?
-                            if(!Objects.equals(evi1.getSampleId(), evi2.getSampleId())){
+                            if (!Objects.equals(evi1.getSampleId(), evi2.getSampleId())) {
                                 var day_between_cultures = ChronoUnit.DAYS.between(evi1.getLaboSampleDate(), evi2.getLaboSampleDate());
                                 smallestTimeWindow = Math.min(smallestTimeWindow, day_between_cultures);
                             }
                         }
                     }
-                    if(smallestTimeWindow < 3){
+                    if (smallestTimeWindow < 3) {
                         return "HOB";
                     } else {
                         return "CONTAMINATION";
@@ -148,7 +146,7 @@ public class EpisodePRAISE implements Episode {
     }
 
     public String toString() {
-        return Stream.of(this.patientId, this.getFirstEvidence().getLaboSampleDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
+        return Stream.of(this.patientId, this.getEpisodeDate().toLocalDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
     }
 
 }

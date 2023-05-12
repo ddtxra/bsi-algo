@@ -27,13 +27,30 @@ public abstract class CultureBase implements Culture {
         throw new NotImplementedException("Not implemented");
     }
 
+
     @Override
-    public boolean isNosocomial() {
+    public Boolean isLabGermCommensal() {
+        throw new NotImplementedException("Not implemented");
+    }
+
+
+    @Override
+    public String getId() {
         throw new NotImplementedException("Not implemented");
     }
 
     @Override
-    public Boolean isLabGermCommensal() {
+    public String getSampleId() {
+        throw new NotImplementedException("Not implemented");
+    }
+
+    @Override
+    public String getStayId() {
+        throw new NotImplementedException("Not implemented");
+    }
+
+    @Override
+    public String getWard() {
         throw new NotImplementedException("Not implemented");
     }
 

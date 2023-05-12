@@ -1,9 +1,6 @@
 package ch.hcuge.spci.bsi.scenarios.model;
 
 import ch.hcuge.spci.bsi.Episode;
-import ch.hcuge.spci.bsi.impl.clabsi.classification.BSIClassificationL1;
-import ch.hcuge.spci.bsi.impl.clabsi.classification.BSIClassificationL2;
-import ch.hcuge.spci.bsi.impl.clabsi.classification.BSIClassificationL3;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
@@ -61,6 +58,6 @@ public class EpisodeImplForTest implements Episode {
     }
 
     public String toString() {
-        return Stream.of(this.patientId, this.getEpisodeDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
+        return Stream.of(this.patientId, this.getEpisodeDate().toLocalDate(), this.getDistinctGerms()).map(Object::toString).collect(Collectors.joining("\t"));
     }
 }
