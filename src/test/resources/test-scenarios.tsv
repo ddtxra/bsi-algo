@@ -1,4 +1,4 @@
-patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample
+patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample_id
 
 >
 # Two positive hemocultures with a same pathogene should not be repeated within 14 days from the first episode

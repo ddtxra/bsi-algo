@@ -39,14 +39,14 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     }
 
     private void verifyHeader(List<String> columnNames) {
-        List<String> expectedHeaders = List.of("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal", "sample");
+        List<String> expectedHeaders = List.of("patient_id", "stay_begin_date", "labo_sample_date", "labo_germ_name", "labo_commensal", "sample_id");
         if (columnNames.size() != expectedHeaders.size()) {
             throw new RuntimeException("Can't find same headers");
         }
 
         for (var i = 0; i < expectedHeaders.size(); i++) {
-            if (!expectedHeaders.get(0).equalsIgnoreCase(columnNames.get(0))) {
-                throw new RuntimeException("Failed");
+            if (!expectedHeaders.get(i).equalsIgnoreCase(columnNames.get(i))) {
+                throw new RuntimeException("Failed the column names are not the same for " + expectedHeaders.get(i) + " and " + columnNames.get(i));
             }
         }
     }

@@ -77,7 +77,7 @@ public class PatientCaseServiceTest {
         String algo = "HUG_v2023";
 
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
-        testCulturesServices.loadContent("cases.tsv");
+        testCulturesServices.loadContent("test-scenarios.tsv");
 
         var patientIdsSetSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
         var patientIdsListSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
@@ -124,7 +124,7 @@ public class PatientCaseServiceTest {
         String algo = "PRAISE";
 
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
-        testCulturesServices.loadContent("cases.tsv");
+        testCulturesServices.loadContent("test-scenarios.tsv");
 
         var patientIdsSetSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
         var patientIdsListSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
