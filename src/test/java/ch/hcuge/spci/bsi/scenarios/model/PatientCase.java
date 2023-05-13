@@ -55,7 +55,7 @@ public class PatientCase {
     }
 
     public void addToDescription(String comment) {
-        this.description += comment;
+        this.description += comment + "\n";
     }
 
     public List<Episode> getListOfExpectedEpisodesForAlgo(String algoName) {

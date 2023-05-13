@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -46,14 +47,27 @@ public class PatientCaseServiceTest {
         }
 
         if (same) {
-            System.out.println("Comparison OK\n");
+            System.out.println("Comparison OK for patient: " + episodes_expected.get(0).getPatientId() + "\n");
         }
 
         return same;
     }
 
     private boolean compareEpisode(Episode episode1, Episode episode2) {
-        return episode1.getPatientId().equals(episode2.getPatientId()) && episode1.getEpisodeDate().toLocalDate().equals(episode2.getEpisodeDate().toLocalDate()) && episode1.getDistinctGerms().equals(episode2.getDistinctGerms());
+        var comparison = episode1.getPatientId().equals(episode2.getPatientId())
+                && episode1.getEpisodeDate().toLocalDate().equals(episode2.getEpisodeDate().toLocalDate())
+                && episode1.getDistinctGerms().equals(episode2.getDistinctGerms());
+
+        if(!(Objects.isNull(episode1.getClassification())) && !episode1.getClassification().isEmpty()){
+            comparison &= episode1.getClassification().equals(episode2.getClassification());
+        }
+        /* TODO ?
+        else if(!(Objects.isNull(episode2.getClassification())) && !episode2.getClassification().isEmpty()){
+            comparison &= episode2.getClassification().equals(episode1.getClassification());
+        }
+         */
+
+        return comparison;
     }
 
 

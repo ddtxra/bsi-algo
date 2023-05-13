@@ -5,6 +5,7 @@ import ch.hcuge.spci.bsi.Episode;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -71,7 +72,7 @@ public class EpisodeImplForTest implements Episode {
         elements.add(this.getEpisodeDate().toLocalDate().toString());
         elements.add(this.getDistinctGerms().toString());
 
-        if(this.classification != null || this.classification != "") {
+        if((!Objects.isNull(this.classification)) && (this.classification.length() > 0)) {
             elements.add(this.getClassification());
         }
 

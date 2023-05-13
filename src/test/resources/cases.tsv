@@ -14,12 +14,12 @@ patient_1001	20210101	2021-01-16	pathA	0
 #expected.HUG_v2023	patient_1001	2021-01-15	pathA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1001	2021-01-01	pathA   NOT-HOB
-#expected.PRAISE	patient_1001	2021-01-15	pathA   HOB
+#expected.PRAISE	patient_1001	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_1001	2021-01-15	pathA	HOB
 
 >
 # If the two positive hemocultures appear in different stays for the same patient it should count as 2 episodes to investigate for HUG
-#⚠️ Only 1 for PRAISE
+# Only 1 for PRAISE
 patient_1002	20210101	2021-01-01	pathA	0
 patient_1002	20210103	2021-01-05	pathA	0
 
@@ -57,7 +57,6 @@ patient_1004	20210101	2021-01-05	pathB	0
 #expected.HUG_v2023	patient_1004	2021-01-04	pathA
 #expected.HUG_v2023	patient_1004	2021-01-05	pathB
 
-
 #expected.PRAISE
 #expected.PRAISE	patient_1004	2021-01-04	pathA+pathB
 
@@ -78,17 +77,15 @@ patient_10042	20210101	2021-01-04	pathA	0
 patient_10042	20210101	2021-01-04	pathB	0
 patient_10042	20210101	2021-01-04	pathC	0
 
-
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_10042	2021-01-04	pathA+pathB+pathC
 
 #expected.PRAISE
-#expected.PRAISE	patient_10042	2021-01-04	pathA+pathB+pathC
-
+#expected.PRAISE	patient_10042	2021-01-04	pathA+pathB+pathC	HOB
 
 >
 #For HUG there is 1 polymicrobial episode (pathA + pathC) and 1 mono episode (pathB): pathC and pathA is a polymicrobial on day 4.
-#For PRAISE there is only 1 polymicrobial episode because they are grouped together.
+#For PRAISE there is only 1 polymicrobial episode because they are grouped together since they are 3 days apart.
 
 #⚠️Tricky but working now with V2
 
@@ -119,8 +116,8 @@ patient_10044	20210101	2021-01-15	pathC	0
 #expected.HUG_v2023	patient_10044	2021-01-15	pathC
 
 #expected.PRAISE
-#expected.PRAISE	patient_10044	2021-01-01	pathA
-#expected.PRAISE	patient_10044	2021-01-14	pathC
+#expected.PRAISE	patient_10044	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_10044	2021-01-14	pathC	HOB
 
 >
 #1 HUG: 2 episodes (1 pathA and 1 pathB)
@@ -128,8 +125,15 @@ patient_1005	20210101	2021-01-01	pathA	0
 patient_1005	20210101	2021-01-03	pathB	0
 patient_1005	20210101	2021-01-04	pathA	0
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1005	2021-01-01	pathA
+#expected.HUG_v2023	patient_1005	2021-01-03	pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1005	2021-01-01	pathA+pathB	NOT-HOB
+
 >
-#scenario (basics) 101 patient_1006patient_1006
+#scenario (basics) 101 patient_1006
 patient_1006	20210101	2021-01-01	pathA	0
 patient_1006	20210101	2021-01-04	pathB	0
 patient_1006	20210101	2021-01-05	pathA	0
@@ -137,6 +141,10 @@ patient_1006	20210101	2021-01-05	pathA	0
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1006	2021-01-01	pathA
 #expected.HUG_v2023	patient_1006	2021-01-04	pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1006	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_1006	2021-01-04	pathB	HOB
 
 >
 #scenario (basics) HUG: 1 polymicrobien
@@ -147,22 +155,34 @@ patient_1007	20210101	2021-01-04	pathA	0
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1007	2021-01-01	pathA+pathB
 
+#expected.PRAISE
+#expected.PRAISE	patient_1007	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_1007	2021-01-04	pathB	HOB
+
 >
 #poly (fake2)
-#⚠️ CHECK THIS ONE WITH MARIE-NO !!!!!!!!!!!!!
-patient_1071	20210101	2021-01-01	pathA	1
-patient_1071	20210101	2021-01-02	pathB	1
-patient_1071	20210101	2021-01-06	pathA	1
-patient_1071	20210101	2021-01-06	pathB	1
-patient_1071	20210101	2021-01-07	pathB	1
-patient_1071	20210101	2021-01-08	pathA	1
+patient_1071	20210101	2021-01-01	pathA	0
+patient_1071	20210101	2021-01-02	pathB	0
+patient_1071	20210101	2021-01-06	pathA	0
+patient_1071	20210101	2021-01-06	pathB	0
+patient_1071	20210101	2021-01-07	pathB	0
+patient_1071	20210101	2021-01-08	pathA	0
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1071	2021-01-01	pathA+pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1071	2021-01-01	pathA+pathB	NOT-HOB
 
 >
 #HUG: 2 episodes: 1 at day 1 (pathA) and 1 at day 2 (pathB)
 patient_1008	20210101	2021-01-01	pathA	0
 patient_1008	20210101	2021-01-02	pathB	0
 patient_1008	20210101	2021-01-15	pathB	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_1008	2021-01-01	pathA+pathB	NOT-HOB
+#expected.PRAISE	patient_1008	2021-01-15	pathB	HOB
 
 >
 # 14 days
@@ -201,6 +221,10 @@ patient_1009	20210101	2021-01-29	pathA	0
 #expected.HUG_v2023	patient_1009	2021-01-15	pathA
 #expected.HUG_v2023	patient_1009	2021-01-29	pathA
 
+#expected.PRAISE
+#expected.PRAISE	patient_1009	2021-01-01	pathA
+#expected.PRAISE	patient_1009	2021-01-15	pathA
+#expected.PRAISE	patient_1009	2021-01-29	pathA
 
 >
 # 14 days
@@ -241,13 +265,29 @@ patient_1019	20210101	2021-01-29	pathA	0
 #expected.HUG_v2023	patient_1019	2021-01-15	pathA
 #expected.HUG_v2023	patient_1019	2021-01-29	pathA
 
->
-#HUG: 1 episode on day 1 (comA) and 1 episode on day 22 (comB)
-patient_1011	20210101	2021-01-01	comA	1
-patient_1011	20210101	2021-01-02	comB	1
+#expected.PRAISE
+#expected.PRAISE	patient_1019	2021-01-01	pathA+pathC
+#expected.PRAISE	patient_1019	2021-01-15	pathA
+#expected.PRAISE	patient_1019	2021-01-29	pathA
+
+#
+# ============== COMMENSALS SECTION ==============
 
 >
-#HUG: 1 episode on day 1 (comA) and 1 episode on day 22 (comB)
+#HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
+# ⚠️ CHECK THE EXPECTED WITH PRAISE. Can we say it is a polymicrobial episode and it is a contamination?
+patient_1011	20210101	2021-01-10	comA	1
+patient_1011	20210101	2021-01-11	comB	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1011	2021-01-10	comA
+#expected.HUG_v2023	patient_1011	2021-01-11	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1011	2021-01-10	comA+comB	CONTAMINATION
+
+>
+#HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
 #❓ 1 polymicrobial contaminant or 2 contaminations? (mnco)
 patient_1111	20210101	2021-01-01	comA	1
 patient_1111	20210101	2021-01-01	comB	1
