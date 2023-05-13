@@ -1,0 +1,14 @@
+patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample_id
+
+>
+#HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
+# ⚠️ CHECK THE EXPECTED WITH PRAISE. Can we say it is a polymicrobial episode and it is a contamination?
+patient_1011	20210101	2021-01-10	comA	1
+patient_1011	20210101	2021-01-11	comB	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1011	2021-01-10	comA
+#expected.HUG_v2023	patient_1011	2021-01-11	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1011	2021-01-10	comA+comB	CONTAMINATION

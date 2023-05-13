@@ -17,14 +17,12 @@ public class EpisodePRAISE implements Episode {
     private List<BloodCulturePRAISE> copyStrainEvidences;
 
     private String patientId;
-    private Boolean laboCommensal;
     private Boolean polymicrobial;
 
     private ZonedDateTime stayBeginDate;
     private ZonedDateTime eventDate;
 
     private Integer birthYear;
-
     private Integer gender;
 
     public EpisodePRAISE(BloodCulturePRAISE culture) {
@@ -85,12 +83,15 @@ public class EpisodePRAISE implements Episode {
                     long smallestTimeWindow = Long.MAX_VALUE;
                     for (var i = 0; i < this.evidences.size(); i++) {
                         for (var j = 0; j < this.evidences.size(); j++) {
-                            var evi1 = this.evidences.get(i);
-                            var evi2 = this.evidences.get(j);
-                            //FIXME for different samples? (this is not defined on the specs)?
-                            if (!Objects.equals(evi1.getSampleId(), evi2.getSampleId())) {
-                                var day_between_cultures = ChronoUnit.DAYS.between(evi1.getLaboSampleDate(), evi2.getLaboSampleDate());
-                                smallestTimeWindow = Math.min(smallestTimeWindow, day_between_cultures);
+                            if(i != j){
+                                var evi1 = this.evidences.get(i);
+                                var evi2 = this.evidences.get(j);
+                                //FIXME for different samples? (this is not defined on the specs)?
+                                //FIXME must be for the same commensal? according to marie-no yes. check with PRAISE
+                                if (Objects.equals(evi1.getLaboGermName(), evi2.getLaboGermName())) {
+                                    var day_between_cultures = Math.abs(ChronoUnit.DAYS.between(evi1.getLaboSampleDate(), evi2.getLaboSampleDate()));
+                                    smallestTimeWindow = Math.min(smallestTimeWindow, day_between_cultures);
+                                }
                             }
                         }
                     }

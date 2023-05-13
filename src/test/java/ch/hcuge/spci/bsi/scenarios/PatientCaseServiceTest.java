@@ -6,7 +6,6 @@ import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.impl.hugv2023.BSIClassifierHUGv2023;
 import ch.hcuge.spci.bsi.impl.praise.BSIClassifierPRAISE;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -73,55 +72,15 @@ public class PatientCaseServiceTest {
 
     @Test
     public void shouldTestAllCasesForHUGV2023() throws IOException, URISyntaxException {
-
-        String algo = "HUG_v2023";
-
-        PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
-        testCulturesServices.loadContent("test-scenarios.tsv");
-
-        var patientIdsSetSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
-        var patientIdsListSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
-
-        Assert.assertEquals(patientIdsSetSize, patientIdsListSize);
-        BSIClassifier classifier = new BSIClassifierHUGv2023();
-
-        AtomicReference<Integer> casesNotTested = new AtomicReference<>(0);
-        AtomicBoolean same = new AtomicBoolean(true);
-        testCulturesServices.getPatientsIds().forEach(pId -> {
-            System.out.println("Testing for " + pId);
-            System.out.println("\t" + testCulturesServices.getDescription(pId));
-
-            List<Culture> cultures = testCulturesServices.getCulturesForPatient(pId);
-            List<Episode> computedEpisodes = classifier.processCultures(cultures);
-            List<Episode> expectedEpisodes = testCulturesServices.getExpectedEpisodesForPatientAndAlgo(pId, algo);
-
-            if (expectedEpisodes.isEmpty()) {
-                System.err.println("No expected tests for patient " + pId);
-                casesNotTested.getAndSet(casesNotTested.get() + 1);
-            } else {
-                if (!compareEpisodes(expectedEpisodes, computedEpisodes)) {
-                    System.out.println("Comparison failed for patient " + pId);
-                    same.set(false);
-                }
-            }
-
-        });
-
-        if (casesNotTested.get() > 0) {
-            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
-        }
-
-        System.out.println(testCulturesServices.getPatientsIds().size() + " cases in total");
-
-        Assert.assertTrue(same.get());
-
+        testAlgo("HUG_v2023", new BSIClassifierHUGv2023());
     }
-
 
     @Test
     public void shouldTestAllCasesForPRAISE() throws IOException, URISyntaxException {
+        testAlgo("PRAISE", new BSIClassifierPRAISE());
+    }
 
-        String algo = "PRAISE";
+    private void testAlgo(String algo, BSIClassifier classifier) throws IOException, URISyntaxException {
 
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
         testCulturesServices.loadContent("test-scenarios.tsv");
@@ -130,7 +89,6 @@ public class PatientCaseServiceTest {
         var patientIdsListSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
 
         Assert.assertEquals(patientIdsSetSize, patientIdsListSize);
-        BSIClassifier classifier = new BSIClassifierPRAISE();
 
         AtomicReference<Integer> casesNotTested = new AtomicReference<>(0);
         AtomicBoolean same = new AtomicBoolean(true);
@@ -147,21 +105,26 @@ public class PatientCaseServiceTest {
                 casesNotTested.getAndSet(casesNotTested.get() + 1);
             } else {
                 if (!compareEpisodes(expectedEpisodes, computedEpisodes)) {
-                    System.out.println("Comparison failed for patient " + pId);
+                    System.out.println("Comparison failed for " + pId);
                     same.set(false);
                 }
             }
 
         });
 
+        var casesTested = testCulturesServices.getPatientsIds().size()  - casesNotTested.get();
+        System.err.println(casesTested + " cases tested " + ((casesTested / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
+
         if (casesNotTested.get() > 0) {
             System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
         }
 
+
         System.out.println(testCulturesServices.getPatientsIds().size() + " cases in total");
 
         Assert.assertTrue(same.get());
-
     }
+
+
 
 }

@@ -289,15 +289,25 @@ patient_1011	20210101	2021-01-11	comB	1
 >
 #HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
 #❓ 1 polymicrobial contaminant or 2 contaminations? (mnco)
-patient_1111	20210101	2021-01-01	comA	1
-patient_1111	20210101	2021-01-01	comB	1
+# ⚠️ CHECK WITH PRAISE
+patient_1111	20210101	2021-01-11	comA	1
+patient_1111	20210101	2021-01-11	comB	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1111	2021-01-11	comA+comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1111	2021-01-11	comA+comB	CONTAMINATION
 
 >
 #HUG: 1 episode on day 1 (comA+comA copy strain day 3) and 1 episode on day 22 (comB+comB copy strain 4)
-patient_1010	20210101	2021-01-01	comA	1
-patient_1010	20210101	2021-01-02	comB	1
-patient_1010	20210101	2021-01-03	comA	1
-patient_1010	20210101	2021-01-04	comB	1
+patient_1010	20210101	2021-01-11	comA	1
+patient_1010	20210101	2021-01-12	comB	1
+patient_1010	20210101	2021-01-13	comA	1
+patient_1010	20210101	2021-01-14	comB	1
+
+#expected.PRAISE
+#expected.PRAISE	patient_1010	2021-01-11	comA+comB	HOB
 
 
 >
