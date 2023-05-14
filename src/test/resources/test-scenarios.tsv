@@ -180,9 +180,14 @@ patient_1008	20210101	2021-01-01	pathA	0
 patient_1008	20210101	2021-01-02	pathB	0
 patient_1008	20210101	2021-01-15	pathB	0
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1008	2021-01-01	pathA
+#expected.HUG_v2023	patient_1008	2021-01-02	pathB
+
 #expected.PRAISE
 #expected.PRAISE	patient_1008	2021-01-01	pathA+pathB	NOT-HOB
 #expected.PRAISE	patient_1008	2021-01-15	pathB	HOB
+
 
 >
 # 14 days
@@ -275,6 +280,10 @@ patient_1019	20210101	2021-01-29	pathA	0
 patient_1025	20210101	2021-01-05	pathA	0
 patient_1025	20210101	2021-01-17	pathA	0
 patient_1025	20210101	2021-01-23	pathA	0
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1025	2021-01-05	pathA
+#expected.HUG_v2023	patient_1025	2021-01-23	pathA
 
 #expected.PRAISE
 #expected.PRAISE	patient_1025	2021-01-05	pathA	HOB
@@ -372,6 +381,9 @@ patient_1013	20210101	2021-01-17	comA	1
 #scenario polymicrobials
 patient_1014	20210101	2021-01-11	pathA	0
 patient_1014	20210101	2021-01-11	pathB	0
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1014	2021-01-11	pathA+pathB
 
 #expected.PRAISE
 #expected.PRAISE	patient_1014	2021-01-11	pathA+pathB	HOB
@@ -502,68 +514,145 @@ patient_1026	20210101	2021-01-16	pathA	0
 #expected.PRAISE	patient_1026	2021-01-12	pathA+comA	HOB
 
 >
-#hob case vignettes (case 6)
-patient_1027	20210101	2021-01-05	pathA	0
-patient_1027	20210110	2021-01-14	pathA	0
+#poly commensals (real case)
+#⚠️ CHECK WITH PRAISE
+patient_1028	20210101	2021-01-11	comA	1
+patient_1028	20210101	2021-01-14	comA	1
+patient_1028	20210101	2021-01-16	comA	1
+patient_1028	20210101	2021-01-16	comB	1
+patient_1028	20210101	2021-01-17	comB	1
+patient_1028	20210101	2021-01-18	comA	1
 
->
-#poly commensals (real)
-patient_1028	20210101	2021-01-01	comA	1
-patient_1028	20210101	2021-01-04	comA	1
-patient_1028	20210101	2021-01-06	comA	1
-patient_1028	20210101	2021-01-06	comB	1
-patient_1028	20210101	2021-01-07	comB	1
-patient_1028	20210101	2021-01-08	comA	1
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1028	2021-01-11	comA+comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1028	2021-01-11	comA	HOB
+#expected.PRAISE	patient_1028	2021-01-16	comB	HOB
 
 >
 #poly commensals (fake)
-patient_1029	20210101	2021-01-01	comA	1
-patient_1029	20210101	2021-01-02	comA	1
+patient_1029	20210101	2021-01-11	comA	1
+patient_1029	20210101	2021-01-12	comA	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1029	2021-01-11	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1029	2021-01-11	comA	HOB
 
 >
 #poly commensals (fake2)
-#⚠️ CHECK THIS ONE WITH MARIE-NO !!!!!!!!!!!!!
-patient_1030	20210101	2021-01-01	comA	1
-patient_1030	20210101	2021-01-02	comB	1
-patient_1030	20210101	2021-01-06	comA	1
-patient_1030	20210101	2021-01-06	comB	1
-patient_1030	20210101	2021-01-07	comB	1
-patient_1030	20210101	2021-01-08	comA	1
+#⚠️ CHECK WITH PRAISE
+# Interesting: even if the logic is quite different, the 2 algorithms end up with same result
+patient_1030	20210101	2021-01-11	comA	1
+patient_1030	20210101	2021-01-12	comB	1
+patient_1030	20210101	2021-01-16	comA	1
+patient_1030	20210101	2021-01-16	comB	1
+patient_1030	20210101	2021-01-17	comB	1
+patient_1030	20210101	2021-01-18	comA	1
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1030	2021-01-11	comA+comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1030	2021-01-11	comA+comB	HOB
 
 >
 #seven case
-patient_1031	20210101	2021-01-01	comA	1
-patient_1031	20210101	2021-01-03	comA	1
-patient_1031	20210101	2021-01-05	comB	1
-patient_1031	20210101	2021-01-06	comB	1
+patient_1031	20210101	2021-01-11	comA	1
+patient_1031	20210101	2021-01-13	comA	1
+patient_1031	20210101	2021-01-15	comB	1
+patient_1031	20210101	2021-01-16	comB	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1031	2021-01-11	comA
+#expected.HUG_v2023	patient_1031	2021-01-15	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1031	2021-01-11	comA	HOB
+#expected.PRAISE	patient_1031	2021-01-15	comB	HOB
 
 >
 #seven case e-mail
+#⚠️ CHECK WITH PRAISE TEST expected may be wrong
 patient_1032	20210101	2021-01-04	pathA	0
 patient_1032	20210101	2021-01-05	pathB	0
 patient_1032	20210101	2021-01-06	comA	1
 patient_1032	20210101	2021-01-08	comA	1
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1032	2021-01-04	pathA
+#expected.HUG_v2023	patient_1032	2021-01-05	pathB
+#expected.HUG_v2023	patient_1032	2021-01-06	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1032	2021-01-04	pathA+pathB+comA	HOB
 
 >
 #seven case e-mail
+#⚠️ CHECK WITH PRAISE TEST expected may be wrong
 patient_1033	20210101	2021-01-04	pathA	0
 patient_1033	20210101	2021-01-05	pathB	0
 patient_1033	20210101	2021-01-06	comA	1
 patient_1033	20210101	2021-01-08	comB	1
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1033	2021-01-04	pathA
+#expected.HUG_v2023	patient_1033	2021-01-05	pathB
+#expected.HUG_v2023	patient_1033	2021-01-06	comA
+#expected.HUG_v2023	patient_1033	2021-01-08	comB
+
+
+#expected.PRAISE
+#expected.PRAISE	patient_1033	2021-01-04	pathA+pathB+comA	HOB
+#expected.PRAISE	patient_1033	2021-01-08	comB	CONTAMINATION
+
 >
 #seven case e-mail
+#⚠️ CHECK WITH PRAISE TEST expected may be wrong
 patient_1034	20210101	2021-01-04	pathA	0
 patient_1034	20210101	2021-01-05	pathB	0
 patient_1034	20210101	2021-01-06	comA	1
+
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1034	2021-01-04	pathA
+#expected.HUG_v2023	patient_1034	2021-01-05	pathB
+#expected.HUG_v2023	patient_1034	2021-01-06	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1034	2021-01-04	pathA+pathB+comA	HOB
 
 >
 #seven case e-mail
 patient_1035	20210101	2021-01-03	pathA	0
 patient_1035	20210101	2021-01-05	pathB	0
 
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1035	2021-01-03	pathA
+#expected.HUG_v2023	patient_1035	2021-01-05	pathB
+
+
+#expected.PRAISE
+#expected.PRAISE	patient_1035	2021-01-03	pathA+pathB	HOB
+
+
+>
+#seven case e-mail (adapted by Daniel concerning nosocomial). Is is NOT-HOB???
+#⚠️ CHECK WITH PRAISE TEST expected may be wrong
+
+patient_1035B	20210101	2021-01-02	pathA	0
+patient_1035B	20210101	2021-01-04	pathB	0
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1035B	2021-01-02	pathA
+#expected.HUG_v2023	patient_1035B	2021-01-04	pathB
+
+
+#expected.PRAISE
+#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB
 
 >
 # ok?
@@ -575,32 +664,66 @@ patient_10199	20210101	2021-01-05	pathB	0
 patient_10199	20210101	2021-01-05	comA	1
 
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_10199	2021-01-01	pathA+pathB+comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_10199	2021-01-01	pathA+pathB	NOT-HOB
+#expected.PRAISE	patient_10199	2021-01-05	comA	CONTAMINATION
+
 
 >
 # Two positive hemocultures with a same pathogene should not be repeated within 14 days from the first episode. But in case of commensals???
-# ⚠️ CHECK WITH PRAISE
+# ⚠️ CHECK WITH PRAISE (interesting, only counts one CONTAMINATION, it is good!)
 patient_c001	20210101	2021-01-05	comA	1
 patient_c001	20210101	2021-01-15	comA	1
 
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c001	2021-01-05	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_c001	2021-01-05	comA	CONTAMINATION
+
 >
 # Two positive hemocultures with 2 CSC from 2 different germs count as true pathogen or contamination?
-# ⚠️ CHECK WITH PRAISE
+# ⚠️ CHECK WITH PRAISE, now it gets a POLYMICROBIAN of type CONTAMINATION. DOes it make any sense???
 patient_c002	20210101	2021-01-05	comA	1
 patient_c002	20210101	2021-01-06	comB	1
 
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c002	2021-01-05	comA
+#expected.HUG_v2023	patient_c002	2021-01-06	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_c002	2021-01-05	comA+comB	CONTAMINATION
+
+# ============ TAKING SAMPLES identifiers into account ======================
+
 >
-# Two BC from the sample sample counts as 1 contaminant or a TRUE bsi?
-# ⚠️ CHECK WITH PRAISE
+# Two BC from the sample counts as 1 contaminant or a TRUE bsi?
+# ⚠️ CHECK WITH PRAISE, CURRENTLY SAMPLE is not taken into account in the algorithm! Maybe it should!
 patient_c003	20210101	2021-01-05	comA	1   sample_a
 patient_c003	20210101	2021-01-05	comA	1   sample_a
 
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c003	2021-01-05	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_c003	2021-01-05	comA	HOB
+
 >
-# Two positive hemocultures from the sample sample counts as 1 contaminant or a TRUE bsi?
-# ⚠️ CHECK WITH PRAISE
+# Two positive hemocultures from different samples should count as a TRUE bsi
 patient_c004	20210101	2021-01-05	comA	1   sample_a
 patient_c004	20210101	2021-01-05	comA	1   sample_b
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c004	2021-01-05	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_c004	2021-01-05	comA	HOB
 
 >
 # Do we apply the 14 days rules for commmensals as well?
@@ -609,14 +732,34 @@ patient_c005	20210101	2021-01-05	comA	1
 patient_c005	20210101	2021-01-06	comA	1
 patient_c005	20210101	2021-01-10	comA	1
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c005	2021-01-05	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_c005	2021-01-05	comA	HOB
+
 >
 # Do we apply the 14 days rules for commmensals as well?
-# ⚠️ CHECK WITH PRAISE
+# ⚠️ CHECK WITH PRAISE, interesting! with 2 contaminations, copy strain does not
 patient_c006	20210101	2021-01-05	comA	1
 patient_c006	20210101	2021-01-10	comA	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c006	2021-01-05	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_c006	2021-01-05	comA	CONTAMINATION
 
 >
 # If 2 commensals are followed by 24 hours, but are not the same germ. Should it be 1 or 2 episodes?
 # ⚠️ CHECK WITH PRAISE
 patient_c007	20210101	2021-01-05	comA	1
 patient_c007	20210101	2021-01-06	comB	1
+
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c007	2021-01-05	comA
+#expected.HUG_v2023	patient_c007	2021-01-06	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_c007	2021-01-05	comA+comB	CONTAMINATION
