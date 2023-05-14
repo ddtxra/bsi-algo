@@ -270,6 +270,16 @@ patient_1019	20210101	2021-01-29	pathA	0
 #expected.PRAISE	patient_1019	2021-01-15	pathA
 #expected.PRAISE	patient_1019	2021-01-29	pathA
 
+>
+#hob case vignettes (case 4 and 5)
+patient_1025	20210101	2021-01-05	pathA	0
+patient_1025	20210101	2021-01-17	pathA	0
+patient_1025	20210101	2021-01-23	pathA	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_1025	2021-01-05	pathA	HOB
+#expected.PRAISE	patient_1025	2021-01-23	pathA	HOB
+
 #
 # ============== COMMENSALS SECTION ==============
 
@@ -430,6 +440,7 @@ patient_1020	20210101	2021-01-16	comA	1
 #expected.PRAISE	patient_1020	2021-01-16	comA	CONTAMINATION
 
 
+
 >
 #hob case vignettes (case 1 and 2)
 patient_1022	20210101	2021-01-05	pathA	0
@@ -476,16 +487,19 @@ patient_1024	20210101	2021-01-15	comB	1
 
 >
 #hob case vignettes (case 4 and 5)
-patient_1025	20210101	2021-01-05	pathA	0
-patient_1025	20210101	2021-01-17	pathA	0
-patient_1025	20210101	2021-01-23	pathA	0
+#⚠️ CHECK WITH PRAISE, DOES IT MAKE ANY SENSE TO CREATE POLYMICROBIALS MIXIMG COMMENSALS wtih True path
+patient_1026	20210101	2021-01-12	pathA	0
+patient_1026	20210101	2021-01-14	comA	1
+patient_1026	20210101	2021-01-15	comA	1
+patient_1026	20210101	2021-01-16	pathA	0
 
->
-#hob case vignettes (case 4 and 5)
-patient_1026	20210101	2021-01-02	pathA	0
-patient_1026	20210101	2021-01-04	comA	1
-patient_1026	20210101	2021-01-05	comA	1
-patient_1026	20210101	2021-01-06	pathA	0
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1026	2021-01-12	pathA
+#expected.HUG_v2023	patient_1026	2021-01-14	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1026	2021-01-12	pathA+comA	HOB
 
 >
 #hob case vignettes (case 6)
