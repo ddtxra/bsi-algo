@@ -10,11 +10,19 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class PatientCaseServiceTest {
 
@@ -79,6 +87,72 @@ public class PatientCaseServiceTest {
     public void shouldTestAllCasesForPRAISE() throws IOException, URISyntaxException {
         testAlgo("PRAISE", new BSIClassifierPRAISE());
     }
+
+    private String formatDate(ZonedDateTime zdt){
+        return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(zdt);
+    }
+
+    private String NN(Object o){
+        if(Objects.isNull(o)) return ""; else return o.toString();
+    }
+
+
+    @Test
+    public void generateFilesForPraise() throws IOException, URISyntaxException {
+        PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
+        testCulturesServices.loadContent("test-scenarios.tsv");
+
+
+        StringBuilder cultureContent = new StringBuilder();
+        var headers = List.of("secenario#", "id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
+        cultureContent.append(String.join("\t", headers));
+        cultureContent.append("\n");
+
+        testCulturesServices.getPatientsIds().forEach(pId -> {
+
+            List<Culture> cultures = testCulturesServices.getCulturesForPatient(pId);
+            List<Episode> expectedEpisodes = testCulturesServices.getExpectedEpisodesForPatientAndAlgo(pId, "PRAISE");
+
+            String[] list = {"Ward1", "Ward2", "Ward3"};
+
+            for (Culture culture : cultures) {
+                Random r = new Random();
+                String ward = list[r.nextInt(list.length)];
+                    List<String> row = List.of(
+                            pId.replace("patient_", "scenario_"),
+                            culture.getId(),
+                            NN(culture.getSampleId()),
+                            culture.getPatientId(),
+                            "",
+                            formatDate(culture.getLaboSampleDate()),
+                            ward,
+                            "",
+                            "",
+                            "",
+                            culture.getLaboGermName(),
+                            (culture.isLabGermCommensal() ? "1" : "0"),
+                            "1",
+                            ward,
+                            "",
+                            formatDate(culture.getStayBeginDate()));
+                    cultureContent.append(String.join("\t", row));
+                    cultureContent.append("\n");
+
+
+            }
+
+
+
+        });
+
+        Path path = Paths.get("cultures.tsv");
+        try {
+            Files.write(path, cultureContent.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void testAlgo(String algo, BSIClassifier classifier) throws IOException, URISyntaxException {
 

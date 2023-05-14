@@ -54,13 +54,34 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     private Culture convertLineToCulture(String lineContent) {
 
         String[] values = lineContent.split(this.separator);
+        String patient_id = values[0];
 
         ZonedDateTime beginDateStay = ZonedDateTime.parse(values[1].substring(0, 4) + "-" + values[1].substring(4, 6) + "-" + values[1].substring(6, 8) + "T00:00:00.000Z");
         ZonedDateTime laboSampleDate = ZonedDateTime.parse(values[2] + "T00:00:00.000Z");
         String germName = values[3];
-        GermType commensal = (Objects.equals(values[4], "1")) ? GermType.COMMENSAL : GermType.TRUE_PATHOGEN;
 
-        return new TestCulture(values[0], beginDateStay, laboSampleDate, germName, commensal);
+        GermType commensal;
+        if((Objects.equals(values[4], "1")) ) {
+            commensal =  GermType.COMMENSAL;
+        }else if((Objects.equals(values[4], "0")) ) {
+            commensal =  GermType.TRUE_PATHOGEN;
+        }else {
+            throw new BSIException("Commensal value is not compliant with 1 or O, found: " + values[4]);
+        }
+
+        if(germName.startsWith("com") && !commensal.equals(GermType.COMMENSAL)){
+            throw new BSIException("commensal should be = 1 for germ " + germName  + " for patient " + patient_id);
+        }
+        if(germName.startsWith("path") && !commensal.equals(GermType.TRUE_PATHOGEN)){
+            throw new BSIException("commensal should be = 0 for germ " + germName + " for patient " + patient_id);
+        }
+
+        String sampleId = "";
+        if(values.length > 5){
+            sampleId = values[5];
+        }
+
+        return new TestCulture(patient_id, beginDateStay, sampleId, laboSampleDate, germName, commensal);
     }
 
     private List<PatientCase> parseContent(String content_tsv) {

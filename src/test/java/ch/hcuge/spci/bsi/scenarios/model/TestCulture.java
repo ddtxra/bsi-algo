@@ -16,9 +16,11 @@ public class TestCulture implements Culture {
 
     private String id;
 
+    private String sampleId;
 
-    public TestCulture(String patientId, ZonedDateTime stayBeginDate, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
-        this.id = patientId + "_" +ID_SEQUENCE.incrementAndGet();
+    public TestCulture(String patientId, ZonedDateTime stayBeginDate, String sampleId, ZonedDateTime laboSampleDate, String laboGermName, GermType laboCommensal) {
+        this.id = "lab_res_" +ID_SEQUENCE.incrementAndGet();
+        this.sampleId = sampleId;
         this.culture = new PositiveHemoCultureHUGv2023(patientId, stayBeginDate, laboSampleDate, laboGermName, laboCommensal, new HashMap<>());
     }
 
@@ -34,7 +36,7 @@ public class TestCulture implements Culture {
 
     @Override
     public String getSampleId() {
-        return null;
+        return this.sampleId;
     }
 
     @Override
