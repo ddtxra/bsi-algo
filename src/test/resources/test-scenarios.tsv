@@ -301,17 +301,24 @@ patient_1111	20210101	2021-01-11	comB	1
 
 >
 #HUG: 1 episode on day 1 (comA+comA copy strain day 3) and 1 episode on day 22 (comB+comB copy strain 4)
+# ⚠️ CHECK WITH MNCO and CHECK WITH PRAISE if that makes any sense!
+
 patient_1010	20210101	2021-01-11	comA	1
 patient_1010	20210101	2021-01-12	comB	1
 patient_1010	20210101	2021-01-13	comA	1
 patient_1010	20210101	2021-01-14	comB	1
 
 #expected.PRAISE
-#expected.PRAISE	patient_1010	2021-01-11	comA+comB	HOB
+#expected.PRAISE	patient_1010	2021-01-11	comA+comB
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1010	2021-01-11	comA
+#expected.HUG_v2023	patient_1010	2021-01-12	comB
 
 
 >
 #HUG: Expect 1 episode on day 1 and one on day 15
+
 patient_1012	20210101	2021-01-01	comA	1
 patient_1012	20210101	2021-01-03	comA	1
 patient_1012	20210101	2021-01-05	comA	1
@@ -322,9 +329,18 @@ patient_1012	20210101	2021-01-13	comA	1
 patient_1012	20210101	2021-01-15	comA	1
 patient_1012	20210101	2021-01-17	comA	1
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1012	2021-01-01	comA
+#expected.HUG_v2023	patient_1012	2021-01-15	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1012	2021-01-01	comA	NOT-HOB
+#expected.PRAISE	patient_1012	2021-01-15	comA	HOB
+
 >
 #HUG: Expect 1 episode on day 1 and one on day 17
 #❓ What about the classification? in BSI vs contaminent
+# ⚠️ CHECK WITH PRAISE
 
 patient_1013	20210101	2021-01-01	comA	1
 patient_1013	20210101	2021-01-05	comA	1
@@ -332,52 +348,86 @@ patient_1013	20210101	2021-01-09	comA	1
 patient_1013	20210101	2021-01-13	comA	1
 patient_1013	20210101	2021-01-17	comA	1
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1013	2021-01-01	comA
+#expected.HUG_v2023	patient_1013	2021-01-17	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1013	2021-01-01	comA	NOT-HOB
+#expected.PRAISE	patient_1013	2021-01-17	comA	CONTAMINATION
+
+# ============== POLYMICROBIALS SECTION ==============
+
 >
 #scenario polymicrobials
-patient_1014	20210101	2021-01-01	pathA	0
-patient_1014	20210101	2021-01-01	pathB	0
+patient_1014	20210101	2021-01-11	pathA	0
+patient_1014	20210101	2021-01-11	pathB	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_1014	2021-01-11	pathA+pathB	HOB
 
 >
 #scenario polymicrobials 2
-patient_1015	20210101	2021-01-01	pathA	0
-patient_1015	20210101	2021-01-02	pathA	0
-patient_1015	20210101	2021-01-02	pathB	0
+patient_1015	20210101	2021-01-11	pathA	0
+patient_1015	20210101	2021-01-12	pathA	0
+patient_1015	20210101	2021-01-12	pathB	0
 
 #expected.HUG_v2023
-#expected.HUG_v2023	patient_1015	2021-01-01	pathA+pathB
+#expected.HUG_v2023	patient_1015	2021-01-11	pathA+pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1015	2021-01-11	pathA+pathB	HOB
 
 >
 # ok?
-patient_1016	20210101	2021-01-01	pathA	0
-patient_1016	20210101	2021-01-02	pathB	0
+#⚠️ check with marie-no and check with PRAISE
+patient_1017	20210101	2021-01-11	pathA	0
+patient_1017	20210101	2021-01-12	pathA	0
+patient_1017	20210101	2021-01-12	pathB	0
+patient_1017	20210101	2021-01-15	pathB	0
+patient_1017	20210101	2021-01-15	pathC	0
 
->
-# ok?
-#⚠️ check with marie-no
-patient_1017	20210101	2021-01-01	pathA	0
-patient_1017	20210101	2021-01-02	pathA	0
-patient_1017	20210101	2021-01-02	pathB	0
-patient_1017	20210101	2021-01-05	pathB	0
-patient_1017	20210101	2021-01-05	pathC	0
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1017	2021-01-11	pathA+pathB+pathC
+
+#expected.PRAISE
+#expected.PRAISE	patient_1017	2021-01-11	pathA+pathB	HOB
+#expected.PRAISE	patient_1017	2021-01-15	pathC	HOB
 
 >
 # ok
-#⚠️ check with marie-no
-patient_1018	20210101	2021-01-01	pathA	0
-patient_1018	20210101	2021-01-02	pathA	0
-patient_1018	20210101	2021-01-02	pathB	0
-patient_1018	20210101	2021-01-05	pathB	0
-patient_1018	20210101	2021-01-05	pathC	0
-patient_1018	20210101	2021-01-16	pathC	0
+#⚠️ check with marie-no and check with PRAISE
+patient_1018	20210101	2021-01-11	pathA	0
+patient_1018	20210101	2021-01-12	pathA	0
+patient_1018	20210101	2021-01-12	pathB	0
+patient_1018	20210101	2021-01-15	pathB	0
+patient_1018	20210101	2021-01-15	pathC	0
+patient_1018	20210101	2021-01-26	pathC	0
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1018	2021-01-11	pathA+pathB+pathC
+#expected.HUG_v2023	patient_1018	2021-01-26	pathC
+
+#expected.PRAISE
+#expected.PRAISE	patient_1018	2021-01-11	pathA+pathB	HOB
+#expected.PRAISE	patient_1018	2021-01-15	pathC	HOB
 
 >
-# ok?
-#⚠️ check with marie-no
-patient_1020	20210101	2021-01-01	pathA	0
-patient_1020	20210101	2021-01-02	pathA	0
-patient_1020	20210101	2021-01-02	pathB	0
-patient_1020	20210101	2021-01-05	pathB	0
-patient_1020	20210101	2021-01-06	comA	0
+#mixing commensals with path
+#⚠️ check with marie- and check with PRAISE
+patient_1020	20210101	2021-01-11	pathA	0
+patient_1020	20210101	2021-01-12	pathA	0
+patient_1020	20210101	2021-01-12	pathB	0
+patient_1020	20210101	2021-01-15	pathB	0
+patient_1020	20210101	2021-01-16	comA	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1020	2021-01-11	pathA+pathB
+#expected.HUG_v2023	patient_1020	2021-01-16	comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_1020	2021-01-11	pathA+pathB	HOB
+#expected.PRAISE	patient_1020	2021-01-16	comA	CONTAMINATION
 
 
 >
@@ -385,21 +435,44 @@ patient_1020	20210101	2021-01-06	comA	0
 patient_1022	20210101	2021-01-05	pathA	0
 patient_1022	20210101	2021-01-07	pathB	0
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1022	2021-01-05	pathA
+#expected.HUG_v2023	patient_1022	2021-01-07	pathB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1022	2021-01-05	pathA+pathB	HOB
+
 >
 #hob case vignettes (case 1 and 2)
 patient_1023	20210101	2021-01-05	pathA	0
 patient_1023	20210101	2021-01-05	pathB	0
 patient_1023	20210101	2021-01-09	pathC	0
 
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1023	2021-01-05	pathA+pathB
+#expected.HUG_v2023	patient_1023	2021-01-09	pathC
+
+#expected.PRAISE
+#expected.PRAISE	patient_1023	2021-01-05	pathA+pathB	HOB
+#expected.PRAISE	patient_1023	2021-01-09	pathC	HOB
+
 >
 #hob case vignettes (case 3)
-#⚠️ FIXME not working version 2022
+#⚠️ CHECK WITH PRAISE, DOES IT MAKE SENSE TO CREATE POLYMICROBIALS LIKE THIS? WEIRED...
 patient_1024	20210101	2021-01-05	pathA	0
 patient_1024	20210101	2021-01-05	comA	1
 patient_1024	20210101	2021-01-06	pathA	0
 patient_1024	20210101	2021-01-06	comA	1
 patient_1024	20210101	2021-01-13	comB	1
 patient_1024	20210101	2021-01-15	comB	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1024	2021-01-05	pathA+comA
+#expected.HUG_v2023	patient_1024	2021-01-13	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1024	2021-01-05	pathA+comA	HOB
+#expected.PRAISE	patient_1024	2021-01-13	comB	HOB
 
 >
 #hob case vignettes (case 4 and 5)
