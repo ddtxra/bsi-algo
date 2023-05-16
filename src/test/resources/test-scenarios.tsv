@@ -318,8 +318,7 @@ patient_1111	20210101	2021-01-11	comB	1
 #expected.PRAISE	patient_1111	2021-01-11	comA+comB	CONTAMINATION
 
 >
-#HUG: 1 episode on day 1 (comA+comA copy strain day 3) and 1 episode on day 22 (comB+comB copy strain 4)
-# ⚠️ CHECK WITH PRAISE if that makes any sense!
+#CHECK WITH PRAISE: RESPONSE on 15.05.2023: Should be one polymicrobial HOB (based on commensals) 
 
 patient_1010	20210101	2021-01-11	comA	1
 patient_1010	20210101	2021-01-12	comB	1
@@ -327,7 +326,7 @@ patient_1010	20210101	2021-01-13	comA	1
 patient_1010	20210101	2021-01-14	comB	1
 
 #expected.PRAISE
-#expected.PRAISE	patient_1010	2021-01-11	comA+comB
+#expected.PRAISE	patient_1010	2021-01-11	comA+comB HOB
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1010	2021-01-11	comA
@@ -358,7 +357,7 @@ patient_1012	20210101	2021-01-17	comA	1
 >
 #HUG: Expect 1 episode on day 1 and one on day 17
 #❓ What about the classification? in BSI vs contaminent
-# ⚠️ CHECK WITH PRAISE
+# ⚠️ CHECK WITH PRAISE 
 
 patient_1013	20210101	2021-01-01	comA	1
 patient_1013	20210101	2021-01-05	comA	1
