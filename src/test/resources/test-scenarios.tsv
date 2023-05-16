@@ -306,16 +306,17 @@ patient_1011	20210101	2021-01-11	comB	1
 
 >
 #HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
-#❓ 1 polymicrobial contaminant or 2 contaminations? (mnco)
-# ⚠️ CHECK WITH PRAISE
+#CHECK WITH PRAISE => 15.05.2023 Out of SCOPE for PRAISE. But algorithms should count ideally as 2 contaminations (if we want to do as CHARITE). Currently FAILS.
 patient_1111	20210101	2021-01-11	comA	1
 patient_1111	20210101	2021-01-11	comB	1
 
-#expected.HUG_v2023
-#expected.HUG_v2023	patient_1111	2021-01-11	comA+comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1111	2021-01-11	comA+comB	CONTAMINATION
+#expected.PRAISE	patient_1111	2021-01-11	comA	CONTAMINATION
+#expected.PRAISE	patient_1111	2021-01-11	comB	CONTAMINATION
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_1111	2021-01-11	comA+comB
 
 >
 #CHECK WITH PRAISE: RESPONSE on 15.05.2023: Should be one polymicrobial HOB (based on commensals) 
