@@ -1,14 +1,14 @@
 patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample_id
 
 >
-#HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
-# ⚠️ CHECK THE EXPECTED WITH PRAISE. Can we say it is a polymicrobial episode and it is a contamination?
-patient_1011	20210101	2021-01-10	comA	1
-patient_1011	20210101	2021-01-11	comB	1
+# Two BC from the sample counts as 1 contaminant or a TRUE bsi?
+# CHECK WITH PRAISE: Response on 15.05: Must be from different samples indeed to make a HOB
+patient_c003	20210101	2021-01-05	comA	1	sample_a
+patient_c003	20210101	2021-01-05	comA	1	sample_a
+
 
 #expected.HUG_v2023
-#expected.HUG_v2023	patient_1011	2021-01-10	comA
-#expected.HUG_v2023	patient_1011	2021-01-11	comB
+#expected.HUG_v2023	patient_c003	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1011	2021-01-10	comA+comB	CONTAMINATION
+#expected.PRAISE	patient_c003	2021-01-05	comA	NOT-HOB

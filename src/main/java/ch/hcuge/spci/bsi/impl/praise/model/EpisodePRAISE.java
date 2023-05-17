@@ -17,7 +17,6 @@ public class EpisodePRAISE implements Episode {
     private List<BloodCulturePRAISE> copyStrainEvidences;
 
     private String patientId;
-    private Boolean polymicrobial;
 
     private ZonedDateTime stayBeginDate;
     private ZonedDateTime eventDate;
@@ -32,7 +31,6 @@ public class EpisodePRAISE implements Episode {
         this.evidences = new ArrayList<>();
         this.polyMicrobialEvidences = new ArrayList<>();
         this.copyStrainEvidences = new ArrayList<>();
-        this.polymicrobial = false; // by default it is false
 
         this.evidences.add(culture);
         this.stayBeginDate = culture.getStayBeginDate();
@@ -64,7 +62,12 @@ public class EpisodePRAISE implements Episode {
 
     @Override
     public Boolean isPolymicrobial() {
-        return this.polymicrobial;
+        //Seven: Only makes sens to talk about polymicrobials for HOBs
+        if(this.getClassification() == "HOB") {
+            return this.getDistinctGerms().size() > 0;
+        }else {
+            return false;
+        }
     }
 
     public String getClassification() {
@@ -87,14 +90,19 @@ public class EpisodePRAISE implements Episode {
                                 var evi1 = this.evidences.get(i);
                                 var evi2 = this.evidences.get(j);
                                 //FIXME for different samples? (this is not defined on the specs)?
-                                //FIXME must be for the same commensal? according to marie-no yes. check with PRAISE
+                                //It must be for the same specie consensus with PRAISE), but different samples
                                 if (Objects.equals(evi1.getLaboGermName(), evi2.getLaboGermName())) {
-                                    var day_between_cultures = Math.abs(ChronoUnit.DAYS.between(evi1.getLaboSampleDate(), evi2.getLaboSampleDate()));
-                                    smallestTimeWindow = Math.min(smallestTimeWindow, day_between_cultures);
+                                    //if the sample dates are the same, the sampling id should be different
+                                    //in other words: to make it potentially a HOB, it must be from different dates or if it the same date, the sampling id MUST be different
+                                    if(!evi1.getLaboSampleDate().equals(evi2.getLaboSampleDate()) || !Objects.equals(evi1.getSampleId(), evi2.getSampleId())){
+                                        var day_between_cultures = Math.abs(ChronoUnit.DAYS.between(evi1.getLaboSampleDate(), evi2.getLaboSampleDate()));
+                                        smallestTimeWindow = Math.min(smallestTimeWindow, day_between_cultures);
+                                    }
                                 }
                             }
                         }
                     }
+                    //to make a HOB the time between the commensals should be less than 3
                     if (smallestTimeWindow < 3) {
                         return "HOB";
                     } else {
@@ -132,7 +140,6 @@ public class EpisodePRAISE implements Episode {
 
     public void addPolymicrobialEvidence(BloodCulturePRAISE culture) {
         this.addEvidence(culture);
-        this.polymicrobial = true;
         this.polyMicrobialEvidences.add(culture);
     }
 

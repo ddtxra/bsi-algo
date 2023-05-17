@@ -10,19 +10,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class PatientCaseServiceTest {
 
@@ -47,9 +40,14 @@ public class PatientCaseServiceTest {
         }
 
         for (var i = 0; i < episodes_expected.size(); i++) {
-            if (!compareEpisode(episodes_expected.get(i), episodes_computed.get(i))) {
+            try {
+                if (!compareEpisode(episodes_expected.get(i), episodes_computed.get(i))) {
+                    same = false;
+                    System.err.println("Expected: " + episodes_expected.get(i) + " but found " + episodes_computed.get(i));
+                }
+            }catch (IndexOutOfBoundsException ie){
                 same = false;
-                System.err.println("Expected: " + episodes_expected.get(i) + " but found " + episodes_computed.get(i));
+                System.err.println("Failed to compare episodes because they are not the same size");
             }
         }
 
@@ -94,6 +92,8 @@ public class PatientCaseServiceTest {
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
         testCulturesServices.loadContent("test-scenarios.tsv");
 
+        var failures = new ArrayList<String>();
+
         var patientIdsSetSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
         var patientIdsListSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
 
@@ -115,6 +115,7 @@ public class PatientCaseServiceTest {
             } else {
                 if (!compareEpisodes(expectedEpisodes, computedEpisodes)) {
                     System.out.println("Comparison failed for " + pId);
+                    failures.add(pId);
                     same.set(false);
                 }
             }
@@ -122,18 +123,20 @@ public class PatientCaseServiceTest {
         });
 
         var casesTested = testCulturesServices.getPatientsIds().size()  - casesNotTested.get();
-        System.err.println(casesTested + " cases tested " + ((casesTested / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
+        System.err.println(casesTested + " cases tested ");
 
         if (casesNotTested.get() > 0) {
             System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
         }
 
+        if(failures.size() > 0){
+            System.err.println(failures.size() + " failed: " + String.join(", ", failures));
+            System.err.println(((failures.size() / ( testCulturesServices.getPatientsIds().size()  * 1.0)) * 100) + " % of failures");
+        }
 
-        System.out.println(testCulturesServices.getPatientsIds().size() + " cases in total");
+        System.err.println(testCulturesServices.getPatientsIds().size() + " cases in total");
 
         Assert.assertTrue(same.get());
     }
-
-
 
 }

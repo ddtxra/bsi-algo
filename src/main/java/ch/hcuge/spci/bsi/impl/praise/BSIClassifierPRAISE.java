@@ -91,8 +91,10 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                 }
             }
 
-            //TODO should we treat commensals differently in the "identification phase" ? Since it is only like 0,1,2
-            //TODO mnco says that if we have comA and comB separated by 24 hours it is a new episode to investigate. Do you agree?
+            //TODO should we treat commensals differently in the "identification phase" ? Since it is only like 0,1,2. Response: YES and NO. Seven says polymicrobials should only be for HOBs. if comA+comB then they are 2 solitory commensals. but if comA+comB+comA+comB then it is 1 single HOB....
+            //which makes it a bit difficult to "treat at the level of the identification"
+            //maybe it requires a post processing afterwards.
+            //TODO mnco says that if we have comA and comB separated by 24 hours it is a new episode to investigate. Do you agree? PRAISE says Yes
 
             //Otherwise create a new
             if (!cultureIsProcessed) {

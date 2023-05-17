@@ -306,14 +306,13 @@ patient_1011	20210101	2021-01-11	comB	1
 
 >
 #HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
-#CHECK WITH PRAISE => 15.05.2023 Out of SCOPE for PRAISE. But algorithms should count ideally as 2 contaminations (if we want to do as CHARITE). Currently FAILS.
+#CHECK WITH PRAISE => Response on 15.05.2023 Out of SCOPE for PRAISE because it is not a HOB.
+#  In CHARITE algorithm counts 2 contaminations (solitary commensals).
+#  In HUGV2023 we still merge them together into one Episode. Since the investigation is semi-manual the investigator can always create 2.
+
 patient_1111	20210101	2021-01-11	comA	1
 patient_1111	20210101	2021-01-11	comB	1
 
-
-#expected.PRAISE
-#expected.PRAISE	patient_1111	2021-01-11	comA	CONTAMINATION
-#expected.PRAISE	patient_1111	2021-01-11	comB	CONTAMINATION
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1111	2021-01-11	comA+comB
@@ -327,7 +326,7 @@ patient_1010	20210101	2021-01-13	comA	1
 patient_1010	20210101	2021-01-14	comB	1
 
 #expected.PRAISE
-#expected.PRAISE	patient_1010	2021-01-11	comA+comB HOB
+#expected.PRAISE	patient_1010	2021-01-11	comA+comB	HOB
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1010	2021-01-11	comA
@@ -698,7 +697,7 @@ patient_c002	20210101	2021-01-06	comB	1
 
 >
 # Two BC from the sample counts as 1 contaminant or a TRUE bsi?
-# ⚠️ CHECK WITH PRAISE, CURRENTLY SAMPLE is not taken into account in the algorithm! Maybe it should!
+# CHECK WITH PRAISE: Response on 15.05: Must be from different samples indeed to make a HOB
 patient_c003	20210101	2021-01-05	comA	1	sample_a
 patient_c003	20210101	2021-01-05	comA	1	sample_a
 
@@ -707,7 +706,7 @@ patient_c003	20210101	2021-01-05	comA	1	sample_a
 #expected.HUG_v2023	patient_c003	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_c003	2021-01-05	comA	HOB
+#expected.PRAISE	patient_c003	2021-01-05	comA	CONTAMINATION
 
 >
 # Two positive hemocultures from different samples should count as a TRUE bsi
@@ -721,8 +720,7 @@ patient_c004	20210101	2021-01-05	comA	1	sample_b
 #expected.PRAISE	patient_c004	2021-01-05	comA	HOB
 
 >
-# Do we apply the 14 days rules for commmensals as well?
-# ⚠️ CHECK WITH PRAISE
+# We must apply the 14 days rules when there is a HOB episode based on commensals as well
 patient_c005	20210101	2021-01-05	comA	1
 patient_c005	20210101	2021-01-06	comA	1
 patient_c005	20210101	2021-01-10	comA	1
@@ -747,14 +745,10 @@ patient_c006	20210101	2021-01-10	comA	1
 
 >
 # If 2 commensals are followed by 24 hours, but are not the same germ. Should it be 1 or 2 episodes?
-# ⚠️ CHECK WITH PRAISE
+# ⚠️ CHECK WITH PRAISE: It is not a HOB, but should be 2 contaminations ? or just simply don't evaluate? Out of SCOPE?
 patient_c007	20210101	2021-01-05	comA	1
 patient_c007	20210101	2021-01-06	comB	1
-
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_c007	2021-01-05	comA
 #expected.HUG_v2023	patient_c007	2021-01-06	comB
-
-#expected.PRAISE
-#expected.PRAISE	patient_c007	2021-01-05	comA+comB	CONTAMINATION
