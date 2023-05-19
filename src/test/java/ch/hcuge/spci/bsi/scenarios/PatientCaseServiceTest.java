@@ -78,19 +78,24 @@ public class PatientCaseServiceTest {
 
     @Test
     public void shouldTestAllCasesForHUGV2023() throws IOException, URISyntaxException {
-        testAlgo("HUG_v2023", new BSIClassifierHUGv2023());
+        testAlgo("HUG_v2023", "test-scenarios.tsv", new BSIClassifierHUGv2023());
     }
 
     @Test
     public void shouldTestAllCasesForPRAISE() throws IOException, URISyntaxException {
-        testAlgo("PRAISE", new BSIClassifierPRAISE());
+        testAlgo("PRAISE", "test-scenarios.tsv", new BSIClassifierPRAISE());
+    }
+
+    @Test
+    public void shouldTestSingleCaseForPRAISE() throws IOException, URISyntaxException {
+        testAlgo("PRAISE", "single.tsv", new BSIClassifierPRAISE());
     }
 
 
-    private void testAlgo(String algo, BSIClassifier classifier) throws IOException, URISyntaxException {
+    private void testAlgo(String algo, String fileScenarios, BSIClassifier classifier) throws IOException, URISyntaxException {
 
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
-        testCulturesServices.loadContent("test-scenarios.tsv");
+        testCulturesServices.loadContent(fileScenarios);
 
         var failures = new ArrayList<String>();
 
@@ -105,11 +110,23 @@ public class PatientCaseServiceTest {
             System.out.println("Testing for " + pId);
             System.out.println("\t" + testCulturesServices.getDescription(pId));
 
+            List<Episode> computedEpisodes = new ArrayList<Episode>();
             List<Culture> cultures = testCulturesServices.getCulturesForPatient(pId);
-            List<Episode> computedEpisodes = classifier.processCultures(cultures);
+            try{
+                computedEpisodes = classifier.processCultures(cultures);
+
+            }catch (Exception e){
+                same.set(false);
+                e.printStackTrace();
+            }
+
             List<Episode> expectedEpisodes = testCulturesServices.getExpectedEpisodesForPatientAndAlgo(pId, algo);
 
-            if (expectedEpisodes.isEmpty()) {
+            if (computedEpisodes.isEmpty()) {
+                System.err.println("Computed episodes failed, they are empty");
+                failures.add(pId);
+
+            } else if (expectedEpisodes.isEmpty()) {
                 System.err.println("No expected tests for patient " + pId);
                 casesNotTested.getAndSet(casesNotTested.get() + 1);
             } else {

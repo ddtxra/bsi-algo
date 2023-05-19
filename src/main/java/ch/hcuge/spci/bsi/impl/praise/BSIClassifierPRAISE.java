@@ -48,6 +48,8 @@ public class BSIClassifierPRAISE implements BSIClassifier {
         return episodes;
     }
 
+
+
     private List<EpisodePRAISE> identifyEpisodes(List<BloodCulturePRAISE> culturesForSinglePatient) {
 
         List<EpisodePRAISE> episodes = new ArrayList<>();
@@ -63,38 +65,66 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                 cultureIsProcessed = true;
             }
 
+
+            if(!cultureIsProcessed){
+                cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingPolymicrobialCriteria(episodes, bcp);
+            }
+
+            if(!cultureIsProcessed){
+                cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
+            }
+
+
             //Search for existing episode within 14 days with same germ (copy strain)
             if (!cultureIsProcessed) {
-                List<EpisodePRAISE> matchingEpisodes = episodes.stream()
-                        .filter(e -> e.getDistinctGerms().contains(bcp.getLaboGermName()))
-                        .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.VALID_NEW_CASES_DAYS).toList();
 
-                if (matchingEpisodes.size() == 1) {
-                    matchingEpisodes.get(0).addCopyStrainEvidence(bcp);
-                    cultureIsProcessed = true;
-                } else if (matchingEpisodes.size() > 1) {
-                    throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode for: " + bcp);
+                //If it is a commensal
+                if(bcp.isCommensal){
+
+                    // check whether there is one already in the 3 days from the same germ
+                    List<EpisodePRAISE> matchingEpisodes = episodes.stream()
+                            .filter(e -> e.getDistinctGerms().contains(bcp.getLaboGermName()))
+                            .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.CONTAMINATION_VALID_DAYS).toList();
+
+                    if (matchingEpisodes.size() == 1) {
+
+                        var candidateEpisode = matchingEpisodes.get(0);
+
+                        //Check if it is a solitary commensal
+                        if(candidateEpisode.isSolitaryCommensal()){
+
+                            var solitaryCommensal = candidateEpisode.getEvidences().get(0);
+
+                            // if the solitary commensal date is the same as the sample date of the new culture
+                            if(solitaryCommensal.getLaboSampleDate().equals(bcp.getLaboSampleDate()) && solitaryCommensal.getSampleId().equals(bcp.getSampleId())){
+                                // DISCARD the culture (does not even count as an evidence)
+                                cultureIsProcessed = true;
+                            }else {
+                                //The episode will not be a solitary commensal anymore, it will be a on-set bacteremia
+                                candidateEpisode.addSecondEvidenceForCSC(bcp);
+                                cultureIsProcessed = true;
+                            }
+
+                        } else if(candidateEpisode.isOB()) {
+
+                            if(ChronoUnit.DAYS.between(candidateEpisode.getEpisodeDate(), bcp.getLaboSampleDate()) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS){
+                                candidateEpisode.addCopyStrainEvidence(bcp);
+                            }else {
+                                episodes.add(new EpisodePRAISE(bcp));
+                            }
+                            cultureIsProcessed = true;
+
+                        } else {
+                            throw new BSIException("Not expecting this state. The episode can only be solitary commensal or OB (onset-bactererimia)");
+                        }
+
+                    } else if (matchingEpisodes.size() > 1) {
+                        throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode for: " + bcp);
+                    }
+
                 }
+
             }
-
-            //Search for existing episode within 3 days with different germ (polymicrobial)
-            if (!cultureIsProcessed) {
-                List<EpisodePRAISE> matchingEpisodes = episodes.stream()
-                        .filter(e -> !e.getDistinctGerms().contains(bcp.getLaboGermName()))
-                        .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.POLYMICROBIAL_VALID_DAYS).toList();
-
-                if (matchingEpisodes.size() == 1) {
-                    matchingEpisodes.get(0).addPolymicrobialEvidence(bcp);
-                    cultureIsProcessed = true;
-                } else if (matchingEpisodes.size() > 1) {
-                    System.err.println("Found more than one matching episode...");
-                }
-            }
-
-            //TODO should we treat commensals differently in the "identification phase" ? Since it is only like 0,1,2. Response: YES and NO. Seven says polymicrobials should only be for HOBs. if comA+comB then they are 2 solitory commensals. but if comA+comB+comA+comB then it is 1 single HOB....
-            //which makes it a bit difficult to "treat at the level of the identification"
-            //maybe it requires a post processing afterwards.
-            //TODO mnco says that if we have comA and comB separated by 24 hours it is a new episode to investigate. Do you agree? PRAISE says Yes
 
             //Otherwise create a new
             if (!cultureIsProcessed) {
@@ -106,6 +136,56 @@ public class BSIClassifierPRAISE implements BSIClassifier {
         return episodes;
 
     }
+
+
+    private boolean attemptToConsolidateWithExistingOBEpisodeUsingPolymicrobialCriteria(List<EpisodePRAISE> episodes, BloodCulturePRAISE bcp){
+
+        boolean consolidated = false;
+
+        //Within 3 days
+        List<EpisodePRAISE> matchingEpisodes = episodes.stream()
+                .filter(EpisodePRAISE::isOB)
+                .filter(e -> !e.getDistinctGerms().contains(bcp.getLaboGermName())) //GERM is not the same!
+                .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.POLYMICROBIAL_VALID_DAYS).toList();
+
+        if (matchingEpisodes.size() == 1) {
+
+            //Check if it is a onset-bacteremial (HOB or COB doesn't matter)
+            matchingEpisodes.get(0).addCopyStrainEvidence(bcp);
+            consolidated = true;
+
+        } else if (matchingEpisodes.size() > 1) {
+            throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode to consolidate using the polymicrobial criteria for culture from patient: " + bcp.getPatientId());
+        }
+
+        return consolidated;
+    }
+
+    private boolean attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(List<EpisodePRAISE> episodes, BloodCulturePRAISE bcp){
+
+        boolean consolidated = false;
+
+        //Within 3 days
+        List<EpisodePRAISE> matchingEpisodes = episodes.stream()
+                .filter(EpisodePRAISE::isOB)
+                .filter(e -> e.getDistinctGerms().contains(bcp.getLaboGermName())) //GERM is the same!
+                .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS).toList();
+
+        if (matchingEpisodes.size() == 1) {
+
+            //Check if it is a onset-bacteremial (HOB or COB doesn't matter)
+            matchingEpisodes.get(0).addCopyStrainEvidence(bcp);
+            consolidated = true;
+
+        } else if (matchingEpisodes.size() > 1) {
+            throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode to consolidate using the non repeat interval criteria for culture of patient: " + bcp.getPatientId());
+        }
+
+        return consolidated;
+    }
+
+
+
 }
 
 

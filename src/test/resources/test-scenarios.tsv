@@ -15,7 +15,7 @@ patient_1001	20210101	2021-01-16	pathA	0
 #expected.HUG_v2023	patient_1001	2021-01-15	pathA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1001	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_1001	2021-01-01	pathA	NOT-HOB (COB)
 #expected.PRAISE	patient_1001	2021-01-15	pathA	HOB
 
 >
@@ -106,6 +106,7 @@ patient_10043	20210101	2021-01-06	pathA	0
 >
 #This one is an extreme case: 1 polymicrobial episode on day 1 (pathA+pathC) because less than 14 days. And 1 mono episode on day 15.
 #⚠️Tricky but working now with V2
+# DOUBLE CKEC WITH PRAISE
 
 patient_10044	20210101	2021-01-01	pathA	0
 patient_10044	20210101	2021-01-14	pathC	0
@@ -117,7 +118,7 @@ patient_10044	20210101	2021-01-15	pathC	0
 #expected.HUG_v2023	patient_10044	2021-01-15	pathC
 
 #expected.PRAISE
-#expected.PRAISE	patient_10044	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_10044	2021-01-01	pathA	NOT-HOB (COB)
 #expected.PRAISE	patient_10044	2021-01-14	pathC	HOB
 
 >
@@ -131,10 +132,11 @@ patient_1005	20210101	2021-01-04	pathA	0
 #expected.HUG_v2023	patient_1005	2021-01-03	pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1005	2021-01-01	pathA+pathB	NOT-HOB
+#expected.PRAISE	patient_1005	2021-01-01	pathA+pathB	NOT-HOB (COB)
 
 >
 #scenario (basics) 101 patient_1006
+#!!! DOUBLE CHECK WITH PRAISE if the HOB on day 4 is transformed is merged to the COB of day 1 because (pathB+pathA) could be "polymicrobials"
 patient_1006	20210101	2021-01-01	pathA	0
 patient_1006	20210101	2021-01-04	pathB	0
 patient_1006	20210101	2021-01-05	pathA	0
@@ -144,8 +146,7 @@ patient_1006	20210101	2021-01-05	pathA	0
 #expected.HUG_v2023	patient_1006	2021-01-04	pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1006	2021-01-01	pathA	NOT-HOB
-#expected.PRAISE	patient_1006	2021-01-04	pathB	HOB
+#expected.PRAISE	patient_1006	2021-01-01	pathA+pathB	TO_BE_CONFIRMED
 
 >
 #scenario (basics) HUG: 1 polymicrobien
@@ -173,7 +174,7 @@ patient_1071	20210101	2021-01-08	pathA	0
 #expected.HUG_v2023	patient_1071	2021-01-01	pathA+pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1071	2021-01-01	pathA+pathB	NOT-HOB
+#expected.PRAISE	patient_1071	2021-01-01	pathA+pathB	NOT-HOB (COB)
 
 >
 #HUG: 2 episodes: 1 at day 1 (pathA) and 1 at day 2 (pathB)
@@ -186,7 +187,7 @@ patient_1008	20210101	2021-01-15	pathB	0
 #expected.HUG_v2023	patient_1008	2021-01-02	pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1008	2021-01-01	pathA+pathB	NOT-HOB
+#expected.PRAISE	patient_1008	2021-01-01	pathA+pathB	NOT-HOB (COB)
 #expected.PRAISE	patient_1008	2021-01-15	pathB	HOB
 
 >
@@ -293,7 +294,9 @@ patient_1025	20210101	2021-01-23	pathA	0
 
 >
 #HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
-# ⚠️ CHECK THE EXPECTED WITH PRAISE. Can we say it is a polymicrobial episode and it is a contamination?
+# CHECK THE EXPECTED WITH PRAISE. Can we say it is a polymicrobial episode and it is a contamination?
+# Response from Seven: NO
+# We talks about polymicrobial only for OBs (Bacteremias), in this case since the commensal is different, those are 2 SOLITARY_COMMENSALS
 patient_1011	20210101	2021-01-10	comA	1
 patient_1011	20210101	2021-01-11	comB	1
 
@@ -302,7 +305,8 @@ patient_1011	20210101	2021-01-11	comB	1
 #expected.HUG_v2023	patient_1011	2021-01-11	comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1011	2021-01-10	comA+comB	CONTAMINATION
+#expected.PRAISE	patient_1011	2021-01-10	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1011	2021-01-11	comB	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
 #HUG: 1 episode on day 1 (comA) and 1 episode on day 2 (comB)
@@ -318,7 +322,7 @@ patient_1111	20210101	2021-01-11	comB	1
 #expected.HUG_v2023	patient_1111	2021-01-11	comA+comB
 
 >
-#CHECK WITH PRAISE: RESPONSE on 15.05.2023: Should be one polymicrobial HOB (based on commensals) 
+#CHECK WITH PRAISE: RESPONSE on 15.05.2023: Should be one polymicrobial HOB (based on commensals)
 
 patient_1010	20210101	2021-01-11	comA	1
 patient_1010	20210101	2021-01-12	comB	1
@@ -326,7 +330,7 @@ patient_1010	20210101	2021-01-13	comA	1
 patient_1010	20210101	2021-01-14	comB	1
 
 #expected.PRAISE
-#expected.PRAISE	patient_1010	2021-01-11	comA+comB	HOB
+#expected.PRAISE	patient_1010	2021-01-11	comA+comB	HOB (HOB-CSC)
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1010	2021-01-11	comA
@@ -351,13 +355,15 @@ patient_1012	20210101	2021-01-17	comA	1
 #expected.HUG_v2023	patient_1012	2021-01-15	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1012	2021-01-01	comA	NOT-HOB
-#expected.PRAISE	patient_1012	2021-01-15	comA	HOB
+#expected.PRAISE	patient_1012	2021-01-01	comA	NOT-HOB (COB-CSC)
+#expected.PRAISE	patient_1012	2021-01-15	comA	HOB (HOB-CSC)
 
 >
-#HUG: Expect 1 episode on day 1 and one on day 17
-#❓ What about the classification? in BSI vs contaminent
-# ⚠️ CHECK WITH PRAISE 
+# Repeated commensals on different dasys
+# CHECK WITH PRAISE: Response from Seven on 17.05.20234:
+#   These are all “solitary commensals” because there is always more than 2 days between the respective samples, hence no HOB is “generated”.
+#   In CHAIRTE logic: Solitary commensals do not generate copy strains and we also would not make a distinction between community and hospital onset (nosocomial) for solitary commensals.
+#   We operate on the assumption that solitary commensals are the result of contamination.
 
 patient_1013	20210101	2021-01-01	comA	1
 patient_1013	20210101	2021-01-05	comA	1
@@ -370,8 +376,63 @@ patient_1013	20210101	2021-01-17	comA	1
 #expected.HUG_v2023	patient_1013	2021-01-17	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1013	2021-01-01	comA	NOT-HOB
-#expected.PRAISE	patient_1013	2021-01-17	comA	CONTAMINATION
+#expected.PRAISE	patient_1013	2021-01-01	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1013	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1013	2021-01-09	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1013	2021-01-13	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1013	2021-01-17	comA	NOT-HOB (SOLITARY_COMMENSAL)
+
+
+>
+# CHECK WITH PRAISE: Response from Seven on 17.05.20234:
+# 	Commensals do not generate copy strains, you could have a scenario where you have a CSC on admission day and then the same CSC again on say day 4 and 5.
+# 	This would generate a CSC HOB (infection start: day 4) and the “community-acquired” solitary CSC on admission day would be ignored.
+
+patient_1013B	20210101	2021-01-01	comA	1
+patient_1013B	20210101	2021-01-04	comA	1
+patient_1013B	20210101	2021-01-05	comA	1
+patient_1013B	20210101	2021-01-09	comA	1
+patient_1013B	20210101	2021-01-13	comA	1
+patient_1013B	20210101	2021-01-17	comA	1
+
+#expected.PRAISE
+#expected.PRAISE	patient_1013B	2021-01-01	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1013B	2021-01-04	comA	HOB (HOB-CSC)
+
+>
+# What if we add a comA on day after the admission (patient_1013C) ? Still not a HOB because the admissionDate is too early. But do we merge the first 2 comA together? How many solitary commensals?
+# CHECK WITH PRAISE: Response from Seven on 17.05.20234:
+# On Jan 01 we have a CSC-"COB" (community-onset bacteremia, not a HOB, not in scope for us) start on Jan. 01.
+# The other CSCs until Jan. 13 are copystrains for us at Charité -> copystrains exist if it is a bacteremia episode, which it is, even if community-onset.
+# CSC on Jan. 17 is a solitary commensal, because outside of copystrain timeframe (14 days).
+
+patient_1013C	20210101	2021-01-01	comA	1
+patient_1013C	20210101	2021-01-02	comA	1
+patient_1013C	20210101	2021-01-05	comA	1
+patient_1013C	20210101	2021-01-09	comA	1
+patient_1013C	20210101	2021-01-13	comA	1
+patient_1013C	20210101	2021-01-17	comA	1
+
+#expected.PRAISE
+#expected.PRAISE	patient_1013C	2021-01-01	comA	NOT-HOB (COB-CSC)
+#expected.PRAISE	patient_1013C	2021-01-17	comA	NOT-HOB (SOLITARY_COMMENSAL)
+
+>
+# What if we have the exactly same scenario as patient_1013C, but shifted 10 days after the admission (patient_1013D)
+# CHECK WITH PRAISE: Response from Seven on 17.05.20234:
+# CSC-HOB start on Jan. 11. Next three are copystrains, Jan. 27 is solitary commensal.
+
+patient_1013D	20210101	2021-01-11	comA	1
+patient_1013D	20210101	2021-01-12	comA	1
+patient_1013D	20210101	2021-01-15	comA	1
+patient_1013D	20210101	2021-01-19	comA	1
+patient_1013D	20210101	2021-01-23	comA	1
+patient_1013D	20210101	2021-01-27	comA	1
+
+#expected.PRAISE
+#expected.PRAISE	patient_1013D	2021-01-11	comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_1013D	2021-01-27	comA	NOT-HOB (SOLITARY_COMMENSAL)
+
 
 >
 #scenario basic polymicrobials
@@ -445,7 +506,7 @@ patient_1020	20210101	2021-01-16	comA	1
 
 #expected.PRAISE
 #expected.PRAISE	patient_1020	2021-01-11	pathA+pathB	HOB
-#expected.PRAISE	patient_1020	2021-01-16	comA	CONTAMINATION
+#expected.PRAISE	patient_1020	2021-01-16	comA	NOT-HOB (SOLITARY_COMMENSAL)
 
 
 >
@@ -489,8 +550,8 @@ patient_1024	20210101	2021-01-15	comB	1
 #expected.HUG_v2023	patient_1024	2021-01-13	comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1024	2021-01-05	pathA+comA	HOB
-#expected.PRAISE	patient_1024	2021-01-13	comB	HOB
+#expected.PRAISE	patient_1024	2021-01-05	pathA+comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_1024	2021-01-13	comB	HOB (HOB-CSC)
 
 >
 #hob case vignettes (case 4 and 5)
@@ -506,11 +567,11 @@ patient_1026	20210101	2021-01-16	pathA	0
 #expected.HUG_v2023	patient_1026	2021-01-14	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1026	2021-01-12	pathA+comA	HOB
+#expected.PRAISE	patient_1026	2021-01-12	pathA+comA	HOB (HOB-CSC)
 
 >
 #poly commensals (real case)
-#⚠️ CHECK WITH PRAISE
+# (!) CHECK WITH PRAISE
 patient_1028	20210101	2021-01-11	comA	1
 patient_1028	20210101	2021-01-14	comA	1
 patient_1028	20210101	2021-01-16	comA	1
@@ -522,8 +583,8 @@ patient_1028	20210101	2021-01-18	comA	1
 #expected.HUG_v2023	patient_1028	2021-01-11	comA+comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1028	2021-01-11	comA	HOB
-#expected.PRAISE	patient_1028	2021-01-16	comB	HOB
+#expected.PRAISE	patient_1028	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1028	2021-01-14	comA+comB	HOB (HOB-CSC)
 
 >
 #poly commensals (fake)
@@ -534,12 +595,11 @@ patient_1029	20210101	2021-01-12	comA	1
 #expected.HUG_v2023	patient_1029	2021-01-11	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1029	2021-01-11	comA	HOB
+#expected.PRAISE	patient_1029	2021-01-11	comA	HOB (HOB-CSC)
 
 >
 #poly commensals (fake2)
-#⚠️ CHECK WITH PRAISE
-# Interesting: even if the logic is quite different, the 2 algorithms end up with same result
+# CHECK WITH PRAISE
 patient_1030	20210101	2021-01-11	comA	1
 patient_1030	20210101	2021-01-12	comB	1
 patient_1030	20210101	2021-01-16	comA	1
@@ -551,7 +611,9 @@ patient_1030	20210101	2021-01-18	comA	1
 #expected.HUG_v2023	patient_1030	2021-01-11	comA+comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1030	2021-01-11	comA+comB	HOB
+#expected.PRAISE	patient_1030	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1030	2021-01-12	comB	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1030	2021-01-16	comA+comB	HOB (HOB-CSC)
 
 >
 #seven case
@@ -565,8 +627,8 @@ patient_1031	20210101	2021-01-16	comB	1
 #expected.HUG_v2023	patient_1031	2021-01-15	comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1031	2021-01-11	comA	HOB
-#expected.PRAISE	patient_1031	2021-01-15	comB	HOB
+#expected.PRAISE	patient_1031	2021-01-11	comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_1031	2021-01-15	comB	HOB (HOB-CSC)
 
 >
 #seven case e-mail
@@ -582,7 +644,7 @@ patient_1032	20210101	2021-01-08	comA	1
 #expected.HUG_v2023	patient_1032	2021-01-06	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1032	2021-01-04	pathA+pathB+comA	HOB
+#expected.PRAISE	patient_1032	2021-01-04	pathA+pathB+comA	HOB (HOB-CSC)
 
 >
 #seven case e-mail
@@ -600,8 +662,8 @@ patient_1033	20210101	2021-01-08	comB	1
 
 
 #expected.PRAISE
-#expected.PRAISE	patient_1033	2021-01-04	pathA+pathB+comA	HOB
-#expected.PRAISE	patient_1033	2021-01-08	comB	CONTAMINATION
+#expected.PRAISE	patient_1033	2021-01-04	pathA+pathB+comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_1033	2021-01-08	comB	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
 #seven case e-mail
@@ -617,7 +679,7 @@ patient_1034	20210101	2021-01-06	comA	1
 #expected.HUG_v2023	patient_1034	2021-01-06	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1034	2021-01-04	pathA+pathB+comA	HOB
+#expected.PRAISE	patient_1034	2021-01-04	pathA+pathB+comA	HOB (HOB-CSC)
 
 >
 #seven case e-mail
@@ -635,7 +697,7 @@ patient_1035	20210101	2021-01-05	pathB	0
 
 >
 #seven case e-mail (adapted by Daniel concerning nosocomial). Is is NOT-HOB???
-#⚠️ CHECK WITH PRAISE TEST expected may be wrong
+#DOUBLE-CHECK WITH PRAISE to see if we can have polymicrobials COBs
 
 patient_1035B	20210101	2021-01-02	pathA	0
 patient_1035B	20210101	2021-01-04	pathB	0
@@ -646,7 +708,7 @@ patient_1035B	20210101	2021-01-04	pathB	0
 
 
 #expected.PRAISE
-#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB
+#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB (COB)
 
 >
 # ok?
@@ -662,13 +724,14 @@ patient_10199	20210101	2021-01-05	comA	1
 #expected.HUG_v2023	patient_10199	2021-01-01	pathA+pathB+comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_10199	2021-01-01	pathA+pathB	NOT-HOB
-#expected.PRAISE	patient_10199	2021-01-05	comA	CONTAMINATION
+#expected.PRAISE	patient_10199	2021-01-01	pathA+pathB	NOT-HOB (COB)
+#expected.PRAISE	patient_10199	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
 
 
 >
-# Two positive hemocultures with a same pathogene should not be repeated within 14 days from the first episode. But in case of commensals???
-# ⚠️ CHECK WITH PRAISE (interesting, only counts one CONTAMINATION, it is good!)
+# Two positive hemocultures with a same pathogene should not be repeated within 14 days from the first episode.
+# DOUBLE-CHECK definition with PRAISE: In case of commensals unless they are part of a onset-bacteremia, the only rule is the one of the 3 days (same germ, not same sample)
+
 patient_c001	20210101	2021-01-05	comA	1
 patient_c001	20210101	2021-01-15	comA	1
 
@@ -677,7 +740,9 @@ patient_c001	20210101	2021-01-15	comA	1
 #expected.HUG_v2023	patient_c001	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_c001	2021-01-05	comA	CONTAMINATION
+#expected.PRAISE	patient_c001	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_c001	2021-01-15	comA	NOT-HOB (SOLITARY_COMMENSAL)
+
 
 >
 # Two positive hemocultures with 2 CSC from 2 different germs count as true pathogen or contamination?
@@ -691,7 +756,8 @@ patient_c002	20210101	2021-01-06	comB	1
 #expected.HUG_v2023	patient_c002	2021-01-06	comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_c002	2021-01-05	comA+comB	CONTAMINATION
+#expected.PRAISE	patient_c002	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_c002	2021-01-06	comB	NOT-HOB (SOLITARY_COMMENSAL)
 
 # ============ TAKING SAMPLES identifiers into account ======================
 
@@ -701,12 +767,18 @@ patient_c002	20210101	2021-01-06	comB	1
 patient_c003	20210101	2021-01-05	comA	1	sample_a
 patient_c003	20210101	2021-01-05	comA	1	sample_a
 
-
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_c003	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_c003	2021-01-05	comA	CONTAMINATION
+#expected.PRAISE	patient_c003	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+
+>
+# What about 2 pathoges from same sample?
+patient_p003	20210101	2021-01-05	pathA	0	sample_a
+patient_p003	20210101	2021-01-05	pathA	0	sample_a
+
+
 
 >
 # Two positive hemocultures from different samples should count as a TRUE bsi
@@ -729,7 +801,7 @@ patient_c005	20210101	2021-01-10	comA	1
 #expected.HUG_v2023	patient_c005	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_c005	2021-01-05	comA	HOB
+#expected.PRAISE	patient_c005	2021-01-05	comA	HOB (HOB-CSC)
 
 >
 # Do we apply the 14 days rules for commmensals as well?
@@ -741,7 +813,8 @@ patient_c006	20210101	2021-01-10	comA	1
 #expected.HUG_v2023	patient_c006	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_c006	2021-01-05	comA	CONTAMINATION
+#expected.PRAISE	patient_c006	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_c006	2021-01-10	comA	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
 # If 2 commensals are followed by 24 hours, but are not the same germ. Should it be 1 or 2 episodes?

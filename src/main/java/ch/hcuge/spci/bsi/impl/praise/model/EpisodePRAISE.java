@@ -54,16 +54,12 @@ public class EpisodePRAISE implements Episode {
         return this.patientId;
     }
 
-    @Override
-    public Boolean isNosocomial() {
-        return BSIUtils.isNosocomial(this.stayBeginDate, this.eventDate);
-    }
 
 
     @Override
     public Boolean isPolymicrobial() {
-        //Seven: Only makes sens to talk about polymicrobials for HOBs
-        if(this.getClassification() == "HOB") {
+        //Seven: Only makes sens to talk about polymicrobials for HOBs //FIXME what about for COBs? Can we talk about polymicrobials
+        if(this.isOB()) {
             return this.getDistinctGerms().size() > 0;
         }else {
             return false;
@@ -72,46 +68,37 @@ public class EpisodePRAISE implements Episode {
 
     public String getClassification() {
 
-        if (!this.isNosocomial()) {
-            return "NOT-HOB";
-        } else {
-            //If there is at least one BC that is not a commensal (true pathogen), then it is a HOB
-            if (this.evidences.stream().anyMatch(e -> !e.isCommensal)) {
-                return "HOB";
-            } else { //no true pathogenes = only commensals
-                //If there is only one commensal, then it is a contamination
-                if (this.evidences.size() == 1) {
-                    return "CONTAMINATION";
-                } else {
-                    long smallestTimeWindow = Long.MAX_VALUE;
-                    for (var i = 0; i < this.evidences.size(); i++) {
-                        for (var j = 0; j < this.evidences.size(); j++) {
-                            if(i != j){
-                                var evi1 = this.evidences.get(i);
-                                var evi2 = this.evidences.get(j);
-                                //FIXME for different samples? (this is not defined on the specs)?
-                                //It must be for the same specie consensus with PRAISE), but different samples
-                                if (Objects.equals(evi1.getLaboGermName(), evi2.getLaboGermName())) {
-                                    //if the sample dates are the same, the sampling id should be different
-                                    //in other words: to make it potentially a HOB, it must be from different dates or if it the same date, the sampling id MUST be different
-                                    if(!evi1.getLaboSampleDate().equals(evi2.getLaboSampleDate()) || !Objects.equals(evi1.getSampleId(), evi2.getSampleId())){
-                                        var day_between_cultures = Math.abs(ChronoUnit.DAYS.between(evi1.getLaboSampleDate(), evi2.getLaboSampleDate()));
-                                        smallestTimeWindow = Math.min(smallestTimeWindow, day_between_cultures);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    //to make a HOB the time between the commensals should be less than 3
-                    if (smallestTimeWindow < 3) {
-                        return "HOB";
-                    } else {
-                        return "CONTAMINATION";
-                    }
+        var classification = "";
+        var subclassification = "";
+
+        if(this.isHOB()) {
+            classification ="HOB";
+
+            if(this.containsCSC()){
+                subclassification += "HOB-CSC";
+            }
+
+
+        }else {
+            classification = "NOT-HOB";
+
+            if(this.isCOB()) {
+                subclassification += "COB";
+
+                if(this.containsCSC()){
+                    subclassification += "-CSC";
                 }
 
-
             }
+            else if(this.isSolitaryCommensal()) {
+                subclassification += "SOLITARY_COMMENSAL";
+            }
+        }
+
+        if(subclassification.length() > 0){
+            return classification + " (" + subclassification + ")";
+        }else {
+            return classification;
         }
     }
 
@@ -138,10 +125,6 @@ public class EpisodePRAISE implements Episode {
         return this.evidences.stream().anyMatch(e -> e.getLaboGermName().equalsIgnoreCase(germ_name));
     }
 
-    public void addPolymicrobialEvidence(BloodCulturePRAISE culture) {
-        this.addEvidence(culture);
-        this.polyMicrobialEvidences.add(culture);
-    }
 
     public void addCopyStrainEvidence(BloodCulturePRAISE culture) {
         this.copyStrainEvidences.add(culture);
@@ -155,6 +138,59 @@ public class EpisodePRAISE implements Episode {
 
     public String toString() {
         return Stream.of(this.patientId, this.getEpisodeDate().toLocalDate(), this.getDistinctGerms(), this.getClassification()).map(Object::toString).collect(Collectors.joining("\t"));
+    }
+
+    public boolean isSolitaryCommensal() {
+        return this.evidences.size() == 1 && this.evidences.get(0).isCommensal;
+    }
+
+    /** Defines whethere it is an "Onset Bacteremia" **/
+    public boolean isOB() {
+        return !isSolitaryCommensal();
+    }
+
+    public boolean isHOB() {
+        return this.isNosocomial() && this.isOB();
+    }
+
+    /**
+     * community-onset bacteremia (not a HOB, not in scope for PRAISE)
+     */
+    public boolean isCOB() {
+        return !this.isNosocomial() && this.isOB();
+    }
+
+    @Override
+    public Boolean isNosocomial() {
+        return BSIUtils.isNosocomial(this.stayBeginDate, this.eventDate);
+    }
+
+    public Boolean containsCSC() {
+        return this.evidences.stream().anyMatch(e -> e.isCommensal);
+    }
+
+    public void addSecondEvidenceForCSC(BloodCulturePRAISE bcp) {
+
+        BloodCulturePRAISE firstEvidence = this.evidences.get(0);
+
+        if(!bcp.isCommensal){
+            throw new BSIException("The culture must be a commensal");
+        }
+        if(!this.isSolitaryCommensal()){
+            throw new BSIException("The culture must be a solitary commensal");
+        }
+        if(!firstEvidence.getLaboGermName().equals(bcp.getLaboGermName())){
+            throw new BSIException("The germs must be the same");
+        }
+
+        //if the dates are the same, then the sample id must be different
+        if(firstEvidence.getLaboSampleDate().equals(bcp.getLaboSampleDate())){
+            if(!firstEvidence.getSampleId().equals(bcp.getSampleId())){
+                throw new BSIException("The sample id must be different for 2 cultures having the same sampling date");
+            }
+        }
+
+        this.evidences.add(bcp);
     }
 
 }

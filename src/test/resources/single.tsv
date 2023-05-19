@@ -1,14 +1,16 @@
 patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample_id
 
 >
-# Two BC from the sample counts as 1 contaminant or a TRUE bsi?
-# CHECK WITH PRAISE: Response on 15.05: Must be from different samples indeed to make a HOB
-patient_c003	20210101	2021-01-05	comA	1	sample_a
-patient_c003	20210101	2021-01-05	comA	1	sample_a
-
+>
+#scenario (basics) 101 patient_1006
+patient_1006	20210101	2021-01-01	pathA	0
+patient_1006	20210101	2021-01-04	pathB	0
+patient_1006	20210101	2021-01-05	pathA	0
 
 #expected.HUG_v2023
-#expected.HUG_v2023	patient_c003	2021-01-05	comA
+#expected.HUG_v2023	patient_1006	2021-01-01	pathA
+#expected.HUG_v2023	patient_1006	2021-01-04	pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_c003	2021-01-05	comA	NOT-HOB
+#expected.PRAISE	patient_1006	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_1006	2021-01-04	pathB	HOB
