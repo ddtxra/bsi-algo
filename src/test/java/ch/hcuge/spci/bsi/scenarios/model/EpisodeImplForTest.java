@@ -1,5 +1,6 @@
 package ch.hcuge.spci.bsi.scenarios.model;
 
+import ch.hcuge.spci.BSIUtils;
 import ch.hcuge.spci.bsi.Episode;
 
 import java.time.ZonedDateTime;
@@ -53,7 +54,7 @@ public class EpisodeImplForTest implements Episode {
     // CLASSIFICATION
     @Override
     public Boolean isNosocomial() {
-        return null;
+        return this.classification.contains("HOB");
     }
 
     @Override

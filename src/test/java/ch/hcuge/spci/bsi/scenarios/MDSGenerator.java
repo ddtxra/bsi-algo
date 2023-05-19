@@ -2,6 +2,8 @@ package ch.hcuge.spci.bsi.scenarios;
 
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.impl.praise.model.EpisodePRAISE;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class MDSGenerator {
 
@@ -35,9 +38,22 @@ public class MDSGenerator {
         testCulturesServices.loadContent("test-scenarios.tsv");
 
         StringBuilder cultureContent = new StringBuilder();
-        var headers = List.of("secenario#", "id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
-        cultureContent.append(String.join("\t", headers));
+        StringBuilder episodeContent = new StringBuilder();
+        StringBuilder hobsOnlyContent = new StringBuilder();
+
+        var headers_for_bc = List.of("secenario#", "id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
+        var headers_for_epi = List.of("patient_id", "episode_date", "micro_organisms", "is_hob", "contains_csc", "classification");
+        var headers_for_hobsonly = List.of("patient_id", "episode_date", "micro_organisms", "contains_csc", "classification");
+
+        cultureContent.append(String.join("\t", headers_for_bc));
         cultureContent.append("\n");
+
+        episodeContent.append(String.join("\t", headers_for_epi));
+        episodeContent.append("\n");
+
+        hobsOnlyContent.append(String.join("\t", headers_for_hobsonly));
+        hobsOnlyContent.append("\n");
+
 
         testCulturesServices.getPatientsIds().forEach(pId -> {
 
@@ -69,20 +85,44 @@ public class MDSGenerator {
                     cultureContent.append(String.join("\t", row));
                     cultureContent.append("\n");
 
+            }
+
+            for (Episode episode : expectedEpisodes) {
+                List<String> row = List.of(
+                        episode.getPatientId(),
+                        formatDate(episode.getEpisodeDate()),
+                        String.join("+", episode.getDistinctGerms()),
+                        episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
+                        episode.getClassification() != null ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
+                        NN(episode.getClassification())
+                        );
+                episodeContent.append(String.join("\t", row));
+                episodeContent.append("\n");
 
             }
 
+            for (Episode episode : expectedEpisodes.stream().filter(e -> !e.getClassification().contains("NOT-HOB")).toList()) {
+                List<String> row = List.of(
+                        episode.getPatientId(),
+                        formatDate(episode.getEpisodeDate()),
+                        String.join("+", episode.getDistinctGerms()),
+                        episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
+                        episode.getClassification() != null ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
+                        NN(episode.getClassification())
+                );
+                hobsOnlyContent.append(String.join("\t", row));
+                hobsOnlyContent.append("\n");
 
+            }
 
         });
 
-        Path path = Paths.get("cultures.txt");
-        try {
-            Files.write(path, cultureContent.toString().getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Files.writeString(Paths.get("src/test/resources/blood-cultures.tsv"), cultureContent.toString());
+        Files.writeString(Paths.get("src/test/resources/output-debug.tsv"), episodeContent.toString());
+        Files.writeString(Paths.get("src/test/resources/output-hobs-only.tsv"), hobsOnlyContent.toString());
+
     }
+
 
 
 
