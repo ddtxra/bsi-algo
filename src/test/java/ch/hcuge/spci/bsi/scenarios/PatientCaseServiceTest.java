@@ -98,6 +98,7 @@ public class PatientCaseServiceTest {
         testCulturesServices.loadContent(fileScenarios);
 
         var failures = new ArrayList<String>();
+        var notTested = new ArrayList<String>();
 
         var patientIdsSetSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
         var patientIdsListSize = new HashSet<>(testCulturesServices.getPatientsIds()).size();
@@ -128,6 +129,7 @@ public class PatientCaseServiceTest {
 
             } else if (expectedEpisodes.isEmpty()) {
                 System.err.println("No expected tests for patient " + pId);
+                notTested.add(pId);
                 casesNotTested.getAndSet(casesNotTested.get() + 1);
             } else {
                 if (!compareEpisodes(expectedEpisodes, computedEpisodes)) {
@@ -143,7 +145,8 @@ public class PatientCaseServiceTest {
         System.err.println(casesTested + " cases tested ");
 
         if (casesNotTested.get() > 0) {
-            System.err.println(casesNotTested.get() + " cases not tested " + ((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " %");
+            System.err.println(casesNotTested.get() + " cases not tested: " +  String.join(", ", notTested));
+            System.err.println(((casesNotTested.get() / (testCulturesServices.getPatientsIds().size() * 1.0)) * 100) + " % not tested");
         }
 
         if(failures.size() > 0){

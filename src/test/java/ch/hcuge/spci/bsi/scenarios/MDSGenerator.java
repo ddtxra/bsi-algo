@@ -1,7 +1,9 @@
 package ch.hcuge.spci.bsi.scenarios;
 
+import ch.hcuge.spci.bsi.BSIClassifier;
 import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
+import ch.hcuge.spci.bsi.impl.praise.BSIClassifierPRAISE;
 import ch.hcuge.spci.bsi.impl.praise.model.EpisodePRAISE;
 
 import org.junit.Test;
@@ -36,29 +38,38 @@ public class MDSGenerator {
     public void generateCulturesForPraise() throws IOException, URISyntaxException {
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
         testCulturesServices.loadContent("test-scenarios.tsv");
+        BSIClassifier bsiClassifier = new BSIClassifierPRAISE();
 
         StringBuilder cultureContent = new StringBuilder();
-        StringBuilder episodeContent = new StringBuilder();
-        StringBuilder hobsOnlyContent = new StringBuilder();
+        StringBuilder episodeContentExpected = new StringBuilder();
+        StringBuilder hobsOnlyContentExpected = new StringBuilder();
+        StringBuilder episodeContentComputed = new StringBuilder();
+        StringBuilder hobsOnlyContentComputed = new StringBuilder();
 
         var headers_for_bc = List.of("secenario#", "id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
-        var headers_for_epi = List.of("patient_id", "episode_date", "micro_organisms", "is_hob", "contains_csc", "classification");
-        var headers_for_hobsonly = List.of("patient_id", "episode_date", "micro_organisms", "contains_csc", "classification");
+        var headers_for_epi = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "containsCSC", "classification");
+        var headers_for_hobsonly = List.of("patientId", "episodeDate", "microOrganism(s)", "containsCSC", "classification");
 
         cultureContent.append(String.join("\t", headers_for_bc));
         cultureContent.append("\n");
 
-        episodeContent.append(String.join("\t", headers_for_epi));
-        episodeContent.append("\n");
+        episodeContentExpected.append(String.join("\t", headers_for_epi));
+        episodeContentExpected.append("\n");
+        episodeContentComputed.append(String.join("\t", headers_for_epi));
+        episodeContentComputed.append("\n");
 
-        hobsOnlyContent.append(String.join("\t", headers_for_hobsonly));
-        hobsOnlyContent.append("\n");
+        hobsOnlyContentExpected.append(String.join("\t", headers_for_hobsonly));
+        hobsOnlyContentExpected.append("\n");
+        hobsOnlyContentComputed.append(String.join("\t", headers_for_hobsonly));
+        hobsOnlyContentComputed.append("\n");
+
 
 
         testCulturesServices.getPatientsIds().forEach(pId -> {
 
             List<Culture> cultures = testCulturesServices.getCulturesForPatient(pId);
             List<Episode> expectedEpisodes = testCulturesServices.getExpectedEpisodesForPatientAndAlgo(pId, "PRAISE");
+            List<Episode> computedEpisodes = bsiClassifier.processCultures(cultures);
 
             String[] list = {"Ward1", "Ward2", "Ward3"};
 
@@ -92,12 +103,12 @@ public class MDSGenerator {
                         episode.getPatientId(),
                         formatDate(episode.getEpisodeDate()),
                         String.join("+", episode.getDistinctGerms()),
+                        (episode.getClassification() != null) ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
                         episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
-                        episode.getClassification() != null ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
                         NN(episode.getClassification())
                         );
-                episodeContent.append(String.join("\t", row));
-                episodeContent.append("\n");
+                episodeContentExpected.append(String.join("\t", row));
+                episodeContentExpected.append("\n");
 
             }
 
@@ -106,20 +117,48 @@ public class MDSGenerator {
                         episode.getPatientId(),
                         formatDate(episode.getEpisodeDate()),
                         String.join("+", episode.getDistinctGerms()),
-                        episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
-                        episode.getClassification() != null ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
+                        (episode.getClassification() != null) ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
                         NN(episode.getClassification())
                 );
-                hobsOnlyContent.append(String.join("\t", row));
-                hobsOnlyContent.append("\n");
+                hobsOnlyContentExpected.append(String.join("\t", row));
+                hobsOnlyContentExpected.append("\n");
+
+            }
+
+            for (Episode episode : computedEpisodes) {
+                List<String> row = List.of(
+                        episode.getPatientId(),
+                        formatDate(episode.getEpisodeDate()),
+                        String.join("+", episode.getDistinctGerms()),
+                        (episode.getClassification() != null) ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
+                        episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
+                        NN(episode.getClassification())
+                );
+                episodeContentComputed.append(String.join("\t", row));
+                episodeContentComputed.append("\n");
+
+            }
+
+            for (Episode episode : computedEpisodes.stream().filter(e -> !e.getClassification().contains("NOT-HOB")).toList()) {
+                List<String> row = List.of(
+                        episode.getPatientId(),
+                        formatDate(episode.getEpisodeDate()),
+                        String.join("+", episode.getDistinctGerms()),
+                        String.valueOf(((EpisodePRAISE)episode).containsCSC()),
+                        NN(episode.getClassification())
+                );
+                hobsOnlyContentComputed.append(String.join("\t", row));
+                hobsOnlyContentComputed.append("\n");
 
             }
 
         });
 
-        Files.writeString(Paths.get("src/test/resources/blood-cultures.tsv"), cultureContent.toString());
-        Files.writeString(Paths.get("src/test/resources/output-debug.tsv"), episodeContent.toString());
-        Files.writeString(Paths.get("src/test/resources/output-hobs-only.tsv"), hobsOnlyContent.toString());
+        Files.writeString(Paths.get("praise-mds/blood-cultures-input.tsv"), cultureContent.toString());
+        Files.writeString(Paths.get("praise-mds/hob-output-expected-including-cobs-and-solitary-commensals.tsv"), episodeContentExpected.toString());
+        Files.writeString(Paths.get("praise-mds/hob-output-expected-hobs-only.tsv"), hobsOnlyContentExpected.toString());
+        Files.writeString(Paths.get("praise-mds/hob-output-computed-including-cobs-and-solitary-commensals.tsv"), episodeContentComputed.toString());
+        Files.writeString(Paths.get("praise-mds/hob-output-computed-hobs-only.tsv"), hobsOnlyContentComputed.toString());
 
     }
 

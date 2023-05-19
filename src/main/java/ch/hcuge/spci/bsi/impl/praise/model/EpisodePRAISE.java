@@ -185,7 +185,7 @@ public class EpisodePRAISE implements Episode {
 
         //if the dates are the same, then the sample id must be different
         if(firstEvidence.getLaboSampleDate().equals(bcp.getLaboSampleDate())){
-            if(!firstEvidence.getSampleId().equals(bcp.getSampleId())){
+            if(firstEvidence.getSampleId().equals(bcp.getSampleId())){
                 throw new BSIException("The sample id must be different for 2 cultures having the same sampling date");
             }
         }

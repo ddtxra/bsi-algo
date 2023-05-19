@@ -106,7 +106,7 @@ patient_10043	20210101	2021-01-06	pathA	0
 >
 #This one is an extreme case: 1 polymicrobial episode on day 1 (pathA+pathC) because less than 14 days. And 1 mono episode on day 15.
 #⚠️Tricky but working now with V2
-# DOUBLE CKEC WITH PRAISE
+# DOUBLE CKECK WITH PRAISE
 
 patient_10044	20210101	2021-01-01	pathA	0
 patient_10044	20210101	2021-01-14	pathC	0
@@ -320,6 +320,23 @@ patient_1111	20210101	2021-01-11	comB	1
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1111	2021-01-11	comA+comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_1111	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1111	2021-01-11	comB	NOT-HOB (SOLITARY_COMMENSAL)
+
+>
+# The rule of 14 days does not apply for commensals neither
+patient_c007	20210101	2021-01-05	comA	1
+patient_c007	20210101	2021-01-06	comB	1
+
+#expected.HUG_v2023
+#expected.HUG_v2023	patient_c007	2021-01-05	comA
+#expected.HUG_v2023	patient_c007	2021-01-06	comB
+
+#expected.PRAISE
+#expected.PRAISE	patient_c007	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_c007	2021-01-06	comB	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
 #CHECK WITH PRAISE: RESPONSE on 15.05.2023: Should be one polymicrobial HOB (based on commensals)
@@ -571,7 +588,7 @@ patient_1026	20210101	2021-01-16	pathA	0
 
 >
 #poly commensals (real case)
-# (!) CHECK WITH PRAISE
+#DOUBLE-CHECK with CHECK WITH PRAISE
 patient_1028	20210101	2021-01-11	comA	1
 patient_1028	20210101	2021-01-14	comA	1
 patient_1028	20210101	2021-01-16	comA	1
@@ -583,8 +600,8 @@ patient_1028	20210101	2021-01-18	comA	1
 #expected.HUG_v2023	patient_1028	2021-01-11	comA+comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1028	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL)
-#expected.PRAISE	patient_1028	2021-01-14	comA+comB	HOB (HOB-CSC)
+#expected.PRAISE	patient_1028	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL) TO_BE_CONFIRMED
+#expected.PRAISE	patient_1028	2021-01-14	comA+comB	HOB (HOB-CSC) TO_BE_CONFIRMED
 
 >
 #poly commensals (fake)
@@ -708,7 +725,7 @@ patient_1035B	20210101	2021-01-04	pathB	0
 
 
 #expected.PRAISE
-#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB (COB)
+#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB (COB) TO_BE_CONFIRMED
 
 >
 # ok?
@@ -778,6 +795,8 @@ patient_c003	20210101	2021-01-05	comA	1	sample_a
 patient_p003	20210101	2021-01-05	pathA	0	sample_a
 patient_p003	20210101	2021-01-05	pathA	0	sample_a
 
+#expected.PRAISE
+#expected.PRAISE	patient_p003	2021-01-05	pathA	HOB
 
 
 >
@@ -789,7 +808,7 @@ patient_c004	20210101	2021-01-05	comA	1	sample_b
 #expected.HUG_v2023	patient_c004	2021-01-05	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_c004	2021-01-05	comA	HOB (CSC)
+#expected.PRAISE	patient_c004	2021-01-05	comA	HOB (HOB-CSC)
 
 >
 # We must apply the 14 days rules when there is a HOB episode based on commensals as well
@@ -816,12 +835,15 @@ patient_c006	20210101	2021-01-10	comA	1
 #expected.PRAISE	patient_c006	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
 #expected.PRAISE	patient_c006	2021-01-10	comA	NOT-HOB (SOLITARY_COMMENSAL)
 
+
 >
-# If 2 commensals are followed by 24 hours, but are not the same germ. Should it be 1 or 2 episodes?
-# ⚠️ CHECK WITH PRAISE: It is not a HOB, but should be 2 contaminations ? or just simply don't evaluate? Out of SCOPE?
-patient_c007	20210101	2021-01-05	comA	1
-patient_c007	20210101	2021-01-06	comB	1
+# On the same sample we find both a pathogene and a commensal. sure we have a HOB, what about we count as well a SOLITARY COMMENSAL?
+patient_sc003	20210101	2021-01-05	pathA	0	sample_a
+patient_sc003	20210101	2021-01-05	comA	1	sample_a
 
 #expected.HUG_v2023
-#expected.HUG_v2023	patient_c007	2021-01-05	comA
-#expected.HUG_v2023	patient_c007	2021-01-06	comB
+#expected.HUG_v2023	patient_sc003	2021-01-05	pathA+comA
+
+#expected.PRAISE
+#expected.PRAISE	patient_sc003	2021-01-05	pathA	HOB
+#expected.PRAISE	patient_sc003	2021-01-05	comA	HOB (SOLITARY_COMMENSAL)
