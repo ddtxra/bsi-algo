@@ -69,9 +69,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
             if (!cultureIsProcessed) {
 
                 //First try to consolidate with existing OB episode (COB or HOB) / COPY STRAINS
-                if(!cultureIsProcessed){
-                    cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
-                }
+                cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
 
                 if(!cultureIsProcessed){
                     cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingPolymicrobialCriteria(episodes, bcp);
@@ -79,7 +77,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
 
                 //If it is a commensal
-                if(bcp.isCommensal){
+                if(!cultureIsProcessed && bcp.isCommensal){
 
                     // check whether there is one already in the 3 days from the same germ
                     List<EpisodePRAISE> matchingEpisodes = episodes.stream()
@@ -119,7 +117,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                         }
 
                     } else if (matchingEpisodes.size() > 1) {
-                        throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode for: " + bcp);
+                        throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode for: " + bcp.getPatientId());
                     }
 
                 }
