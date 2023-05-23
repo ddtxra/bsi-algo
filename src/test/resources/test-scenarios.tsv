@@ -106,7 +106,7 @@ patient_10043	20210101	2021-01-06	pathA	0
 >
 #This one is an extreme case: 1 polymicrobial episode on day 1 (pathA+pathC) because less than 14 days. And 1 mono episode on day 15.
 #⚠️Tricky but working now with V2
-# DOUBLE CKECK WITH PRAISE
+#Seven 20 May 2023: one HOB with path C (because path A on day 14 is a copytrain of earlier COB). MvM agree SRW agree
 
 patient_10044	20210101	2021-01-01	pathA	0
 patient_10044	20210101	2021-01-14	pathC	0
@@ -136,7 +136,7 @@ patient_1005	20210101	2021-01-04	pathA	0
 
 >
 #scenario (basics) 101 patient_1006
-#!!! DOUBLE CHECK WITH PRAISE if the HOB on day 4 is transformed is merged to the COB of day 1 because (pathB+pathA) could be "polymicrobials"
+#Response from PRAISE: Seven: 1 HOB with path B (same reason as patient_10044) MvM agree SRW agree
 patient_1006	20210101	2021-01-01	pathA	0
 patient_1006	20210101	2021-01-04	pathB	0
 patient_1006	20210101	2021-01-05	pathA	0
@@ -146,7 +146,8 @@ patient_1006	20210101	2021-01-05	pathA	0
 #expected.HUG_v2023	patient_1006	2021-01-04	pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1006	2021-01-01	pathA+pathB	TO_BE_CONFIRMED
+#expected.PRAISE	patient_1006	2021-01-01	pathA	NOT-HOB (COB)
+#expected.PRAISE	patient_1006	2021-01-04	pathB	HOB
 
 >
 #scenario (basics) HUG: 1 polymicrobien
@@ -158,7 +159,7 @@ patient_1007	20210101	2021-01-04	pathA	0
 #expected.HUG_v2023	patient_1007	2021-01-01	pathA+pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1007	2021-01-01	pathA	NOT-HOB
+#expected.PRAISE	patient_1007	2021-01-01	pathA	NOT-HOB (COB)
 #expected.PRAISE	patient_1007	2021-01-04	pathB	HOB
 
 >
@@ -588,7 +589,7 @@ patient_1026	20210101	2021-01-16	pathA	0
 
 >
 #poly commensals (real case)
-#DOUBLE-CHECK with CHECK WITH PRAISE
+#PRAISE: Seven on 20 May: polymicrobial CSC-HOB. Isolate on day 11 is a solitary commensal. Isolate on day 18 is a copystrain. MvM agree SRW agree
 patient_1028	20210101	2021-01-11	comA	1
 patient_1028	20210101	2021-01-14	comA	1
 patient_1028	20210101	2021-01-16	comA	1
@@ -600,8 +601,8 @@ patient_1028	20210101	2021-01-18	comA	1
 #expected.HUG_v2023	patient_1028	2021-01-11	comA+comB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1028	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL) TO_BE_CONFIRMED
-#expected.PRAISE	patient_1028	2021-01-14	comA+comB	HOB (HOB-CSC) TO_BE_CONFIRMED
+#expected.PRAISE	patient_1028	2021-01-11	comA	NOT-HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_1028	2021-01-14	comA+comB	HOB (HOB-CSC)
 
 >
 #poly commensals (fake)
@@ -714,7 +715,8 @@ patient_1035	20210101	2021-01-05	pathB	0
 
 >
 #seven case e-mail (adapted by Daniel concerning nosocomial). Is is NOT-HOB???
-#DOUBLE-CHECK WITH PRAISE to see if we can have polymicrobials COBs
+#DOUBLE-CHECK WITH PRAISE: Yes, polymicrobial HOB. MvM this is a tricky one that we should discuss. Could be 1 of two options COB with path A on day 2, Hob on day 3 with path B, or polymicrobial and present on admission. Really curious to hear what others think. It feels suboptimal say no HOB, but I think depending on the order of steps (assigning community onset vs. Grouping as polymicrobial) could give different resutls.
+# SRW based on how I understand we have defined it at the moment I would say polymicrobial COB on day 2. But maybe indeed worth discussing.
 
 patient_1035B	20210101	2021-01-02	pathA	0
 patient_1035B	20210101	2021-01-04	pathB	0
@@ -725,7 +727,7 @@ patient_1035B	20210101	2021-01-04	pathB	0
 
 
 #expected.PRAISE
-#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB (COB) TO_BE_CONFIRMED
+#expected.PRAISE	patient_1035B	2021-01-02	pathA+pathB	NOT-HOB (COB)
 
 >
 # ok?
@@ -838,6 +840,7 @@ patient_c006	20210101	2021-01-10	comA	1
 
 >
 # On the same sample we find both a pathogene and a commensal. sure we have a HOB, what about we count as well a SOLITARY COMMENSAL?
+# Seven: Yes, exactly as you write. SRW agree
 patient_sc003	20210101	2021-01-05	pathA	0	sample_a
 patient_sc003	20210101	2021-01-05	comA	1	sample_a
 
@@ -846,4 +849,4 @@ patient_sc003	20210101	2021-01-05	comA	1	sample_a
 
 #expected.PRAISE
 #expected.PRAISE	patient_sc003	2021-01-05	pathA	HOB
-#expected.PRAISE	patient_sc003	2021-01-05	comA	HOB (SOLITARY_COMMENSAL)
+#expected.PRAISE	patient_sc003	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)

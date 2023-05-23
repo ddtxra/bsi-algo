@@ -65,18 +65,18 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                 cultureIsProcessed = true;
             }
 
-
-            if(!cultureIsProcessed){
-                cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingPolymicrobialCriteria(episodes, bcp);
-            }
-
-            if(!cultureIsProcessed){
-                cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
-            }
-
-
             //Search for existing episode within 14 days with same germ (copy strain)
             if (!cultureIsProcessed) {
+
+                //First try to consolidate with existing OB episode (COB or HOB) / COPY STRAINS
+                if(!cultureIsProcessed){
+                    cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
+                }
+
+                if(!cultureIsProcessed){
+                    cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingPolymicrobialCriteria(episodes, bcp);
+                }
+
 
                 //If it is a commensal
                 if(bcp.isCommensal){
@@ -142,6 +142,10 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         boolean consolidated = false;
 
+/*        if(bcp.isCommensal){ //Can't consolidate single bcp that is a commensal
+            return false;
+        }*/
+
         //Within 3 days
         List<EpisodePRAISE> matchingEpisodes = episodes.stream()
                 .filter(EpisodePRAISE::isOB)
@@ -153,6 +157,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
             //Check if it is a onset-bacteremial (HOB or COB doesn't matter)
             matchingEpisodes.get(0).addCopyStrainEvidence(bcp);
             consolidated = true;
+
 
         } else if (matchingEpisodes.size() > 1) {
             throw new BSIException("Found more " + matchingEpisodes.size() + " than 1 episode to consolidate using the polymicrobial criteria for culture from patient: " + bcp.getPatientId());
