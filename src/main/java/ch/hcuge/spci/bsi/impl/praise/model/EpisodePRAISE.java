@@ -193,4 +193,7 @@ public class EpisodePRAISE implements Episode {
         this.evidences.add(bcp);
     }
 
+    public void addPolymicrobialEvidences(List<BloodCulturePRAISE> evidences) {
+        this.evidences.addAll(evidences);
+    }
 }

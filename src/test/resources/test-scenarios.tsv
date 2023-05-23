@@ -680,12 +680,13 @@ patient_1033	20210101	2021-01-08	comB	1
 
 
 #expected.PRAISE
-#expected.PRAISE	patient_1033	2021-01-04	pathA+pathB+comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_1033	2021-01-04	pathA+pathB	HOB
+#expected.PRAISE	patient_1033	2021-01-06	comA	NOT-HOB (SOLITARY_COMMENSAL)
 #expected.PRAISE	patient_1033	2021-01-08	comB	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
 #seven case e-mail
-#⚠️ CHECK WITH PRAISE TEST expected may be wrong
+#DOUBLE CHECK with PRAISE
 patient_1034	20210101	2021-01-04	pathA	0
 patient_1034	20210101	2021-01-05	pathB	0
 patient_1034	20210101	2021-01-06	comA	1
@@ -697,7 +698,8 @@ patient_1034	20210101	2021-01-06	comA	1
 #expected.HUG_v2023	patient_1034	2021-01-06	comA
 
 #expected.PRAISE
-#expected.PRAISE	patient_1034	2021-01-04	pathA+pathB+comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_1034	2021-01-04	pathA+pathB	HOB
+#expected.PRAISE	patient_1034	2021-01-06	comA	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
 #seven case e-mail

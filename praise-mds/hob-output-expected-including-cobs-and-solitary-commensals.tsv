@@ -6,13 +6,14 @@ patient_1003	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1003	2021/01/05	pathB	true	false	HOB
 patient_1004	2021/01/04	pathA+pathB	true	false	HOB
 patient_10041	2021/01/04	pathA+pathB	true	false	HOB
-patient_10042	2021/01/04	pathC+pathB+pathA	true	false	HOB
-patient_10043	2021/01/04	pathC+pathB+pathA	true	false	HOB
+patient_10042	2021/01/04	pathA+pathC+pathB	true	false	HOB
+patient_10043	2021/01/04	pathA+pathC+pathB	true	false	HOB
 patient_10044	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_10044	2021/01/14	pathC	true	false	HOB
 patient_1005	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)
-patient_1006	2021/01/01	pathA+pathB	true	false	TO_BE_CONFIRMED
-patient_1007	2021/01/01	pathA	false	false	NOT-HOB
+patient_1006	2021/01/01	pathA	false	false	NOT-HOB (COB)
+patient_1006	2021/01/04	pathB	true	false	HOB
+patient_1007	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1007	2021/01/04	pathB	true	false	HOB
 patient_1071	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)
 patient_1008	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)
@@ -59,20 +60,22 @@ patient_1023	2021/01/09	pathC	true	false	HOB
 patient_1024	2021/01/05	pathA+comA	true	true	HOB (HOB-CSC)
 patient_1024	2021/01/13	comB	true	true	HOB (HOB-CSC)
 patient_1026	2021/01/12	pathA+comA	true	true	HOB (HOB-CSC)
-patient_1028	2021/01/11	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL) TO_BE_CONFIRMED
-patient_1028	2021/01/14	comA+comB	true	true	HOB (HOB-CSC) TO_BE_CONFIRMED
+patient_1028	2021/01/11	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
+patient_1028	2021/01/14	comA+comB	true	true	HOB (HOB-CSC)
 patient_1029	2021/01/11	comA	true	true	HOB (HOB-CSC)
 patient_1030	2021/01/11	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_1030	2021/01/12	comB	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_1030	2021/01/16	comA+comB	true	true	HOB (HOB-CSC)
 patient_1031	2021/01/11	comA	true	true	HOB (HOB-CSC)
 patient_1031	2021/01/15	comB	true	true	HOB (HOB-CSC)
-patient_1032	2021/01/04	comA+pathB+pathA	true	true	HOB (HOB-CSC)
-patient_1033	2021/01/04	comA+pathB+pathA	true	true	HOB (HOB-CSC)
+patient_1032	2021/01/04	pathA+comA+pathB	true	true	HOB (HOB-CSC)
+patient_1033	2021/01/04	pathA+pathB	true	false	HOB
+patient_1033	2021/01/06	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_1033	2021/01/08	comB	false	false	NOT-HOB (SOLITARY_COMMENSAL)
-patient_1034	2021/01/04	comA+pathB+pathA	true	true	HOB (HOB-CSC)
+patient_1034	2021/01/04	pathA+pathB	true	false	HOB
+patient_1034	2021/01/06	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_1035	2021/01/03	pathA+pathB	true	false	HOB
-patient_1035B	2021/01/02	pathA+pathB	false	false	NOT-HOB (COB) TO_BE_CONFIRMED
+patient_1035B	2021/01/02	pathA+pathB	false	false	NOT-HOB (COB)
 patient_10199	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)
 patient_10199	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_c001	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
@@ -86,4 +89,4 @@ patient_c005	2021/01/05	comA	true	true	HOB (HOB-CSC)
 patient_c006	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_c006	2021/01/10	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_sc003	2021/01/05	pathA	true	false	HOB
-patient_sc003	2021/01/05	comA	true	false	HOB (SOLITARY_COMMENSAL)
+patient_sc003	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
