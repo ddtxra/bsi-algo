@@ -8,7 +8,6 @@ import ch.hcuge.spci.bsi.impl.praise.mapper.PRAISECultureMapper;
 import ch.hcuge.spci.bsi.impl.praise.model.BloodCulturePRAISE;
 import ch.hcuge.spci.bsi.impl.praise.model.EpisodePRAISE;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -22,12 +21,12 @@ public class BSIClassifierPRAISE implements BSIClassifier {
     @Override
     public List<Episode> processCultures(List<Culture> positiveBloodCultures) {
         if (positiveBloodCultures.size() > 0) {
-            return identifiyEpisodes(positiveBloodCultures.stream().map(PRAISECultureMapper::mapCulture).collect(Collectors.toList()));
+            return identifyEpisodes(positiveBloodCultures.stream().map(PRAISECultureMapper::mapCulture).collect(Collectors.toList()));
         }
         return List.of();
     }
 
-    private List<Episode> identifiyEpisodes(List<BloodCulturePRAISE> bloodCultures) {
+    private List<Episode> identifyEpisodes(List<BloodCulturePRAISE> bloodCultures) {
 
         List<Episode> episodes = new ArrayList<>();
 
@@ -39,7 +38,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
         //For each patient
         positiveBloodCulturesGroupedByPatient.keySet().forEach(patientId -> {
             List<BloodCulturePRAISE> positiveBloocCulturesForPatient = positiveBloodCulturesGroupedByPatient.get(patientId);
-            List<EpisodePRAISE> episodesForPatient = this.identifyEpisodes(positiveBloocCulturesForPatient);
+            List<EpisodePRAISE> episodesForPatient = this.identifyEpisodesForPatient(positiveBloocCulturesForPatient);
             episodes.addAll(episodesForPatient);
 
         });
@@ -48,8 +47,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
     }
 
 
-
-    private List<EpisodePRAISE> identifyEpisodes(List<BloodCulturePRAISE> culturesForSinglePatient) {
+    private List<EpisodePRAISE> identifyEpisodesForPatient(List<BloodCulturePRAISE> culturesForSinglePatient) {
 
         List<EpisodePRAISE> episodes = new ArrayList<>();
         List<BloodCulturePRAISE> culturesSorted = culturesForSinglePatient.stream().sorted(Comparator.comparing(BloodCulturePRAISE::getLaboSampleDate)).toList();
@@ -68,7 +66,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
             if (!cultureIsProcessed) {
 
                 //First try to consolidate with existing OB episode (COB or HOB) / COPY STRAINS
-                cultureIsProcessed = attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
+                cultureIsProcessed = checkIfCopyStrainOfExistingOBEpisodeUsingNonRepeatIntervalCriteria(episodes, bcp);
 
 
                 //If it is a commensal
@@ -94,7 +92,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                                 cultureIsProcessed = true;
                             }else {
                                 //The episode will not be a solitary commensal anymore, it will be a on-set bacteremia
-                                candidateEpisode.addSecondEvidenceForCSC(bcp);
+                                candidateEpisode.addSecondCSCEvidenceToMakeItAHOB(bcp);
                                 cultureIsProcessed = true;
                             }
 
@@ -124,7 +122,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                 episodes.add(new EpisodePRAISE(bcp));
             }
 
-            episodes = attemptToConsolidateEpisodesTogetherUsingPolymicrobialCriteria(episodes);
+            episodes = attemptToConsolidateOBEpisodesTogetherUsingPolymicrobialCriteria(episodes);
 
         }
 
@@ -132,7 +130,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
     }
 
-    private List<EpisodePRAISE> attemptToConsolidateEpisodesTogetherUsingPolymicrobialCriteria(List<EpisodePRAISE> episodes){
+    private List<EpisodePRAISE> attemptToConsolidateOBEpisodesTogetherUsingPolymicrobialCriteria(List<EpisodePRAISE> episodes){
 
         int sizeBeforeConsolidation;
         int lastSize = episodes.size();
@@ -186,7 +184,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
     }
 
-    private boolean attemptToConsolidateWithExistingOBEpisodeUsingNonRepeatIntervalCriteria(List<EpisodePRAISE> episodes, BloodCulturePRAISE bcp){
+    private boolean checkIfCopyStrainOfExistingOBEpisodeUsingNonRepeatIntervalCriteria(List<EpisodePRAISE> episodes, BloodCulturePRAISE bcp){
 
         boolean consolidated = false;
 

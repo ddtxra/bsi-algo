@@ -5,7 +5,6 @@ import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.exception.BSIException;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -169,7 +168,7 @@ public class EpisodePRAISE implements Episode {
         return this.evidences.stream().anyMatch(e -> e.isCommensal);
     }
 
-    public void addSecondEvidenceForCSC(BloodCulturePRAISE bcp) {
+    public void addSecondCSCEvidenceToMakeItAHOB(BloodCulturePRAISE bcp) {
 
         BloodCulturePRAISE firstEvidence = this.evidences.get(0);
 
@@ -177,7 +176,7 @@ public class EpisodePRAISE implements Episode {
             throw new BSIException("The culture must be a commensal");
         }
         if(!this.isSolitaryCommensal()){
-            throw new BSIException("The culture must be a solitary commensal");
+            throw new BSIException("The current 'episode' must be a solitary commensal");
         }
         if(!firstEvidence.getLaboGermName().equals(bcp.getLaboGermName())){
             throw new BSIException("The germs must be the same");
@@ -195,5 +194,6 @@ public class EpisodePRAISE implements Episode {
 
     public void addPolymicrobialEvidences(List<BloodCulturePRAISE> evidences) {
         this.evidences.addAll(evidences);
+        this.polyMicrobialEvidences.addAll(evidences);
     }
 }
