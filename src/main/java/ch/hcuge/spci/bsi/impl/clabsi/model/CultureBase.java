@@ -54,4 +54,7 @@ public abstract class CultureBase implements Culture {
         throw new NotImplementedException("Not implemented");
     }
 
+    abstract protected String getMaterialType();
+
+
 }

@@ -75,15 +75,7 @@ public class EpisodeHUGv2023 implements Episode {
     }
 
     public String getClassification() {
-        //If only 1 commensal
-        if (this.evidences.stream().filter(e -> e.getLaboCommensal().equals(GermType.COMMENSAL)).count() == 1) {
-            return "[C]"; //contamination
-        }
-        if (this.evidences.stream().filter(e -> e.getLaboCommensal().name() != GermType.COMMENSAL.name()).count() > 0 && this.getDistinctGerms().size() > 1) {
-            //what if 2 contaminations in same day? is it a polymicrobial or 2 contaminations?
-            return "[P]"; //contamination
-        }
-        return "";
+        return "TODO";
     }
 
     @Override
