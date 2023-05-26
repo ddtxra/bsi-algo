@@ -8,7 +8,6 @@ import ch.hcuge.spci.bsi.impl.praise.mapper.PRAISECultureMapper;
 import ch.hcuge.spci.bsi.impl.praise.model.BloodCulturePRAISE;
 import ch.hcuge.spci.bsi.impl.praise.model.EpisodePRAISE;
 
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +42,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         });
 
-        return episodes;
+        return episodes.stream().sorted(Comparator.comparing(Episode::getEpisodeDate)).toList();
     }
 
 
@@ -70,7 +69,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
 
                 //If it is a commensal
-                if(!cultureIsProcessed && bcp.isCommensal){
+                if (!cultureIsProcessed && bcp.isCommensal) {
 
                     // check whether there is one already in the 3 days from the same germ
                     List<EpisodePRAISE> matchingEvents = episodes.stream()
@@ -82,25 +81,25 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                         var candidateEpisode = matchingEvents.get(0);
 
                         //Check if it is a solitary commensal
-                        if(candidateEpisode.isSolitaryCommensal()){
+                        if (candidateEpisode.isSolitaryCommensal()) {
 
                             var solitaryCommensal = candidateEpisode.getEvidences().get(0);
 
                             // if the solitary commensal date is the same as the sample date of the new culture
-                            if(solitaryCommensal.getLaboSampleDate().equals(bcp.getLaboSampleDate()) && solitaryCommensal.getSampleId().equals(bcp.getSampleId())){
+                            if (solitaryCommensal.getLaboSampleDate().equals(bcp.getLaboSampleDate()) && solitaryCommensal.getSampleId().equals(bcp.getSampleId())) {
                                 // DISCARD the culture (does not even count as an evidence)
                                 cultureIsProcessed = true;
-                            }else {
+                            } else {
                                 //The episode will not be a solitary commensal anymore, it will be a on-set bacteremia
                                 candidateEpisode.addSecondCSCEvidenceToMakeItAHOB(bcp);
                                 cultureIsProcessed = true;
                             }
 
-                        } else if(candidateEpisode.isOB()) {
+                        } else if (candidateEpisode.isOB()) {
 
-                            if(ChronoUnit.DAYS.between(candidateEpisode.getEpisodeDate(), bcp.getLaboSampleDate()) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS){
+                            if (ChronoUnit.DAYS.between(candidateEpisode.getEpisodeDate(), bcp.getLaboSampleDate()) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS) {
                                 candidateEpisode.addCopyStrainEvidence(bcp);
-                            }else {
+                            } else {
                                 episodes.add(new EpisodePRAISE(bcp));
                             }
                             cultureIsProcessed = true;
@@ -126,11 +125,12 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         }
 
+
         return episodes;
 
     }
 
-    private List<EpisodePRAISE> attemptToConsolidateOBEpisodesTogetherUsingPolymicrobialCriteria(List<EpisodePRAISE> episodes){
+    private List<EpisodePRAISE> attemptToConsolidateOBEpisodesTogetherUsingPolymicrobialCriteria(List<EpisodePRAISE> episodes) {
 
         int sizeBeforeConsolidation;
         int lastSize = episodes.size();
@@ -142,29 +142,24 @@ public class BSIClassifierPRAISE implements BSIClassifier {
             consolidatedEpisodes = attemptToConsolidate(episodes);
             lastSize = consolidatedEpisodes.size();
 
-        }while (lastSize < sizeBeforeConsolidation);
+        } while (lastSize < sizeBeforeConsolidation);
 
         return consolidatedEpisodes;
 
     }
 
-
-
-        private List<EpisodePRAISE> attemptToConsolidate(List<EpisodePRAISE> episodes){
+    private List<EpisodePRAISE> attemptToConsolidate(List<EpisodePRAISE> episodes) {
 
         List<EpisodePRAISE> consolidatedEpisodes = new ArrayList<>();
         Set<Integer> processed = new HashSet<Integer>();
 
-        ZonedDateTime startDate = episodes.get(0).getEpisodeDate();
-        ZonedDateTime endDate = episodes.get(episodes.size() - 1).getEpisodeDate();
-
-        for(var i=0; i<episodes.size(); i++){
+        for (var i = 0; i < episodes.size(); i++) {
             var episodeI = episodes.get(i);
-            for(var j=i; j<episodes.size(); j++){
+            for (var j = i; j < episodes.size(); j++) {
                 var episodeJ = episodes.get(j);
-                if(i!=j && !processed.contains(i) && !processed.contains(j)){
-                    if(episodeI.isOB() && episodeJ.isOB()){
-                        if(Math.abs(ChronoUnit.DAYS.between(episodeI.getEpisodeDate(), episodeJ.getEpisodeDate())) < PRAISEParameters.POLYMICROBIAL_VALID_DAYS){
+                if (i != j && !processed.contains(i) && !processed.contains(j)) {
+                    if (episodeI.isOB() && episodeJ.isOB()) {
+                        if (Math.abs(ChronoUnit.DAYS.between(episodeI.getEpisodeDate(), episodeJ.getEpisodeDate())) < PRAISEParameters.POLYMICROBIAL_VALID_DAYS) {
                             episodeI.addPolymicrobialEvidences(episodeJ.getEvidences());
                             consolidatedEpisodes.add(episodeI);
                             processed.add(i);
@@ -174,7 +169,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
                 }
             }
 
-            if(!processed.contains(i)){
+            if (!processed.contains(i)) {
                 consolidatedEpisodes.add(episodeI);
             }
         }
@@ -184,7 +179,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
     }
 
-    private boolean checkIfCopyStrainOfExistingOBEpisodeUsingNonRepeatIntervalCriteria(List<EpisodePRAISE> episodes, BloodCulturePRAISE bcp){
+    private boolean checkIfCopyStrainOfExistingOBEpisodeUsingNonRepeatIntervalCriteria(List<EpisodePRAISE> episodes, BloodCulturePRAISE bcp) {
 
         boolean consolidated = false;
 
@@ -206,7 +201,6 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         return consolidated;
     }
-
 
 
 }

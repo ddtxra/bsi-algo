@@ -57,9 +57,9 @@ public class EpisodePRAISE implements Episode {
 
     @Override
     public Boolean isPolymicrobial() {
-        //Seven: Only makes sens to talk about polymicrobials for HOBs //FIXME what about for COBs? Can we talk about polymicrobials
+        //Seven: Only makes sens to talk about polymicrobials for OBs (HOBs and COBs)
         if(this.isOB()) {
-            return this.getDistinctGerms().size() > 0;
+            return this.getDistinctGerms().size() > 1;
         }else {
             return false;
         }

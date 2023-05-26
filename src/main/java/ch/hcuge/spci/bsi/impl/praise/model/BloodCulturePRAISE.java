@@ -130,7 +130,7 @@ public class BloodCulturePRAISE implements Culture {
 
     @Override
     public String getLaboGermName() {
-        if (microorgSnomedCTCode != null) {
+        if (microorgSnomedCTCode != null && !microorgSnomedCTCode.equals("not-done") && !microorgSnomedCTCode.equals("")) {
             return this.microorgSnomedCTCode;
         }
 
