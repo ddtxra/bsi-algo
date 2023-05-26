@@ -104,7 +104,9 @@ public class EpisodePRAISE implements Episode {
     @Override
     public Set<String> getDistinctGerms() {
         List<String> distinctGerms = this.evidences.stream().map(BloodCulturePRAISE::getLaboGermName).toList();
-        return new TreeSet(distinctGerms);
+        var ts = new TreeSet<>(String::compareTo);
+        ts.addAll(distinctGerms);
+        return ts;
     }
 
     /**
