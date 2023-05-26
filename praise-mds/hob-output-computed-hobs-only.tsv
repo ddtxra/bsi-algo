@@ -29,15 +29,15 @@ patient_1020	2021/01/11	pathA+pathB	false	HOB
 patient_1022	2021/01/05	pathA+pathB	false	HOB
 patient_1023	2021/01/05	pathA+pathB	false	HOB
 patient_1023	2021/01/09	pathC	false	HOB
-patient_1024	2021/01/05	pathA+comA	true	HOB (HOB-CSC)
+patient_1024	2021/01/05	comA+pathA	true	HOB (HOB-CSC)
 patient_1024	2021/01/13	comB	true	HOB (HOB-CSC)
-patient_1026	2021/01/12	pathA+comA	true	HOB (HOB-CSC)
+patient_1026	2021/01/12	comA+pathA	true	HOB (HOB-CSC)
 patient_1028	2021/01/14	comA+comB	true	HOB (HOB-CSC)
 patient_1029	2021/01/11	comA	true	HOB (HOB-CSC)
 patient_1030	2021/01/16	comA+comB	true	HOB (HOB-CSC)
 patient_1031	2021/01/11	comA	true	HOB (HOB-CSC)
 patient_1031	2021/01/15	comB	true	HOB (HOB-CSC)
-patient_1032	2021/01/04	pathA+pathB+comA	true	HOB (HOB-CSC)
+patient_1032	2021/01/04	comA+pathA+pathB	true	HOB (HOB-CSC)
 patient_1033	2021/01/04	pathA+pathB	false	HOB
 patient_1034	2021/01/04	pathA+pathB	false	HOB
 patient_1035	2021/01/03	pathA+pathB	false	HOB

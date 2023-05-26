@@ -103,7 +103,8 @@ public class EpisodePRAISE implements Episode {
 
     @Override
     public Set<String> getDistinctGerms() {
-        return this.evidences.stream().map(BloodCulturePRAISE::getLaboGermName).collect(Collectors.toSet());
+        List<String> distinctGerms = this.evidences.stream().map(BloodCulturePRAISE::getLaboGermName).toList();
+        return new TreeSet(distinctGerms);
     }
 
     /**
