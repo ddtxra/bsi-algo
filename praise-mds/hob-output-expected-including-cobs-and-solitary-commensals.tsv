@@ -6,8 +6,8 @@ patient_1003	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1003	2021/01/05	pathB	true	false	HOB
 patient_1004	2021/01/04	pathA+pathB	true	false	HOB
 patient_10041	2021/01/04	pathA+pathB	true	false	HOB
-patient_10042	2021/01/04	pathB+pathA+pathC	true	false	HOB
-patient_10043	2021/01/04	pathB+pathA+pathC	true	false	HOB
+patient_10042	2021/01/04	pathC+pathB+pathA	true	false	HOB
+patient_10043	2021/01/04	pathC+pathB+pathA	true	false	HOB
 patient_10044	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_10044	2021/01/14	pathC	true	false	HOB
 patient_1005	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)

@@ -3,8 +3,8 @@ patient_1001	2021/01/15	pathA	false	HOB
 patient_1003	2021/01/05	pathB	false	HOB
 patient_1004	2021/01/04	pathA+pathB	false	HOB
 patient_10041	2021/01/04	pathA+pathB	false	HOB
-patient_10042	2021/01/04	pathB+pathA+pathC	false	HOB
-patient_10043	2021/01/04	pathB+pathA+pathC	false	HOB
+patient_10042	2021/01/04	pathC+pathB+pathA	false	HOB
+patient_10043	2021/01/04	pathC+pathB+pathA	false	HOB
 patient_10044	2021/01/14	pathC	false	HOB
 patient_1006	2021/01/04	pathB	false	HOB
 patient_1007	2021/01/04	pathB	false	HOB
