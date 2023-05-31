@@ -90,3 +90,5 @@ patient_c006	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_c006	2021/01/10	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_sc003	2021/01/05	pathA	true	false	HOB
 patient_sc003	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
+patient_suzCom14	2021/01/03	comA	true	true	HOB (HOB-CSC)
+patient_suzCom14	2021/01/17	comA	true	true	HOB (HOB-CSC)

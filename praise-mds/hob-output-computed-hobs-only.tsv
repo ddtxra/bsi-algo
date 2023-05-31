@@ -45,3 +45,5 @@ patient_p003	2021/01/05	pathA	false	HOB
 patient_c004	2021/01/05	comA	true	HOB (HOB-CSC)
 patient_c005	2021/01/05	comA	true	HOB (HOB-CSC)
 patient_sc003	2021/01/05	pathA	false	HOB
+patient_suzCom14	2021/01/03	comA	true	HOB (HOB-CSC)
+patient_suzCom14	2021/01/17	comA	true	HOB (HOB-CSC)

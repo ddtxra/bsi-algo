@@ -852,3 +852,15 @@ patient_sc003	20210101	2021-01-05	comA	1	sample_a
 #expected.PRAISE
 #expected.PRAISE	patient_sc003	2021-01-05	pathA	HOB
 #expected.PRAISE	patient_sc003	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
+
+>
+
+patient_suzCom14	20210101	2021-01-03	comA	1
+patient_suzCom14	20210101	2021-01-04	comA	1
+patient_suzCom14	20210101	2021-01-16	comA	1
+patient_suzCom14	20210101	2021-01-17	comA	1
+patient_suzCom14	20210101	2021-01-18	comA	1
+
+#expected.PRAISE
+#expected.PRAISE patient_suzCom14	2021/01/03	comA	true	true	HOB (HOB-CSC)
+#expected.PRAISE patient_suzCom14	2021/01/17	comA	true	true	HOB (HOB-CSC)
