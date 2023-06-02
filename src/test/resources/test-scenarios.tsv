@@ -8,7 +8,6 @@ patient_1001	20210101	2021-01-05	pathA	0
 patient_1001	20210101	2021-01-10	pathA	0
 patient_1001	20210101	2021-01-14	pathA	0
 patient_1001	20210101	2021-01-15	pathA	0
-patient_1001	20210101	2021-01-16	pathA	0
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1001	2021-01-01	pathA
@@ -22,14 +21,28 @@ patient_1001	20210101	2021-01-16	pathA	0
 # If the two positive hemocultures appear in different stays for the same patient it should count as 2 episodes to investigate for HUG
 # Only 1 for PRAISE
 patient_1002	20210101	2021-01-01	pathA	0
-patient_1002	20210103	2021-01-05	pathA	0
+patient_1002	20210103	2021-01-04	pathA	0
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_1002	2021-01-01	pathA
-#expected.HUG_v2023	patient_1002	2021-01-05	pathA
+#expected.HUG_v2023	patient_1002	2021-01-04	pathA
 
 #expected.PRAISE
 #expected.PRAISE	patient_1002	2021-01-01	pathA	NOT-HOB (COB)
+#expected.PRAISE	patient_1002	2021-01-04	pathA	NOT-HOB (COB)
+
+
+
+>
+# Patient ReAdmitted, Seven on 01.06.2023
+# In our current logic this would be 2 HOBs. Both with S. aureus. One for Stay 1 and one for Stay 2.
+# Rationale for this decision: This scenario is rather rare and a merely “episode of care / stay” based approach is more feasible for us.
+patient_readmitted	20230101	2023-01-03	pathSAureus	0
+patient_readmitted	20230104	2023-01-06	pathSAureus	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_readmitted	2023-01-03	pathSAureus	HOB
+#expected.PRAISE	patient_readmitted	2023-01-06	pathSAureus	HOB
 
 >
 # Two positive hemocultures with a different pathogene more than 3 days should count as 2 episodes
@@ -179,17 +192,16 @@ patient_1071	20210101	2021-01-08	pathA	0
 
 >
 #HUG: 2 episodes: 1 at day 1 (pathA) and 1 at day 2 (pathB)
-patient_1008	20210101	2021-01-01	pathA	0
-patient_1008	20210101	2021-01-02	pathB	0
-patient_1008	20210101	2021-01-15	pathB	0
+patient_1008	20210101	2021-01-03	pathA	0
+patient_1008	20210101	2021-01-04	pathB	0
+patient_1008	20210101	2021-01-17	pathB	0
 
 #expected.HUG_v2023
-#expected.HUG_v2023	patient_1008	2021-01-01	pathA
-#expected.HUG_v2023	patient_1008	2021-01-02	pathB
+#expected.HUG_v2023	patient_1008	2021-01-03	pathA
+#expected.HUG_v2023	patient_1008	2021-01-04	pathB
 
 #expected.PRAISE
-#expected.PRAISE	patient_1008	2021-01-01	pathA+pathB	NOT-HOB (COB)
-#expected.PRAISE	patient_1008	2021-01-15	pathB	HOB
+#expected.PRAISE	patient_1008	2021-01-03	pathA+pathB	HOB
 
 >
 # 14 days
@@ -854,6 +866,7 @@ patient_sc003	20210101	2021-01-05	comA	1	sample_a
 #expected.PRAISE	patient_sc003	2021-01-05	comA	NOT-HOB (SOLITARY_COMMENSAL)
 
 >
+# Commensals repeated
 
 patient_suzCom14	20210101	2021-01-03	comA	1
 patient_suzCom14	20210101	2021-01-04	comA	1
@@ -861,6 +874,47 @@ patient_suzCom14	20210101	2021-01-16	comA	1
 patient_suzCom14	20210101	2021-01-17	comA	1
 patient_suzCom14	20210101	2021-01-18	comA	1
 
+
 #expected.PRAISE
-#expected.PRAISE patient_suzCom14	2021/01/03	comA	true	true	HOB (HOB-CSC)
-#expected.PRAISE patient_suzCom14	2021/01/17	comA	true	true	HOB (HOB-CSC)
+#expected.PRAISE	patient_suzCom14	2021-01-03	comA	HOB (HOB-CSC)
+#expected.PRAISE	patient_suzCom14	2021-01-17	comA	HOB (HOB-CSC)
+>
+#Should be 2 HOB (Day 3 and Day 20), each with S. aureus. Rationale: Day 13 is a copystrain (repeat isolate within RIT-period) and does not create an episode that would “block” the isolate on Day 20.
+
+patient_sevSaureus	20210101	2021-01-03	pathSAureus	0
+patient_sevSaureus	20210101	2021-01-13	pathSAureus	0
+patient_sevSaureus	20210101	2021-01-20	pathSAureus	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_sevSaureus	2021-01-03	pathSAureus	HOB
+#expected.PRAISE	patient_sevSaureus	2021-01-20	pathSAureus	HOB
+
+
+>
+# Here is another tricky one, you could perhaps put in:
+# 2 HOB: 1 with only S. aureus (Day 3) and one polymicrobial on Day 8 (E. coli and E. faecium (NOT: S. aureus, because S. aureus on Day 8 is a copystrain (=within RIT-period) of the HOB from Day 3)). This example illustrates: We do copystrain elimination before forming polymicrobial episodes.
+
+patient_sevSaurPoly	20210101	2021-01-03	pathSAureus	0
+patient_sevSaurPoly	20210101	2021-01-08	pathEColi	0
+patient_sevSaurPoly	20210101	2021-01-08	pathEFaicium	0
+patient_sevSaurPoly	20210101	2021-01-08	pathSAureus	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_sevSaurPoly	2021-01-03	pathSAureus	HOB
+#expected.PRAISE	patient_sevSaurPoly	2021-01-08	pathEColi+pathEFaicium	HOB
+
+
+>
+# Here it gets difficult. Our (Charité) current logic is that for polymicrobial HOB the copystrains (=RIT-period) are counted from the day of the respective isolate (i.e. Day 3 onwards for S. aureus and Day 5 from E. coli in this example). I.e. the “count start day” for RIT-period differs from the infection beginning of the polymicrobial episode (= Day 3 in this example).
+# Therefore, this would result in:
+# 2 HOBs: 1 polymicrobial HOB (S. aureus and E. coli) on Day 3; 1 S. aureus HOB on Day 18.
+# E. coli on Day 18 is a copystrain and not a HOB.
+
+patient_sevSaurPoly2	20210101	2021-01-03	pathSAureus	0
+patient_sevSaurPoly2	20210101	2021-01-05	pathEColi	0
+patient_sevSaurPoly2	20210101	2021-01-18	pathSAureus	0
+patient_sevSaurPoly2	20210101	2021-01-18	pathEColi	0
+
+#expected.PRAISE
+#expected.PRAISE	patient_sevSaurPoly2	2021-01-03	pathSAureus+pathEColi	HOB
+#expected.PRAISE	patient_sevSaurPoly2	2021-01-18	pathSAureus	HOB

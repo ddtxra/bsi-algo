@@ -123,6 +123,10 @@ public class EpisodePRAISE implements Episode {
         return this.getFirstEvidence().getLaboSampleDate();
     }
 
+    public ZonedDateTime getFirstDateForGerm(String germName) {
+        return Objects.requireNonNull(this.evidences.stream().filter(e -> e.getLaboGermName().equals(germName)).min(Comparator.comparing(BloodCulturePRAISE::getLaboSampleDate)).orElse(null)).getLaboSampleDate();
+    }
+
     boolean containsGerm(String germ_name) {
         return this.evidences.stream().anyMatch(e -> e.getLaboGermName().equalsIgnoreCase(germ_name));
     }

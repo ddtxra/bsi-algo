@@ -10,6 +10,7 @@ import ch.hcuge.spci.bsi.impl.praise.model.EpisodePRAISE;
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,24 +30,25 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         List<Episode> episodes = new ArrayList<>();
 
+        Function<BloodCulturePRAISE, String> groupingFunction = bc -> PRAISEParameters.RESET_RIT_PERIOD_AFTER_READMISSION ? (bc.getPatientId() + "_" + bc.getStayId()) : bc.getPatientId();
+
         //First we group the bloodCultures and filter out only positive results
         final Map<String, List<BloodCulturePRAISE>> positiveBloodCulturesGroupedByPatient = bloodCultures.stream()
                 .filter(bc -> bc.pos_neg == Boolean.TRUE || bc.pos_neg == null) // Get only Positive Blood Cultures
-                .collect(Collectors.groupingBy(BloodCulturePRAISE::getPatientId));
+                .collect(Collectors.groupingBy(groupingFunction));
 
         //For each patient
         positiveBloodCulturesGroupedByPatient.keySet().forEach(patientId -> {
             List<BloodCulturePRAISE> positiveBloocCulturesForPatient = positiveBloodCulturesGroupedByPatient.get(patientId);
-            List<EpisodePRAISE> episodesForPatient = this.identifyEpisodesForPatient(positiveBloocCulturesForPatient);
+            List<EpisodePRAISE> episodesForPatient = this.identifyEpisodesForGroupPatientOrPatientStay(positiveBloocCulturesForPatient);
             episodes.addAll(episodesForPatient);
-
         });
 
         return episodes.stream().sorted(Comparator.comparing(Episode::getEpisodeDate)).toList();
     }
 
 
-    private List<EpisodePRAISE> identifyEpisodesForPatient(List<BloodCulturePRAISE> culturesForSinglePatient) {
+    private List<EpisodePRAISE> identifyEpisodesForGroupPatientOrPatientStay(List<BloodCulturePRAISE> culturesForSinglePatient) {
 
         List<EpisodePRAISE> episodes = new ArrayList<>();
         List<BloodCulturePRAISE> culturesSorted = culturesForSinglePatient.stream().sorted(Comparator.comparing(BloodCulturePRAISE::getLaboSampleDate)).toList();
@@ -183,11 +185,14 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         boolean consolidated = false;
 
+
         //Within 3 days
         List<EpisodePRAISE> matchingEpisodes = episodes.stream()
                 .filter(EpisodePRAISE::isOB)
                 .filter(e -> e.getDistinctGerms().contains(bcp.getLaboGermName())) //GERM is the same!
-                .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS).toList();
+                //.filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getEpisodeDate(), bcp.getLaboSampleDate())) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS).toList()
+                // using last germ
+                .filter(e -> Math.abs(ChronoUnit.DAYS.between(e.getFirstDateForGerm(bcp.getLaboGermName()), bcp.getLaboSampleDate())) < PRAISEParameters.NON_REPEAT_INTERVAL_DAYS).toList();
 
         if (matchingEpisodes.size() == 1) {
 

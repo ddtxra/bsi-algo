@@ -30,7 +30,7 @@ public class BloodCulturePRAISE implements Culture {
 
     @Override
     public String getStayId() {
-        return null;
+        return this.admissionDate.toString();
     }
 
     @Override

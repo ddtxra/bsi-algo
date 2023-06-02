@@ -1,48 +1,17 @@
 patient_id	stay_begin_date	labo_sample_date	labo_germ_name	labo_commensal	sample_id
 
->
-#This one is an extreme case: 1 polymicrobial episode on day 1 (pathA+pathC) because less than 14 days. And 1 mono episode on day 15.
-#⚠️Tricky but working now with V2
-#Seven 20 May 2023: one HOB with path C (because path A on day 14 is a copytrain of earlier COB). MvM agree SRW agree
-
-patient_10044	20210101	2021-01-01	pathA	0
-patient_10044	20210101	2021-01-14	pathC	0
-patient_10044	20210101	2021-01-14	pathA	0
-patient_10044	20210101	2021-01-15	pathC	0
-
-#expected.HUG_v2023
-#expected.HUG_v2023	patient_10044	2021-01-01	pathA+pathC
-#expected.HUG_v2023	patient_10044	2021-01-15	pathC
-
-#expected.PRAISE
-#expected.PRAISE	patient_10044	2021-01-01	pathA	NOT-HOB (COB)
-#expected.PRAISE	patient_10044	2021-01-14	pathC	HOB
-
 
 >
-#scenario (basics) 101 patient_1006
-#Response from PRAISE: Seven: 1 HOB with path B (same reason as patient_10044) MvM agree SRW agree
-patient_1006	20210101	2021-01-01	pathA	0
-patient_1006	20210101	2021-01-04	pathB	0
-patient_1006	20210101	2021-01-05	pathA	0
+# Here it gets difficult. Our (Charité) current logic is that for polymicrobial HOB the copystrains (=RIT-period) are counted from the day of the respective isolate (i.e. Day 3 onwards for S. aureus and Day 5 from E. coli in this example). I.e. the “count start day” for RIT-period differs from the infection beginning of the polymicrobial episode (= Day 3 in this example).
+# Therefore, this would result in:
+# 2 HOBs: 1 polymicrobial HOB (S. aureus and E. coli) on Day 3; 1 S. aureus HOB on Day 18.
+# E. coli on Day 18 is a copystrain and not a HOB.
 
-#expected.HUG_v2023
-#expected.HUG_v2023	patient_1006	2021-01-01	pathA
-#expected.HUG_v2023	patient_1006	2021-01-04	pathB
-
-#expected.PRAISE
-#expected.PRAISE	patient_1006	2021-01-01	pathA	NOT-HOB (COB)
-#expected.PRAISE	patient_1006	2021-01-04	pathB	HOB
-
->
-#scenario (basics) HUG: 1 polymicrobien
-patient_1007	20210101	2021-01-01	pathA	0
-patient_1007	20210101	2021-01-04	pathB	0
-patient_1007	20210101	2021-01-04	pathA	0
-
-#expected.HUG_v2023
-#expected.HUG_v2023	patient_1007	2021-01-01	pathA+pathB
+patient_sevSaurPoly2	20210101	2021-01-03	pathSAureus	0
+patient_sevSaurPoly2	20210101	2021-01-05	pathEColi	0
+patient_sevSaurPoly2	20210101	2021-01-18	pathSAureus	0
+patient_sevSaurPoly2	20210101	2021-01-18	pathEColi	0
 
 #expected.PRAISE
-#expected.PRAISE	patient_1007	2021-01-01	pathA	NOT-HOB (COB)
-#expected.PRAISE	patient_1007	2021-01-04	pathB	HOB
+#expected.PRAISE	patient_sevSaurPoly2	2021-01-03	pathSAureus+pathEColi	HOB
+#expected.PRAISE	patient_sevSaurPoly2	2021-01-18	pathSAureus	HOB
