@@ -2,6 +2,9 @@ patientId	episodeDate	microOrganism(s)	isHOB	containsCSC	classification
 patient_1001	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1001	2021/01/15	pathA	true	false	HOB
 patient_1002	2021/01/01	pathA	false	false	NOT-HOB (COB)
+patient_1002	2021/01/04	pathA	false	false	NOT-HOB (COB)
+patient_readmitted	2023/01/03	pathSAureus	true	false	HOB
+patient_readmitted	2023/01/06	pathSAureus	true	false	HOB
 patient_1003	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1003	2021/01/05	pathB	true	false	HOB
 patient_1004	2021/01/04	pathA+pathB	true	false	HOB
@@ -16,8 +19,7 @@ patient_1006	2021/01/04	pathB	true	false	HOB
 patient_1007	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1007	2021/01/04	pathB	true	false	HOB
 patient_1071	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)
-patient_1008	2021/01/01	pathA+pathB	false	false	NOT-HOB (COB)
-patient_1008	2021/01/15	pathB	true	false	HOB
+patient_1008	2021/01/03	pathA+pathB	true	false	HOB
 patient_1009	2021/01/01	pathA	false	false	NOT-HOB (COB)
 patient_1009	2021/01/15	pathA	true	false	HOB
 patient_1009	2021/01/29	pathA	true	false	HOB
@@ -90,3 +92,11 @@ patient_c006	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_c006	2021/01/10	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
 patient_sc003	2021/01/05	pathA	true	false	HOB
 patient_sc003	2021/01/05	comA	false	false	NOT-HOB (SOLITARY_COMMENSAL)
+patient_suzCom14	2021/01/03	comA	true	true	HOB (HOB-CSC)
+patient_suzCom14	2021/01/17	comA	true	true	HOB (HOB-CSC)
+patient_sevSaureus	2021/01/03	pathSAureus	true	false	HOB
+patient_sevSaureus	2021/01/20	pathSAureus	true	false	HOB
+patient_sevSaurPoly	2021/01/03	pathSAureus	true	false	HOB
+patient_sevSaurPoly	2021/01/08	pathEColi+pathEFaicium	true	false	HOB
+patient_sevSaurPoly2	2021/01/03	pathSAureus+pathEColi	true	false	HOB
+patient_sevSaurPoly2	2021/01/18	pathSAureus	true	false	HOB
