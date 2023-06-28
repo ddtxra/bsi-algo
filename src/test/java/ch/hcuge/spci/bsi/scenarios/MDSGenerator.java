@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class MDSGenerator {
@@ -36,36 +37,60 @@ public class MDSGenerator {
 
     @Test
     public void generateCulturesForPraise() throws IOException, URISyntaxException {
+        var SEPARATOR = ";";
+
         PatientCaseServiceImpl testCulturesServices = new PatientCaseServiceImpl();
         testCulturesServices.loadContent("test-scenarios.tsv");
         BSIClassifier bsiClassifier = new BSIClassifierPRAISE();
 
+        StringBuilder patientContent = new StringBuilder();
         StringBuilder cultureContent = new StringBuilder();
+
         StringBuilder episodeContentExpected = new StringBuilder();
         StringBuilder hobsOnlyContentExpected = new StringBuilder();
         StringBuilder episodeContentComputed = new StringBuilder();
         StringBuilder hobsOnlyContentComputed = new StringBuilder();
 
-        var headers_for_bc = List.of("secenario#", "id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
+        var headers_for_patient = List.of("patientId", "gender", "birthDate", "deathDate", "inHospitalMortality");
+        var headers_for_bc = List.of("id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
         var headers_for_epi = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "containsCSC", "classification");
         var headers_for_hobsonly = List.of("patientId", "episodeDate", "microOrganism(s)", "containsCSC", "classification");
 
-        cultureContent.append(String.join("\t", headers_for_bc));
+        patientContent.append(String.join(SEPARATOR, headers_for_patient));
+        patientContent.append("\n");
+
+        cultureContent.append(String.join(SEPARATOR, headers_for_bc));
         cultureContent.append("\n");
 
-        episodeContentExpected.append(String.join("\t", headers_for_epi));
+        episodeContentExpected.append(String.join(SEPARATOR, headers_for_epi));
         episodeContentExpected.append("\n");
-        episodeContentComputed.append(String.join("\t", headers_for_epi));
+        episodeContentComputed.append(String.join(SEPARATOR, headers_for_epi));
         episodeContentComputed.append("\n");
 
-        hobsOnlyContentExpected.append(String.join("\t", headers_for_hobsonly));
+        hobsOnlyContentExpected.append(String.join(SEPARATOR, headers_for_hobsonly));
         hobsOnlyContentExpected.append("\n");
-        hobsOnlyContentComputed.append(String.join("\t", headers_for_hobsonly));
+        hobsOnlyContentComputed.append(String.join(SEPARATOR, headers_for_hobsonly));
         hobsOnlyContentComputed.append("\n");
 
+        AtomicInteger cnt = new AtomicInteger(0);
 
 
         testCulturesServices.getPatientsIds().forEach(pId -> {
+
+            var seed = cnt.incrementAndGet();
+            String gender = new Random(seed).nextDouble() < 1.0 / 20 ? "U" : (new Random(seed).nextDouble() < 0.5 ? "M" : "F");
+            String birthDate = java.time.LocalDate.of(1930, 1, 1).plusDays(new Random(seed).nextInt(27371)).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            var birthDat = java.time.LocalDate.parse(birthDate, java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            var randomYear = new Random(seed).nextInt(31) + 50;
+            String deathDate = birthDate.isEmpty() ? "" : birthDat.plusYears(randomYear).isAfter(java.time.LocalDate.now()) ? "" : birthDat.plusYears(randomYear).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            String inHospitalMortality = "";
+            if(!deathDate.equals("")){
+                inHospitalMortality = (new Random(seed).nextDouble() < 0.7 ? "1" : "0");
+            }
+
+            List<String> patientRow = List.of(pId, gender, birthDate, deathDate, inHospitalMortality);
+            patientContent.append(String.join(SEPARATOR, patientRow));
+            patientContent.append("\n");
 
             List<Culture> cultures = testCulturesServices.getCulturesForPatient(pId);
             List<Episode> expectedEpisodes = testCulturesServices.getExpectedEpisodesForPatientAndAlgo(pId, "PRAISE");
@@ -77,23 +102,22 @@ public class MDSGenerator {
                 Random r = new Random();
                 String ward = list[r.nextInt(list.length)];
                     List<String> row = List.of(
-                            pId.replace("patient_", "scenario_"),
                             culture.getId(),
-                            NN(culture.getSampleId()),
+                            culture.getSampleId(),
                             culture.getPatientId(),
-                            NN(""),
+                            "",
                             formatDate(culture.getLaboSampleDate()),
                             ward,
-                            NN(""),
-                            NN(""),
-                            NN(""),
+                            "",
+                            "",
+                            "",
                             culture.getLaboGermName(),
                             (culture.isLabGermCommensal() ? "1" : "0"),
                             "1",
                             ward,
-                            NN(""),
+                            "",
                             formatDate(culture.getStayBeginDate()));
-                    cultureContent.append(String.join("\t", row));
+                    cultureContent.append(String.join(SEPARATOR, row));
                     cultureContent.append("\n");
 
             }
@@ -107,7 +131,7 @@ public class MDSGenerator {
                         episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
                         NN(episode.getClassification())
                         );
-                episodeContentExpected.append(String.join("\t", row));
+                episodeContentExpected.append(String.join(SEPARATOR, row));
                 episodeContentExpected.append("\n");
 
             }
@@ -120,7 +144,7 @@ public class MDSGenerator {
                         (episode.getClassification() != null) ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
                         NN(episode.getClassification())
                 );
-                hobsOnlyContentExpected.append(String.join("\t", row));
+                hobsOnlyContentExpected.append(String.join(SEPARATOR, row));
                 hobsOnlyContentExpected.append("\n");
 
             }
@@ -134,7 +158,7 @@ public class MDSGenerator {
                         episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
                         NN(episode.getClassification())
                 );
-                episodeContentComputed.append(String.join("\t", row));
+                episodeContentComputed.append(String.join(SEPARATOR, row));
                 episodeContentComputed.append("\n");
 
             }
@@ -147,18 +171,20 @@ public class MDSGenerator {
                         String.valueOf(((EpisodePRAISE)episode).containsCSC()),
                         NN(episode.getClassification())
                 );
-                hobsOnlyContentComputed.append(String.join("\t", row));
+                hobsOnlyContentComputed.append(String.join(SEPARATOR, row));
                 hobsOnlyContentComputed.append("\n");
 
             }
 
         });
 
-        Files.writeString(Paths.get("praise-mds/blood-cultures-input.tsv"), cultureContent.toString());
-        Files.writeString(Paths.get("praise-mds/hob-output-expected-including-cobs-and-solitary-commensals.tsv"), episodeContentExpected.toString());
-        Files.writeString(Paths.get("praise-mds/hob-output-expected-hobs-only.tsv"), hobsOnlyContentExpected.toString());
-        Files.writeString(Paths.get("praise-mds/hob-output-computed-including-cobs-and-solitary-commensals.tsv"), episodeContentComputed.toString());
-        Files.writeString(Paths.get("praise-mds/hob-output-computed-hobs-only.tsv"), hobsOnlyContentComputed.toString());
+        Files.writeString(Paths.get("praise-mds/PATIENTS.CSV"), patientContent.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/BLOODCULTURES.CSV"), cultureContent.toString(),  StandardCharsets.UTF_8);
+
+        Files.writeString(Paths.get("praise-mds/hob-output-expected-including-cobs-and-solitary-commensals.tsv"), episodeContentExpected.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-expected-hobs-only.tsv"), hobsOnlyContentExpected.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-computed-including-cobs-and-solitary-commensals.tsv"), episodeContentComputed.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-computed-hobs-only.tsv"), hobsOnlyContentComputed.toString(),  StandardCharsets.UTF_8);
 
     }
 
