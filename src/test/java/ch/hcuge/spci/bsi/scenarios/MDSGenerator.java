@@ -78,14 +78,16 @@ public class MDSGenerator {
         testCulturesServices.getPatientsIds().forEach(pId -> {
 
             var seed = cnt.incrementAndGet();
-            String gender = new Random(seed).nextDouble() < 1.0 / 20 ? "U" : (new Random(seed).nextDouble() < 0.5 ? "M" : "F");
-            String birthDate = java.time.LocalDate.of(1930, 1, 1).plusDays(new Random(seed).nextInt(27371)).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            Random random = new Random(seed);
+
+            String gender = random.nextDouble() < 1.0 / 20 ? "U" : (random.nextDouble() < 0.5 ? "M" : "F");
+            String birthDate = java.time.LocalDate.of(1930, 1, 1).plusDays(random.nextInt(27371)).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
             var birthDat = java.time.LocalDate.parse(birthDate, java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            var randomYear = new Random(seed).nextInt(31) + 50;
+            var randomYear = random.nextInt(31) + 50;
             String deathDate = birthDate.isEmpty() ? "" : birthDat.plusYears(randomYear).isAfter(java.time.LocalDate.now()) ? "" : birthDat.plusYears(randomYear).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
             String inHospitalMortality = "";
             if(!deathDate.equals("")){
-                inHospitalMortality = (new Random(seed).nextDouble() < 0.7 ? "1" : "0");
+                inHospitalMortality = (random.nextDouble() < 0.7 ? "1" : "0");
             }
 
             List<String> patientRow = List.of(pId, gender, birthDate, deathDate, inHospitalMortality);
