@@ -1,57 +1,57 @@
 patientId;episodeDate;microOrganism(s);isHOB;isPolymicrobial;containsCSC;classification
-patient_1001;2021/01/15;;true;false;false;HOB
-patient_readmitted;2021/01/03;;true;false;false;HOB
-patient_readmitted;2021/01/06;;true;false;false;HOB
-patient_1003;2021/01/05;;true;false;false;HOB
-patient_1004;2021/01/04;;true;true;false;HOB
-patient_10041;2021/01/04;;true;true;false;HOB
-patient_10042;2021/01/04;;true;true;false;HOB
-patient_10043;2021/01/04;;true;true;false;HOB
-patient_10044;2021/01/14;;true;false;false;HOB
-patient_1006;2021/01/04;;true;false;false;HOB
-patient_1007;2021/01/04;;true;false;false;HOB
-patient_1008;2021/01/03;;true;true;false;HOB
-patient_1009;2021/01/15;;true;false;false;HOB
-patient_1009;2021/01/29;;true;false;false;HOB
-patient_1019;2021/01/15;;true;false;false;HOB
-patient_1019;2021/01/29;;true;false;false;HOB
-patient_1025;2021/01/05;;true;false;false;HOB
-patient_1025;2021/01/23;;true;false;false;HOB
-patient_1010;2021/01/11;;true;true;true;HOB (HOB-CSC)
-patient_1012;2021/01/15;;true;false;true;HOB (HOB-CSC)
-patient_1013B;2021/01/04;;true;false;true;HOB (HOB-CSC)
-patient_1013D;2021/01/11;;true;false;true;HOB (HOB-CSC)
-patient_1014;2021/01/11;;true;true;false;HOB
-patient_1015;2021/01/11;;true;true;false;HOB
-patient_1017;2021/01/11;;true;true;false;HOB
-patient_1017;2021/01/15;;true;false;false;HOB
-patient_1018;2021/01/11;;true;true;false;HOB
-patient_1018;2021/01/15;;true;false;false;HOB
-patient_1020;2021/01/11;;true;true;false;HOB
-patient_1022;2021/01/05;;true;true;false;HOB
-patient_1023;2021/01/05;;true;true;false;HOB
-patient_1023;2021/01/09;;true;false;false;HOB
-patient_1024;2021/01/05;;true;true;true;HOB (HOB-CSC)
-patient_1024;2021/01/13;;true;false;true;HOB (HOB-CSC)
-patient_1026;2021/01/12;;true;true;true;HOB (HOB-CSC)
-patient_1028;2021/01/14;;true;true;true;HOB (HOB-CSC)
-patient_1029;2021/01/11;;true;false;true;HOB (HOB-CSC)
-patient_1030;2021/01/16;;true;true;true;HOB (HOB-CSC)
-patient_1031;2021/01/11;;true;false;true;HOB (HOB-CSC)
-patient_1031;2021/01/15;;true;false;true;HOB (HOB-CSC)
-patient_1032;2021/01/04;;true;true;true;HOB (HOB-CSC)
-patient_1033;2021/01/04;;true;true;false;HOB
-patient_1034;2021/01/04;;true;true;false;HOB
-patient_1035;2021/01/03;;true;true;false;HOB
-patient_p003;2021/01/05;;true;false;false;HOB
-patient_c004;2021/01/05;;true;false;true;HOB (HOB-CSC)
-patient_c005;2021/01/05;;true;false;true;HOB (HOB-CSC)
-patient_sc003;2021/01/05;;true;false;false;HOB
-patient_suzCom14;2021/01/03;;true;false;true;HOB (HOB-CSC)
-patient_suzCom14;2021/01/17;;true;false;true;HOB (HOB-CSC)
-patient_sevSaureus;2021/01/03;;true;false;false;HOB
-patient_sevSaureus;2021/01/20;;true;false;false;HOB
-patient_sevSaurPoly;2021/01/03;;true;false;false;HOB
-patient_sevSaurPoly;2021/01/08;;true;true;false;HOB
-patient_sevSaurPoly2;2021/01/03;;true;true;false;HOB
-patient_sevSaurPoly2;2021/01/18;;true;false;false;HOB
+patient_1001;2021/01/15;pathA;true;false;false;HOB
+patient_readmitted;2021/01/03;pathSAureus;true;false;false;HOB
+patient_readmitted;2021/01/06;pathSAureus;true;false;false;HOB
+patient_1003;2021/01/05;pathB;true;false;false;HOB
+patient_1004;2021/01/04;pathA+pathB;true;true;false;HOB
+patient_10041;2021/01/04;pathA+pathB;true;true;false;HOB
+patient_10042;2021/01/04;pathA+pathB+pathC;true;true;false;HOB
+patient_10043;2021/01/04;pathA+pathB+pathC;true;true;false;HOB
+patient_10044;2021/01/14;pathC;true;false;false;HOB
+patient_1006;2021/01/04;pathB;true;false;false;HOB
+patient_1007;2021/01/04;pathB;true;false;false;HOB
+patient_1008;2021/01/03;pathA+pathB;true;true;false;HOB
+patient_1009;2021/01/15;pathA;true;false;false;HOB
+patient_1009;2021/01/29;pathA;true;false;false;HOB
+patient_1019;2021/01/15;pathA;true;false;false;HOB
+patient_1019;2021/01/29;pathA;true;false;false;HOB
+patient_1025;2021/01/05;pathA;true;false;false;HOB
+patient_1025;2021/01/23;pathA;true;false;false;HOB
+patient_1010;2021/01/11;comA+comB;true;true;true;HOB (HOB-CSC)
+patient_1012;2021/01/15;comA;true;false;true;HOB (HOB-CSC)
+patient_1013B;2021/01/04;comA;true;false;true;HOB (HOB-CSC)
+patient_1013D;2021/01/11;comA;true;false;true;HOB (HOB-CSC)
+patient_1014;2021/01/11;pathA+pathB;true;true;false;HOB
+patient_1015;2021/01/11;pathA+pathB;true;true;false;HOB
+patient_1017;2021/01/11;pathA+pathB;true;true;false;HOB
+patient_1017;2021/01/15;pathC;true;false;false;HOB
+patient_1018;2021/01/11;pathA+pathB;true;true;false;HOB
+patient_1018;2021/01/15;pathC;true;false;false;HOB
+patient_1020;2021/01/11;pathA+pathB;true;true;false;HOB
+patient_1022;2021/01/05;pathA+pathB;true;true;false;HOB
+patient_1023;2021/01/05;pathA+pathB;true;true;false;HOB
+patient_1023;2021/01/09;pathC;true;false;false;HOB
+patient_1024;2021/01/05;comA+pathA;true;true;true;HOB (HOB-CSC)
+patient_1024;2021/01/13;comB;true;false;true;HOB (HOB-CSC)
+patient_1026;2021/01/12;comA+pathA;true;true;true;HOB (HOB-CSC)
+patient_1028;2021/01/14;comA+comB;true;true;true;HOB (HOB-CSC)
+patient_1029;2021/01/11;comA;true;false;true;HOB (HOB-CSC)
+patient_1030;2021/01/16;comA+comB;true;true;true;HOB (HOB-CSC)
+patient_1031;2021/01/11;comA;true;false;true;HOB (HOB-CSC)
+patient_1031;2021/01/15;comB;true;false;true;HOB (HOB-CSC)
+patient_1032;2021/01/04;comA+pathA+pathB;true;true;true;HOB (HOB-CSC)
+patient_1033;2021/01/04;pathA+pathB;true;true;false;HOB
+patient_1034;2021/01/04;pathA+pathB;true;true;false;HOB
+patient_1035;2021/01/03;pathA+pathB;true;true;false;HOB
+patient_p003;2021/01/05;pathA;true;false;false;HOB
+patient_c004;2021/01/05;comA;true;false;true;HOB (HOB-CSC)
+patient_c005;2021/01/05;comA;true;false;true;HOB (HOB-CSC)
+patient_sc003;2021/01/05;pathA;true;false;false;HOB
+patient_suzCom14;2021/01/03;comA;true;false;true;HOB (HOB-CSC)
+patient_suzCom14;2021/01/17;comA;true;false;true;HOB (HOB-CSC)
+patient_sevSaureus;2021/01/03;pathSAureus;true;false;false;HOB
+patient_sevSaureus;2021/01/20;pathSAureus;true;false;false;HOB
+patient_sevSaurPoly;2021/01/03;pathSAureus;true;false;false;HOB
+patient_sevSaurPoly;2021/01/08;pathEColi+pathEFaicium;true;true;false;HOB
+patient_sevSaurPoly2;2021/01/03;pathEColi+pathSAureus;true;true;false;HOB
+patient_sevSaurPoly2;2021/01/18;pathSAureus;true;false;false;HOB
