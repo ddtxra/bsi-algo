@@ -5,6 +5,7 @@ import ch.hcuge.spci.bsi.Culture;
 import ch.hcuge.spci.bsi.Episode;
 import ch.hcuge.spci.bsi.impl.praise.BSIClassifierPRAISE;
 import ch.hcuge.spci.bsi.impl.praise.model.EpisodePRAISE;
+import ch.hcuge.spci.bsi.scenarios.model.EpisodeImplForTest;
 
 import org.junit.Test;
 
@@ -27,14 +28,6 @@ public class MDSGenerator {
 
 
 
-    private String formatDate(ZonedDateTime zdt){
-        return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(zdt);
-    }
-
-    private String NN(Object o){
-        if(Objects.isNull(o) || o.toString().length() == 0) return "n/a"; else return o.toString();
-    }
-
 
     @Test
     public void generateCulturesForPraise() throws IOException, URISyntaxException {
@@ -54,8 +47,7 @@ public class MDSGenerator {
 
         var headers_for_patient = List.of("patientId", "gender", "birthDate", "deathDate", "inHospitalMortality");
         var headers_for_bc = List.of("bloodCultureid", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attrWardECDCWardClassification", "admHospDate");
-        var headers_for_epi = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "containsCSC", "classification");
-        var headers_for_hobsonly = List.of("patientId", "episodeDate", "microOrganism(s)", "containsCSC", "classification");
+        var headers_for_episodes = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "isPolymicrobial", "containsCSC", "classification");
 
         patientContent.append(String.join(SEPARATOR, headers_for_patient));
         patientContent.append("\n");
@@ -63,14 +55,14 @@ public class MDSGenerator {
         cultureContent.append(String.join(SEPARATOR, headers_for_bc));
         cultureContent.append("\n");
 
-        episodeContentExpected.append(String.join(SEPARATOR, headers_for_epi));
+        episodeContentExpected.append(String.join(SEPARATOR, headers_for_episodes));
         episodeContentExpected.append("\n");
-        episodeContentComputed.append(String.join(SEPARATOR, headers_for_epi));
+        episodeContentComputed.append(String.join(SEPARATOR, headers_for_episodes));
         episodeContentComputed.append("\n");
 
-        hobsOnlyContentExpected.append(String.join(SEPARATOR, headers_for_hobsonly));
+        hobsOnlyContentExpected.append(String.join(SEPARATOR, headers_for_episodes));
         hobsOnlyContentExpected.append("\n");
-        hobsOnlyContentComputed.append(String.join(SEPARATOR, headers_for_hobsonly));
+        hobsOnlyContentComputed.append(String.join(SEPARATOR, headers_for_episodes));
         hobsOnlyContentComputed.append("\n");
 
         AtomicInteger cnt = new AtomicInteger(0);
@@ -122,59 +114,28 @@ public class MDSGenerator {
 
             }
 
+
+            //EXPECTED
             for (Episode episode : expectedEpisodes) {
-                List<String> row = List.of(
-                        episode.getPatientId(),
-                        formatDate(episode.getEpisodeDate()),
-                        String.join("+", episode.getDistinctGerms()),
-                        (episode.getClassification() != null) ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
-                        episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
-                        NN(episode.getClassification())
-                        );
-                episodeContentExpected.append(String.join(SEPARATOR, row));
+                episodeContentExpected.append(String.join(SEPARATOR, getRow((EpisodeImplForTest) episode)));
                 episodeContentExpected.append("\n");
 
-            }
-
-            for (Episode episode : expectedEpisodes.stream().filter(e -> !e.getClassification().contains("NOT-HOB")).toList()) {
-                List<String> row = List.of(
-                        episode.getPatientId(),
-                        formatDate(episode.getEpisodeDate()),
-                        String.join("+", episode.getDistinctGerms()),
-                        (episode.getClassification() != null) ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
-                        NN(episode.getClassification())
-                );
-                hobsOnlyContentExpected.append(String.join(SEPARATOR, row));
-                hobsOnlyContentExpected.append("\n");
+                if(!episode.getClassification().contains("NOT-HOB")){
+                    hobsOnlyContentExpected.append(String.join(SEPARATOR, getRow((EpisodeImplForTest)episode)));
+                    hobsOnlyContentExpected.append("\n");
+                }
 
             }
 
+            //COMPUTED
             for (Episode episode : computedEpisodes) {
-                List<String> row = List.of(
-                        episode.getPatientId(),
-                        formatDate(episode.getEpisodeDate()),
-                        String.join( episode.getDistinctGerms().stream().sorted().collect(Collectors.joining("+"))),
-                        String.valueOf((episode).isPolymicrobial()),
-                        (episode.getClassification() != null) ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
-                        episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
-                        NN(episode.getClassification())
-                );
-                episodeContentComputed.append(String.join(SEPARATOR, row));
+                episodeContentComputed.append(String.join(SEPARATOR, getRow((EpisodePRAISE)episode)));
                 episodeContentComputed.append("\n");
 
-            }
-
-            for (Episode episode : computedEpisodes.stream().filter(e -> !e.getClassification().contains("NOT-HOB")).toList()) {
-                List<String> row = List.of(
-                        episode.getPatientId(),
-                        formatDate(episode.getEpisodeDate()),
-                        String.join( episode.getDistinctGerms().stream().sorted().collect(Collectors.joining("+"))),
-                        String.valueOf((episode).isPolymicrobial()),
-                        String.valueOf(((EpisodePRAISE)episode).containsCSC()),
-                        NN(episode.getClassification())
-                );
-                hobsOnlyContentComputed.append(String.join(SEPARATOR, row));
-                hobsOnlyContentComputed.append("\n");
+                if(!episode.getClassification().contains("NOT-HOB")) {
+                    hobsOnlyContentComputed.append(String.join(SEPARATOR, getRow((EpisodePRAISE)episode)));
+                    hobsOnlyContentComputed.append("\n");
+                }
 
             }
 
@@ -191,6 +152,41 @@ public class MDSGenerator {
     }
 
 
+    private static List<String> getRow(EpisodePRAISE episode){
+
+        return List.of(
+                episode.getPatientId(),
+                formatDate(episode.getEpisodeDate()),
+                String.join( episode.getDistinctGerms().stream().sorted().collect(Collectors.joining("+"))),
+                String.valueOf((episode).isHOB()),
+                String.valueOf((episode).isPolymicrobial()),
+                String.valueOf((episode).containsCSC()),
+                NN(episode.getClassification())
+        );
+
+    }
+
+    private static List<String> getRow(EpisodeImplForTest episode){
+
+        return List.of(
+                episode.getPatientId(),
+                formatDate(episode.getEpisodeDate()),
+                String.join( episode.getDistinctGerms().stream().sorted().collect(Collectors.joining("+"))),
+                String.valueOf(episode.getClassification().startsWith("HOB")),
+                String.valueOf(episode.isPolymicrobial()),
+                String.valueOf(episode.getClassification().contains("CSC")),
+                NN(episode.getClassification())
+        );
+
+    }
+
+    private static String formatDate(ZonedDateTime zdt){
+        return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(zdt);
+    }
+
+    private static String NN(Object o){
+        if(Objects.isNull(o) || o.toString().length() == 0) return "n/a"; else return o.toString();
+    }
 
 
 }
