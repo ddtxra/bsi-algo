@@ -153,7 +153,8 @@ public class MDSGenerator {
                 List<String> row = List.of(
                         episode.getPatientId(),
                         formatDate(episode.getEpisodeDate()),
-                        String.join("+", episode.getDistinctGerms()),
+                        String.join( episode.getDistinctGerms().stream().sorted().collect(Collectors.joining("+"))),
+                        String.valueOf((episode).isPolymicrobial()),
                         (episode.getClassification() != null) ? String.valueOf(!episode.getClassification().contains("NOT-HOB")) : "n/a",
                         episode.getClassification() != null ? String.valueOf(episode.getClassification().contains("CSC")) : "n/a",
                         NN(episode.getClassification())
@@ -167,7 +168,8 @@ public class MDSGenerator {
                 List<String> row = List.of(
                         episode.getPatientId(),
                         formatDate(episode.getEpisodeDate()),
-                        String.join("+", episode.getDistinctGerms()),
+                        String.join( episode.getDistinctGerms().stream().sorted().collect(Collectors.joining("+"))),
+                        String.valueOf((episode).isPolymicrobial()),
                         String.valueOf(((EpisodePRAISE)episode).containsCSC()),
                         NN(episode.getClassification())
                 );
