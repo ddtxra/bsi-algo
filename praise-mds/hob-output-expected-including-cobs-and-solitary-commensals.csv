@@ -9,8 +9,8 @@ patient_1003;2021/01/01;pathA;false;false;NOT-HOB (COB)
 patient_1003;2021/01/05;pathB;true;false;HOB
 patient_1004;2021/01/04;pathA+pathB;true;false;HOB
 patient_10041;2021/01/04;pathA+pathB;true;false;HOB
-patient_10042;2021/01/04;pathA+pathC+pathB;true;false;HOB
-patient_10043;2021/01/04;pathA+pathC+pathB;true;false;HOB
+patient_10042;2021/01/04;pathC+pathB+pathA;true;false;HOB
+patient_10043;2021/01/04;pathC+pathB+pathA;true;false;HOB
 patient_10044;2021/01/01;pathA;false;false;NOT-HOB (COB)
 patient_10044;2021/01/14;pathC;true;false;HOB
 patient_1005;2021/01/01;pathA+pathB;false;false;NOT-HOB (COB)
@@ -70,7 +70,7 @@ patient_1030;2021/01/12;comB;false;false;NOT-HOB (SOLITARY_COMMENSAL)
 patient_1030;2021/01/16;comA+comB;true;true;HOB (HOB-CSC)
 patient_1031;2021/01/11;comA;true;true;HOB (HOB-CSC)
 patient_1031;2021/01/15;comB;true;true;HOB (HOB-CSC)
-patient_1032;2021/01/04;pathA+comA+pathB;true;true;HOB (HOB-CSC)
+patient_1032;2021/01/04;comA+pathB+pathA;true;true;HOB (HOB-CSC)
 patient_1033;2021/01/04;pathA+pathB;true;false;HOB
 patient_1033;2021/01/06;comA;false;false;NOT-HOB (SOLITARY_COMMENSAL)
 patient_1033;2021/01/08;comB;false;false;NOT-HOB (SOLITARY_COMMENSAL)
