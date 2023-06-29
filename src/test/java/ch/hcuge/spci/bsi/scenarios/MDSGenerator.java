@@ -183,10 +183,10 @@ public class MDSGenerator {
         Files.writeString(Paths.get("praise-mds/PATIENTS.CSV"), patientContent.toString(),  StandardCharsets.UTF_8);
         Files.writeString(Paths.get("praise-mds/BLOODCULTURES.CSV"), cultureContent.toString(),  StandardCharsets.UTF_8);
 
-        Files.writeString(Paths.get("praise-mds/hob-output-expected-including-cobs-and-solitary-commensals.tsv"), episodeContentExpected.toString(),  StandardCharsets.UTF_8);
-        Files.writeString(Paths.get("praise-mds/hob-output-expected-hobs-only.tsv"), hobsOnlyContentExpected.toString(),  StandardCharsets.UTF_8);
-        Files.writeString(Paths.get("praise-mds/hob-output-computed-including-cobs-and-solitary-commensals.tsv"), episodeContentComputed.toString(),  StandardCharsets.UTF_8);
-        Files.writeString(Paths.get("praise-mds/hob-output-computed-hobs-only.tsv"), hobsOnlyContentComputed.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-expected-including-cobs-and-solitary-commensals.csv"), episodeContentExpected.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-expected-hobs-only.csv"), hobsOnlyContentExpected.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-computed-including-cobs-and-solitary-commensals.csv"), episodeContentComputed.toString(),  StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("praise-mds/hob-output-computed-hobs-only.csv"), hobsOnlyContentComputed.toString(),  StandardCharsets.UTF_8);
 
     }
 
