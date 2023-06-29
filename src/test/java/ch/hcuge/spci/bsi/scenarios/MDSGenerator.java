@@ -100,8 +100,7 @@ public class MDSGenerator {
             String[] list = {"Ward1", "Ward2", "Ward3"};
 
             for (Culture culture : cultures) {
-                Random r = new Random();
-                String ward = list[r.nextInt(list.length)];
+                String ward = list[random.nextInt(list.length)];
                     List<String> row = List.of(
                             culture.getId(),
                             culture.getSampleId(),
