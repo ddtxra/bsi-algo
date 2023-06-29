@@ -1,7 +1,7 @@
 patientId;episodeDate;microOrganism(s);containsCSC;classification
 patient_1001;2021/01/15;pathA;false;HOB
-patient_readmitted;2023/01/03;pathSAureus;false;HOB
-patient_readmitted;2023/01/06;pathSAureus;false;HOB
+patient_readmitted;2021/01/03;pathSAureus;false;HOB
+patient_readmitted;2021/01/06;pathSAureus;false;HOB
 patient_1003;2021/01/05;pathB;false;HOB
 patient_1004;2021/01/04;pathA+pathB;false;HOB
 patient_10041;2021/01/04;pathA+pathB;false;HOB

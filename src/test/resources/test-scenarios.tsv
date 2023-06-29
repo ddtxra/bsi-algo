@@ -37,12 +37,12 @@ patient_1002	20210103	2021-01-04	pathA	0
 # Patient ReAdmitted, Seven on 01.06.2023
 # In our current logic this would be 2 HOBs. Both with S. aureus. One for Stay 1 and one for Stay 2.
 # Rationale for this decision: This scenario is rather rare and a merely “episode of care / stay” based approach is more feasible for us.
-patient_readmitted	20230101	2023-01-03	pathSAureus	0
-patient_readmitted	20230104	2023-01-06	pathSAureus	0
+patient_readmitted	20210101	2021-01-03	pathSAureus	0
+patient_readmitted	20210104	2021-01-06	pathSAureus	0
 
 #expected.PRAISE
-#expected.PRAISE	patient_readmitted	2023-01-03	pathSAureus	HOB
-#expected.PRAISE	patient_readmitted	2023-01-06	pathSAureus	HOB
+#expected.PRAISE	patient_readmitted	2021-01-03	pathSAureus	HOB
+#expected.PRAISE	patient_readmitted	2021-01-06	pathSAureus	HOB
 
 >
 # Two positive hemocultures with a different pathogene more than 3 days should count as 2 episodes

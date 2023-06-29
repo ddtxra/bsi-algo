@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -52,7 +53,7 @@ public class MDSGenerator {
         StringBuilder hobsOnlyContentComputed = new StringBuilder();
 
         var headers_for_patient = List.of("patientId", "gender", "birthDate", "deathDate", "inHospitalMortality");
-        var headers_for_bc = List.of("id", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attributableWardECDCWardClassification", "admissionDate");
+        var headers_for_bc = List.of("bloodCultureid", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attrWardECDCWardClassification", "admHospDate");
         var headers_for_epi = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "containsCSC", "classification");
         var headers_for_hobsonly = List.of("patientId", "episodeDate", "microOrganism(s)", "containsCSC", "classification");
 
@@ -82,9 +83,7 @@ public class MDSGenerator {
 
             String gender = random.nextDouble() < 1.0 / 20 ? "U" : (random.nextDouble() < 0.5 ? "M" : "F");
             String birthDate = java.time.LocalDate.of(1930, 1, 1).plusDays(random.nextInt(27371)).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            var birthDat = java.time.LocalDate.parse(birthDate, java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            var randomYear = random.nextInt(31) + 50;
-            String deathDate = birthDate.isEmpty() ? "" : birthDat.plusYears(randomYear).isAfter(java.time.LocalDate.now()) ? "" : birthDat.plusYears(randomYear).format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            String deathDate = birthDate.isEmpty() || random.nextDouble() > 0.1 ? "" : LocalDate.of(2021, 2, 1).plusDays(random.nextInt(731)).format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
             String inHospitalMortality = "";
             if(!deathDate.equals("")){
                 inHospitalMortality = (random.nextDouble() < 0.7 ? "1" : "0");

@@ -3,8 +3,8 @@ patient_1001;2021/01/01;pathA;false;false;NOT-HOB (COB)
 patient_1001;2021/01/15;pathA;true;false;HOB
 patient_1002;2021/01/01;pathA;false;false;NOT-HOB (COB)
 patient_1002;2021/01/04;pathA;false;false;NOT-HOB (COB)
-patient_readmitted;2023/01/03;pathSAureus;true;false;HOB
-patient_readmitted;2023/01/06;pathSAureus;true;false;HOB
+patient_readmitted;2021/01/03;pathSAureus;true;false;HOB
+patient_readmitted;2021/01/06;pathSAureus;true;false;HOB
 patient_1003;2021/01/01;pathA;false;false;NOT-HOB (COB)
 patient_1003;2021/01/05;pathB;true;false;HOB
 patient_1004;2021/01/04;pathA+pathB;true;false;HOB
