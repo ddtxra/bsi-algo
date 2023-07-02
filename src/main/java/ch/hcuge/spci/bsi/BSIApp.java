@@ -46,7 +46,7 @@ public class BSIApp {
             logger.error("The provided path is not a valid folder: " + folder.getAbsolutePath());
             System.exit(1);
         }else {
-            logger.info("Reading from " + folder.getAbsolutePath());
+            logger.info("Reading from: " + folder.getAbsolutePath());
         }
 
         File bloodCultureFile = new File(folder, CULTURE_FILENAME);
