@@ -41,7 +41,7 @@ ch.hcuge.spci.bsi.BSIApp - File /data/OUTPUT_PRAISE_20230702151512.CSV saved
 ```bash
 docker build -t bsi-algo .
 FOLDER=`pwd`/praise-mds
-docker run --rm -v $FOLDER:/data bsi-algo /data
+docker run --rm -v $FOLDER:/data bsi-algo
 ```
 
 ### Build and run the image with docker from Java sources
