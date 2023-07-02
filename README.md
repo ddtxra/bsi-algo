@@ -12,8 +12,8 @@ The application is written in Java and can be executed in Java directly (11 or a
 ## Run with java
 Specify a folder where you will have a file 
 ```bash
-java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar <FOLDER>
-java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar praise-mds
+java -jar target/bsi-algorithm-1.0-SNAPSHOT.jar <FOLDER>
+java -jar target/bsi-algorithm-1.0-SNAPSHOT.jar praise-mds
 ```
 
 ## Run with dockerhub (easiest)
@@ -21,7 +21,7 @@ java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar praise-mds
 ```bash
 # Select a folder with BLOODCULTURES.CSV file inside
 FOLDER=./praise-mds 
-docker run --rm -v $FOLDER:/data ddtxra/bsi-algo /data
+docker run --rm -v $FOLDER:/data ddtxra/bsi-algo
 ```
 An output should be showed like this:
 ```
@@ -48,7 +48,7 @@ docker run --rm -v $FOLDER:/data bsi-algo
 ```bash
 docker build -t bsi-algo-src -f DockerfileSRC .
 FOLDER=`pwd`/praise-mds
-docker run --rm -v $FOLDER:/data bsi-algo-src /data
+docker run --rm -v $FOLDER:/data bsi-algo-src
 ```
 
 
