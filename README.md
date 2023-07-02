@@ -11,7 +11,7 @@ java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar praise-mds
 
 ```bash
 FOLDER=/tmp/hugdata-in-praise-format
-docker run --rm -v $FOLDER:/data bsi-algo /data
+docker run --rm -v $FOLDER:/data ddtxra/bsi-algo /data
 ```
 
 ## Build and run the image with docker from jar pre-compiled
