@@ -19,7 +19,8 @@ java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar praise-mds
 ## Run with dockerhub (easiest)
 
 ```bash
-FOLDER=`pwd`/praise-mds # Or any folder with BLOODCULTURES.CSV file inside
+# Select a folder with BLOODCULTURES.CSV file inside
+FOLDER=./praise-mds 
 docker run --rm -v $FOLDER:/data ddtxra/bsi-algo /data
 ```
 An output should be showed like this:
