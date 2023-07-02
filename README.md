@@ -1,4 +1,9 @@
-An algorithm to implement CLABSI.
+Different implementations developed by the PCI team in Geneva to build Blood Stream Infection algorithms.
+Currently the repository contains 2 implementations (and it is a work in progress):
+
+* ch.hcuge.spci.bsi.impl.hugv2023.PositiveHemoCultureHUGv2023 For a semi-automated surveillance done by PCI nurses at HUG
+* ch.hcuge.spci.bsi.impl.praise.BSIClassifierPRAISE For a fully-automated surveillance in collaboration with PRAISE
+* (CLABSI )
 
 ## Run with java
 Specify a folder where you will have a file 
