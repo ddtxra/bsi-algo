@@ -43,7 +43,7 @@ public class BSIApp {
         String folderPath = args[0];
         File folder = new File(folderPath);
         if (!folder.isDirectory()) {
-            logger.error("The provided path is not a valid folder.");
+            logger.error("The provided path is not a valid folder: " + folder.getAbsolutePath());
             System.exit(1);
         }else {
             logger.info("Reading from " + folder.getAbsolutePath());
@@ -79,7 +79,7 @@ public class BSIApp {
         logger.info("----- " + hobEpisodes.stream().filter(e -> ((EpisodePRAISE)e).containsCSC()).count() + " CSC HOB episodes");
         var outputFile = folder + "/OUTPUT_PRAISE_" + currentTime.format(formatter) + ".CSV";
         saveEpisodeFileForPraise(episodesComputed,outputFile);
-        logger.info("File " +  outputFile + " saved");
+        logger.info("Saving file in " +  outputFile + " saved");
 
     }
 

@@ -53,8 +53,13 @@ docker run --rm -v $FOLDER:/data bsi-algo-src /data
 
 
 # To help
-# Build the fat jar
+# Build the image for dockerhub
+```
 mvn package shade:shade
+docker build -t bsi-algo .
+docker tag bsi-algo ddtxra/bsi-algo  
+docker push ddtxra/bsi-algo
+```
 
 # GLOSSARY 
 
