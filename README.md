@@ -1,5 +1,35 @@
 An algorithm to implement CLABSI.
 
+## Run with java
+Specify a folder where you will have a file 
+```bash
+java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar <FOLDER>
+java -jar target/clabsi-algorithm-1.0-SNAPSHOT.jar praise-mds
+```
+
+## Run with dockerhub (easiest)
+
+```bash
+FOLDER=/tmp/hugdata-in-praise-format
+docker run --rm -v $FOLDER:/data bsi-algo /data
+```
+
+## Build and run the image with docker from jar pre-compiled
+```bash
+docker build -t bsi-algo .
+FOLDER=`pwd`/praise-mds
+docker run --rm -v $FOLDER:/data bsi-algo /data
+```
+
+## Build and run the image with docker from sources
+```bash
+docker build -t bsi-algo-src -f DockerfileSRC .
+FOLDER=`pwd`/praise-mds
+docker run --rm -v $FOLDER:/data bsi-algo-src /data
+```
+
+# Build the fat jar
+mvn package shade:shade
 
 # GLOSSARY 
 

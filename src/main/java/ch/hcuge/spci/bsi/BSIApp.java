@@ -10,38 +10,76 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class PRAISEApp {
+public class BSIApp {
 
-    private static String folder = "N:\\SPCI\\it-projects\\BSI\\PRAISE\\";
-    private static String cultureFile = "input-from-2010-SAT-3-PRAISE-MDS.csv";
-    private static String outputFile = "SAT-3-PRAISE-episodes_from_2010.csv";
+    private final static String CULTURE_FILENAME = "BLOODCULTURES.CSV";
+
+//    private static String folder = "N:\\SPCI\\it-projects\\BSI\\PRAISE\\";
+//    private static String cultureFile = "input-from-2010-SAT-3-PRAISE-MDS.csv";
+//    private static String outputFile = "output.csv";
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    private static Logger logger = LogManager.getLogger(PRAISEApp.class);
+    private static Logger logger = LogManager.getLogger(BSIApp.class);
 
     public static void main(String args[]) throws IOException {
 
+        if (args.length < 1) {
+            logger.error("Please provide a folder path as an argument.");
+            System.exit(1);
+        }
+
+        String folderPath = args[0];
+        File folder = new File(folderPath);
+        if (!folder.isDirectory()) {
+            logger.error("The provided path is not a valid folder.");
+            System.exit(1);
+        }else {
+            logger.info("Reading from " + folder.getAbsolutePath());
+        }
+
+        File bloodCultureFile = new File(folder, CULTURE_FILENAME);
+        File patientFile = new File(folder, "PATIENTS.CSV");
+
+        if (!bloodCultureFile.exists()) {
+            logger.error("The " + CULTURE_FILENAME + " file does not exist in the provided folder.");
+            System.exit(1);
+        } else {
+            logger.info(CULTURE_FILENAME + " file found in the given folder.");
+        }
+
+        if (!patientFile.exists()) {
+            logger.warn("The PATIENTS.CSV file does not exist in the provided folder. (ok for now...)");
+        }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         //FOR PRAISE
-        List<Culture> cultures = parsePRAISEMDSCultureFile(folder + cultureFile);
+        List<Culture> cultures = parsePRAISEMDSCultureFile(bloodCultureFile.getAbsolutePath());
         BSIClassifier classifier = new BSIClassifierPRAISE();
-        logger.info(cultures.size() + " cultures processed");
+        logger.info("- " + cultures.size() + " cultures processed using the " +  classifier.getClass().getSimpleName() + " implementation");
         List<Episode> episodesComputed = classifier.processCultures(cultures);
-        logger.info(episodesComputed.size() + " episodes computed");
-        saveEpisodeFileForPraise(episodesComputed,folder + outputFile);
-        logger.info("File saved");
+        logger.info("- " + episodesComputed.size() + " 'episodes?' computed ");
+        var hobEpisodes = episodesComputed.stream().filter(e -> ((EpisodePRAISE) e).isHOB()).toList();
+        logger.info("--- " + episodesComputed.stream().filter(e -> ((EpisodePRAISE)e).isCOB()).count() + " COB (community-onset bacteremia)");
+        logger.info("--- " + episodesComputed.stream().filter(e -> ((EpisodePRAISE)e).isSolitaryCommensal()).count() + " contaminations (solitary commensals)");
+        logger.info("--- " + hobEpisodes.size() + " HOB episodes");
+        logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).count() + " polymicrobial HOB episodes");
+        logger.info("----- " + hobEpisodes.stream().filter(e -> ((EpisodePRAISE)e).containsCSC()).count() + " CSC HOB episodes");
+        var outputFile = folder + "/OUTPUT_PRAISE_" + currentTime.format(formatter) + ".CSV";
+        saveEpisodeFileForPraise(episodesComputed,outputFile);
+        logger.info("File " +  outputFile + " saved");
 
     }
 
@@ -70,14 +108,14 @@ public class PRAISEApp {
                 ;
                 String sampleWardId = csvRecord.get("sampleWardId");
                 String sampleWardECDCWardClassification = csvRecord.get("sampleWardECDCWardClassification");
-                Integer isolateNumber = Integer.valueOf(csvRecord.get("isolateNumber"));
+                Integer isolateNumber = csvRecord.get("isolateNumber").length() > 0 ? Integer.valueOf(csvRecord.get("isolateNumber")): null;
                 String microorgSnomedCTCode = csvRecord.get("microorgSnomedCTCode");
                 String microorgLocalId = csvRecord.get("microorgLocalId");
-                Boolean isCommensal = Boolean.valueOf("1".equals(csvRecord.get("isCommensal")));
+                Boolean isCommensal = Boolean.valueOf("1".equals(csvRecord.get("isCSC")));
                 Boolean pos_neg = Boolean.valueOf("POS".equals(csvRecord.get("pos_neg")));
                 String attributableWardId = csvRecord.get("attributableWardId");
-                String attributableWardECDCWardClassification = csvRecord.get("attributableWardECDCWardClassification");
-                LocalDate admissionDate = LocalDate.parse(csvRecord.get("admissionDate"), formatter);
+                String attributableWardECDCWardClassification = csvRecord.get("attrWardECDCWardClassification");
+                LocalDate admissionDate = LocalDate.parse(csvRecord.get("admHospDate"), formatter);
 
                 Culture culture = new BloodCulturePRAISE(cultureId, sampleId, patientId, episodeOfCareId, sampleDate, sampleWardId, sampleWardECDCWardClassification,
                         isolateNumber, microorgSnomedCTCode, microorgLocalId, isCommensal, pos_neg, attributableWardId, attributableWardECDCWardClassification, admissionDate);

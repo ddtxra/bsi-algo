@@ -1,0 +1,25 @@
+# Use a base image with Java and Maven installed
+FROM maven:3.8.4-openjdk-17 AS build
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the pom.xml file to the container
+COPY pom.xml .
+
+# Copy the source code to the container
+COPY src src
+
+# Build the application using Maven
+RUN mvn package shade:shade
+
+# Use a base image with Java installed
+FROM openjdk:17
+
+# Set the working directory inside the container
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+# Set the entry point for the container
+ENTRYPOINT ["java", "-jar", "app.jar"]
