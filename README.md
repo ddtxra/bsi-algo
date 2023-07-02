@@ -20,21 +20,23 @@ java -jar target/bsi-algorithm-1.0-SNAPSHOT.jar praise-mds
 
 ```bash
 # Select a folder with BLOODCULTURES.CSV file inside
-FOLDER=./praise-mds 
-docker run --rm -v $FOLDER:/data ddtxra/bsi-algo
+docker run -v .\praise-mds:/data bsi-algo-src
+docker run -v ./praise-mds:/data ddtxra/bsi-algo
 ```
 An output should be showed like this:
 ```
-ch.hcuge.spci.bsi.BSIApp - Reading from /data
-ch.hcuge.spci.bsi.BSIApp - BLOODCULTURES.CSV file found in the given folder.
-ch.hcuge.spci.bsi.BSIApp - - 255 cultures processed using the BSIClassifierPRAISE implementation
-ch.hcuge.spci.bsi.BSIApp - - 101 'episodes?' computed 
-ch.hcuge.spci.bsi.BSIApp - --- 15 COB (community-onset bacteremia)
-ch.hcuge.spci.bsi.BSIApp - --- 30 contaminations (solitary commensals)
-ch.hcuge.spci.bsi.BSIApp - --- 56 HOB episodes
-ch.hcuge.spci.bsi.BSIApp - ----- 23 polymicrobial HOB episodes
-ch.hcuge.spci.bsi.BSIApp - ----- 17 CSC HOB episodes
-ch.hcuge.spci.bsi.BSIApp - File /data/OUTPUT_PRAISE_20230702151512.CSV saved
+Reading cultures from: C:\git\github\bsi-algo\praise-mds
+BLOODCULTURES.CSV file found in the given folder.
+Algorithm implementation: PRAISE (BSIClassifierPRAISE)
+- 255 cultures processed between 2021/01/01 and 2021/01/29 for 57 patients
+- 101 episodes computed for 57 patients
+--- 15 COB (community-onset bacteremia) episodes for 14 patients
+--- 30 Solitary commensals (contaminations) for 18 patients
+--- 56 HOB (hospital-onset bacteremia) episodes for 43 patients
+----- 23 polymicrobial HOB episodes
+----- 17 CSC HOB episodes
+Saving all episodes file in praise-mds/OUTPUT_PRAISE_ALL_20230702234934.CSV for debug
+Saving HOB episodes file in praise-mds/OUTPUT_PRAISE_HOBS_20230702234934.CSV
 ```
 
 ### Build and run the image with docker from jar pre-compiled
@@ -47,8 +49,8 @@ docker run --rm -v $FOLDER:/data bsi-algo
 ### Build and run the image with docker from Java sources
 ```bash
 docker build -t bsi-algo-src -f DockerfileSRC .
-FOLDER=`pwd`/praise-mds
-docker run --rm -v $FOLDER:/data bsi-algo-src
+FOLDER=./praise-mds
+docker run --rm ./praise-mds:/data bsi-algo-src
 ```
 
 

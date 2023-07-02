@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class BSIApp {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     private static Logger logger = LogManager.getLogger(BSIApp.class);
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException, InterruptedException {
 
         if (args.length < 1) {
             logger.error("Please provide a folder path as an argument.");
@@ -46,7 +47,7 @@ public class BSIApp {
             logger.error("The provided path is not a valid folder: " + folder.getAbsolutePath());
             System.exit(1);
         }else {
-            logger.info("Reading from: " + folder.getAbsolutePath());
+            logger.info("Reading cultures from: " + folder.getAbsolutePath());
         }
 
         File bloodCultureFile = new File(folder, CULTURE_FILENAME);
@@ -65,21 +66,32 @@ public class BSIApp {
 
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        DateTimeFormatter praiseDateFormatted = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
         //FOR PRAISE
         List<Culture> cultures = parsePRAISEMDSCultureFile(bloodCultureFile.getAbsolutePath());
         BSIClassifier classifier = new BSIClassifierPRAISE();
-        logger.info("- " + cultures.size() + " cultures processed using the " +  classifier.getClass().getSimpleName() + " implementation");
+        logger.info("Algorithm implementation: PRAISE (" + classifier.getClass().getSimpleName() + ")");
+        logger.info("- " + cultures.size() + " cultures processed between " + cultures.stream().min(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted) + " and " + cultures.stream().max(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted)  + " for " + cultures.stream().map(
+                Culture::getPatientId).distinct().count() + " patients");
         List<Episode> episodesComputed = classifier.processCultures(cultures);
-        logger.info("- " + episodesComputed.size() + " 'episodes?' computed ");
+        logger.info("- " + episodesComputed.size() + " episodes computed for " + episodesComputed.stream().map(Episode::getPatientId).distinct().count() + " patients");
         var hobEpisodes = episodesComputed.stream().filter(e -> ((EpisodePRAISE) e).isHOB()).toList();
-        logger.info("--- " + episodesComputed.stream().filter(e -> ((EpisodePRAISE)e).isCOB()).count() + " COB (community-onset bacteremia)");
-        logger.info("--- " + episodesComputed.stream().filter(e -> ((EpisodePRAISE)e).isSolitaryCommensal()).count() + " contaminations (solitary commensals)");
-        logger.info("--- " + hobEpisodes.size() + " HOB episodes");
+        var cobEpisodes = episodesComputed.stream().filter(e -> ((EpisodePRAISE)e).isCOB()).toList();
+        logger.info("--- " + cobEpisodes.size() + " COB (community-onset bacteremia) episodes for " + cobEpisodes.stream().map(c -> c.getPatientId()).distinct().count() + " patients");
+        var contaminations = episodesComputed.stream().filter(e -> (((EpisodePRAISE) e).isSolitaryCommensal())).toList();
+        logger.info("--- " + contaminations.size() + " Solitary commensals (contaminations) for " + contaminations.stream().map(Episode::getPatientId).distinct().count() + " patients");
+        logger.info("--- " + hobEpisodes.size() + " HOB (hospital-onset bacteremia) episodes for " + hobEpisodes.stream().map(Episode::getPatientId).distinct().count() + " patients");
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).count() + " polymicrobial HOB episodes");
         logger.info("----- " + hobEpisodes.stream().filter(e -> ((EpisodePRAISE)e).containsCSC()).count() + " CSC HOB episodes");
-        var outputFile = folder + "/OUTPUT_PRAISE_" + currentTime.format(formatter) + ".CSV";
+        var outputFile = folder + "/OUTPUT_PRAISE_ALL_" + currentTime.format(formatter) + ".CSV";
+        var hobOutputFile = folder + "/OUTPUT_PRAISE_HOBS_" + currentTime.format(formatter) + ".CSV";
+
         saveEpisodeFileForPraise(episodesComputed,outputFile);
-        logger.info("Saving file in " +  outputFile + " saved");
+        saveEpisodeFileForPraise(hobEpisodes,hobOutputFile);
+
+        logger.info("Saving all episodes file in " +  outputFile + " for debug");
+        logger.info("Saving HOB episodes file in " +  hobOutputFile);
 
     }
 
