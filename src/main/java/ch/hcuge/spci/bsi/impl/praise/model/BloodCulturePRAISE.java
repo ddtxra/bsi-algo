@@ -1,6 +1,7 @@
 package ch.hcuge.spci.bsi.impl.praise.model;
 
 import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.exception.BSIException;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -88,7 +89,18 @@ public class BloodCulturePRAISE implements Culture {
     /**
      * Only if both pos and neg cultures are available 1= pos, 0 = neg
      */
-    public Boolean pos_neg;
+    public String pos_neg;
+
+    public Boolean isPositiveCulture(){
+        if(pos_neg.equals("1")){
+            return true;
+        }
+
+        if(pos_neg.equals("0")){
+            return false;
+        }
+        else throw new BSIException("Not expecting " + pos_neg + " for pos_neg (0 or 1)");
+    }
 
     /**
      * Ward where pt was 2 days prior to culture taken  if pt was transfered on day of blood culture, take first ward (where patient came from)
@@ -139,7 +151,7 @@ public class BloodCulturePRAISE implements Culture {
         } else return "unknown";
     }
 
-    public BloodCulturePRAISE(String id, String sampleId, String patientId, String episodeOfCareId, LocalDate sampleDate, String sampleWardId, String sampleWardECDCWardClassification, Integer isolateNumber, String microorgSnomedCTCode, String microorgLocalId, Boolean isCommensal, Boolean pos_neg, String attributableWardId, String attributableWardECDCWardClassification, LocalDate admissionDate) {
+    public BloodCulturePRAISE(String id, String sampleId, String patientId, String episodeOfCareId, LocalDate sampleDate, String sampleWardId, String sampleWardECDCWardClassification, Integer isolateNumber, String microorgSnomedCTCode, String microorgLocalId, Boolean isCommensal, String pos_neg, String attributableWardId, String attributableWardECDCWardClassification, LocalDate admissionDate) {
         this.id = id;
         this.sampleId = sampleId;
         this.patientId = patientId;

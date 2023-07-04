@@ -1,11 +1,16 @@
 package ch.hcuge.spci.bsi.impl.praise.mapper;
 
 import ch.hcuge.spci.bsi.Culture;
+import ch.hcuge.spci.bsi.impl.clabsi.model.BloodCulture;
 import ch.hcuge.spci.bsi.impl.praise.model.BloodCulturePRAISE;
 
 public class PRAISECultureMapper {
 
     public static BloodCulturePRAISE mapCulture(Culture culture) {
+
+        if(culture instanceof BloodCulturePRAISE){
+            return (BloodCulturePRAISE)culture;
+        }
 
         return new BloodCulturePRAISE(
                 culture.getId(), // this.id = id;
@@ -19,7 +24,7 @@ public class PRAISECultureMapper {
                 null, //microorgSnomedCTCode
                 culture.getLaboGermName(), //microorgLocalId
                 culture.isLabGermCommensal(),
-                Boolean.TRUE, //only true from the interface
+                "1", //only true from the interface
                 null, // attributableWardId
                 null, //attributableWardECDCWardClassification
                 culture.getStayBeginDate().toLocalDate()); //this.admissionDate = admissionDate;

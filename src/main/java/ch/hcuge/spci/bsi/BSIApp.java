@@ -204,7 +204,7 @@ public class BSIApp {
                     String microorgSnomedCTCode = csvRecord.get("microorgSnomedCTCode");
                     String microorgLocalId = csvRecord.get("microorgLocalId");
                     Boolean isCommensal = Boolean.valueOf("1".equals(csvRecord.get("isCSC")));
-                    Boolean pos_neg = Boolean.valueOf("1".equals(csvRecord.get("pos_neg")));
+                    String pos_neg = csvRecord.get("pos_neg");
                     String attributableWardId = csvRecord.get("attributableWardId");
                     String attributableWardECDCWardClassification = csvRecord.get("attrWardECDCWardClassification");
 

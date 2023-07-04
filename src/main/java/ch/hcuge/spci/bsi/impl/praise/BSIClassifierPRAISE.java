@@ -34,7 +34,7 @@ public class BSIClassifierPRAISE implements BSIClassifier {
 
         //First we group the bloodCultures and filter out only positive results
         final Map<String, List<BloodCulturePRAISE>> positiveBloodCulturesGroupedByPatient = bloodCultures.stream()
-                .filter(bc -> bc.pos_neg == Boolean.TRUE || bc.pos_neg == null) // Get only Positive Blood Cultures
+                .filter(BloodCulturePRAISE::isPositiveCulture) // Get only Positive Blood Cultures
                 .collect(Collectors.groupingBy(groupingFunction));
 
         //For each patient
