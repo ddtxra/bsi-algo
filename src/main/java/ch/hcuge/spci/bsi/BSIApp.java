@@ -85,8 +85,9 @@ public class BSIApp {
 
         BSIClassifier classifier = new BSIClassifierPRAISE();
         logger.info("Algorithm implementation: PRAISE (" + classifier.getClass().getSimpleName() + ")");
-        logger.info("- " + cultures.size() + " cultures processed between " + cultures.stream().min(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted) + " and " + cultures.stream().max(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted)  + " for " + cultures.stream().map(
+        logger.info("- " + cultures.size() + " cultures " +  cultures.stream().filter(c -> ((BloodCulturePRAISE)c).isPositiveCulture()).count() + " (positives) processed between " + cultures.stream().min(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted) + " and " + cultures.stream().max(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted)  + " for " + cultures.stream().map(
                 Culture::getPatientId).distinct().count() + " patients");
+
         List<Episode> episodesComputed = classifier.processCultures(cultures);
         logger.info("- " + episodesComputed.size() + " episodes computed for " + episodesComputed.stream().map(Episode::getPatientId).distinct().count() + " patients");
         var hobEpisodes = episodesComputed.stream().filter(e -> ((EpisodePRAISE) e).isHOB()).toList();
