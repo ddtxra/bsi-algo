@@ -1,4 +1,4 @@
-bloodCultureid;sampleId;patientId;episodeOfCareId;sampleDate;sampleWardId;sampleWardECDCWardClassification;isolateNumber;microorgSnomedCTCode;microorgLocalId;isCSC;pos_neg;attributableWardId;attrWardECDCWardClassification;admHospDate
+bloodCultureId;sampleId;patientId;episodeOfCareId;sampleDate;sampleWardId;sampleWardECDCWardClassification;isolateNumber;microorgSnomedCTCode;microorgLocalId;isCSC;pos_neg;attributableWardId;attrWardECDCWardClassification;admHospDate
 lab_res_1;;patient_1001;;2021/01/01;Ward2;;;;pathA;0;1;Ward2;;2021/01/01
 lab_res_2;;patient_1001;;2021/01/05;Ward2;;;;pathA;0;1;Ward2;;2021/01/01
 lab_res_3;;patient_1001;;2021/01/10;Ward2;;;;pathA;0;1;Ward2;;2021/01/01

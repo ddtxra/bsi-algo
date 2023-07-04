@@ -47,7 +47,7 @@ public class MDSGenerator {
         StringBuilder hobsPRAISEContent = new StringBuilder();
 
         var headers_for_patient = List.of("patientId", "gender", "birthDate", "deathDate", "inHospitalMortality");
-        var headers_for_bc = List.of("bloodCultureid", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attrWardECDCWardClassification", "admHospDate");
+        var headers_for_bc = List.of("bloodCultureId", "sampleId", "patientId", "episodeOfCareId", "sampleDate", "sampleWardId",	"sampleWardECDCWardClassification",	"isolateNumber",	"microorgSnomedCTCode",	"microorgLocalId", "isCSC", "pos_neg",	"attributableWardId",	"attrWardECDCWardClassification", "admHospDate");
         var headers_for_episodes_expected = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "isPolymicrobial", "containsCSC", "classification");
         var headers_for_episodes_computed = List.of("patientId", "episodeDate", "microOrganism(s)", "isHOB", "isPolymicrobial", "containsCSC", "classification", "evidences_count", "evidences_bcIds");
 
