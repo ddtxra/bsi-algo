@@ -92,7 +92,7 @@ public class BSIApp {
         logger.info("- " + episodesComputed.size() + " episodes computed for " + episodesComputed.stream().map(Episode::getPatientId).distinct().count() + " patients");
         var hobEpisodes = episodesComputed.stream().filter(e -> ((EpisodePRAISE) e).isHOB()).toList();
         var cobEpisodes = episodesComputed.stream().filter(e -> ((EpisodePRAISE)e).isCOB()).toList();
-        logger.info("--- " + cobEpisodes.size() + " COB (community-onset bacteremia) episodes for " + cobEpisodes.stream().map(c -> c.getPatientId()).distinct().count() + " patients");
+        logger.info("--- " + cobEpisodes.size() + " COB (community-onset bacteremia) episodes for " + cobEpisodes.stream().map(Episode::getPatientId).distinct().count() + " patients");
         var contaminations = episodesComputed.stream().filter(e -> (((EpisodePRAISE) e).isSolitaryCommensal())).toList();
         logger.info("--- " + contaminations.size() + " Solitary commensals (contaminations) for " + contaminations.stream().map(Episode::getPatientId).distinct().count() + " patients");
         logger.info("--- " + hobEpisodes.size() + " HOB (hospital-onset bacteremia) episodes for " + hobEpisodes.stream().map(Episode::getPatientId).distinct().count() + " patients");

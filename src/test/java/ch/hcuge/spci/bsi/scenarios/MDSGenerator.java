@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 import java.util.stream.Collectors;
 
 public class MDSGenerator {
@@ -69,6 +70,8 @@ public class MDSGenerator {
 
         AtomicInteger cnt = new AtomicInteger(0);
         AtomicInteger hobsCounter = new AtomicInteger(0);
+        AtomicInteger sampleCounter = new AtomicInteger(0);
+
 
         testCulturesServices.getPatientsIds().forEach(pId -> {
 
@@ -94,16 +97,22 @@ public class MDSGenerator {
             String[] list = {"Ward1", "Ward2", "Ward3"};
 
             for (Culture culture : cultures) {
+
+                var sampleId = culture.getSampleId();
+                if(sampleId == null || sampleId.length() == 0){
+                    sampleId = "sample_" + sampleCounter.incrementAndGet();
+                }
+
                 String ward = list[random.nextInt(list.length)];
                     List<String> row = List.of(
                             culture.getId(),
-                            culture.getSampleId(),
+                            sampleId,
                             culture.getPatientId(),
                             "",
                             formatDate(culture.getLaboSampleDate()),
                             ward,
                             "",
-                            "",
+                            "1",
                             "",
                             culture.getLaboGermName(),
                             (culture.isLabGermCommensal() ? "1" : "0"),
