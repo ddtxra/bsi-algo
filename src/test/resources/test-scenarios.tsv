@@ -808,8 +808,8 @@ patient_c003	20210101	2021-01-05	comA	1	sample_a
 
 >
 # What about 2 pathoges from same sample?
-patient_p003	20210101	2021-01-05	pathA	0	sample_a
-patient_p003	20210101	2021-01-05	pathA	0	sample_a
+patient_p003	20210101	2021-01-05	pathA	0	sample_b
+patient_p003	20210101	2021-01-05	pathA	0	sample_b
 
 #expected.PRAISE
 #expected.PRAISE	patient_p003	2021-01-05	pathA	HOB
@@ -817,8 +817,8 @@ patient_p003	20210101	2021-01-05	pathA	0	sample_a
 
 >
 # Two positive hemocultures from different samples should count as a TRUE bsi
-patient_c004	20210101	2021-01-05	comA	1	sample_a
-patient_c004	20210101	2021-01-05	comA	1	sample_b
+patient_c004	20210101	2021-01-05	comA	1	sample_c
+patient_c004	20210101	2021-01-05	comA	1	sample_d
 
 #expected.HUG_v2023
 #expected.HUG_v2023	patient_c004	2021-01-05	comA

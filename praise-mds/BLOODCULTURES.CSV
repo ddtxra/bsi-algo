@@ -227,10 +227,10 @@ lab_res_225;sample_225;patient_c002;;2021/01/05;Ward3;;1;;comA;1;1;Ward3;;2021/0
 lab_res_226;sample_226;patient_c002;;2021/01/06;Ward1;;1;;comB;1;1;Ward1;;2021/01/01
 lab_res_227;sample_a;patient_c003;;2021/01/05;Ward1;;1;;comA;1;1;Ward1;;2021/01/01
 lab_res_228;sample_a;patient_c003;;2021/01/05;Ward2;;1;;comA;1;1;Ward2;;2021/01/01
-lab_res_229;sample_a;patient_p003;;2021/01/05;Ward3;;1;;pathA;0;1;Ward3;;2021/01/01
-lab_res_230;sample_a;patient_p003;;2021/01/05;Ward1;;1;;pathA;0;1;Ward1;;2021/01/01
-lab_res_231;sample_a;patient_c004;;2021/01/05;Ward1;;1;;comA;1;1;Ward1;;2021/01/01
-lab_res_232;sample_b;patient_c004;;2021/01/05;Ward1;;1;;comA;1;1;Ward1;;2021/01/01
+lab_res_229;sample_b;patient_p003;;2021/01/05;Ward3;;1;;pathA;0;1;Ward3;;2021/01/01
+lab_res_230;sample_b;patient_p003;;2021/01/05;Ward1;;1;;pathA;0;1;Ward1;;2021/01/01
+lab_res_231;sample_c;patient_c004;;2021/01/05;Ward1;;1;;comA;1;1;Ward1;;2021/01/01
+lab_res_232;sample_d;patient_c004;;2021/01/05;Ward1;;1;;comA;1;1;Ward1;;2021/01/01
 lab_res_233;sample_227;patient_c005;;2021/01/05;Ward3;;1;;comA;1;1;Ward3;;2021/01/01
 lab_res_234;sample_228;patient_c005;;2021/01/06;Ward1;;1;;comA;1;1;Ward1;;2021/01/01
 lab_res_235;sample_229;patient_c005;;2021/01/10;Ward3;;1;;comA;1;1;Ward3;;2021/01/01
