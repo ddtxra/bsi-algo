@@ -171,8 +171,20 @@ public class EpisodePRAISE implements Episode {
         return BSIUtils.isNosocomial(this.stayBeginDate, this.eventDate);
     }
 
+    public long getDaysFromAdmissions() {
+        return BSIUtils.countDaysFromAdmission(this.stayBeginDate, this.eventDate);
+    }
+
     public Boolean containsCSC() {
         return this.evidences.stream().anyMatch(e -> e.isCommensal);
+    }
+
+    public Boolean containsCSCForAll() {
+        return this.evidences.stream().allMatch(e -> e.isCommensal);
+    }
+
+    public Boolean containsPathogenForAll() {
+        return this.evidences.stream().allMatch(e -> !e.isCommensal);
     }
 
     public Boolean containsPathogen() {

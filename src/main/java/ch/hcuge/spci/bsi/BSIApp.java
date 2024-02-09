@@ -102,6 +102,10 @@ public class BSIApp {
         logger.info("--- " + contaminations.size() + " Solitary commensals (contaminations) for " + contaminations.stream().map(Episode::getPatientId).distinct().count() + " patients");
         logger.info("--- " + hobEpisodes.size() + " HOB (hospital-onset bacteremia) episodes for " + hobEpisodes.stream().map(Episode::getPatientId).distinct().count() + " patients");
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).count() + " polymicrobial HOB episodes");
+        logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsCSCForAll())).count() + " polymicrobial HOB episodes with only CC");
+        logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsPathogenForAll())).count() + " polymicrobial HOB episodes with only Pathogenes");
+        logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsCSC() || ((EpisodePRAISE)e).containsPathogen())).count() + " polymicrobial HOB episodes with mixed (CC + Pathogenes)");
+
         logger.info("----- " + hobEpisodes.stream().filter(e -> ((EpisodePRAISE)e).containsCSC()).count() + " CSC HOB episodes");
         var outputFile = folder + "/OUTPUT_ALL_" + currentTime.format(formatter) + ".CSV";
         var hobOutputFile = folder + "/OUTPUT_HOBS_" + currentTime.format(formatter) + ".CSV";
@@ -274,20 +278,15 @@ public class BSIApp {
     }
 
     private static void saveEpisodeFileForPraiseInPraiseOutput(List<Episode> episodes, String filePath) throws IOException {
-
-        try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter(';')
                         .withHeader("hobId", "hobEventDate", "patientId", "patientSex", "patientBirthDate", "patientDeathDate",
                                 "bcId", "hobBcStatus", "bcMicroorgLocalId", "bcMicroorgSnomedCTConceptId",
                                 "bcMicroorgSpecifiedName", "bcIsCc", "hobPolymicrobial", "hobCc",
-                                "hobPathogen", "hobAttrWardId", "hobAttrWardECDCWard", "hobAttrWardECDCWardPatient", "hobAttrWardLocalWardGroup"
-
-                        ));
-        ) {
+                                "hobPathogen", "hobAttrWardId", "hobAttrWardECDCWard", "hobAttrWardECDCWardPatient", "hobAttrWardLocalWardGroup", "daysFromAdmission"
+                        ))) {
 
             for (Episode e : episodes) {
-
                 EpisodePRAISE praiseEpisode = (EpisodePRAISE) e;
 
                 String hobId = e.getPatientId() + "_" + e.getEpisodeDate().format(sformatter);
@@ -297,73 +296,108 @@ public class BSIApp {
                 String patientBirthDate = "";
                 String patientDeathDate = "";
                 String hobBcStatus = "MICROORG_EVENT";
-                Boolean hobPolymicrobial = e.isPolymicrobial(); //boolean	0 (no); 1 (yes)	[1..n]	if polymicrobial -> 1 = True = Yes
-                Boolean hobCc = ((EpisodePRAISE) e).containsCSC(); //boolean	0 (no); 1 (yes)	[1..n]	HOB contains a CSC
-                Boolean hobPathogen = ((EpisodePRAISE) e).containsPathogen(); //boolean	0 (no); 1 (yes)	[1..n]	HOB contains a recognized pathogen
-                String hobAttrWardId = ""; //stringWardID to which HOB is attributed
-                String hobAttrWardECDCWard = ""; // tring	value_set (ECDC classification list)	[1..n]	Ward type to what HOB is attributed: Consensus = ward type, patient specialty = optional.
-                String hobAttrWardECDCWardPatient = ""; // string	value_set (ECDC classification list)	[0..n]	Optional.
-                String hobAttrWardLocalWardGroup = ""; // string	value_set (locally defined)	[0..n]	Optional.
+                Boolean hobPolymicrobial = e.isPolymicrobial();
+                Boolean hobCc = praiseEpisode.containsCSC();
+                Boolean hobPathogen = praiseEpisode.containsPathogen();
+                String hobAttrWardId = "";
+                String hobAttrWardECDCWard = "";
+                String hobAttrWardECDCWardPatient = "";
+                String hobAttrWardLocalWardGroup = "";
 
-
-                if(e.getDistinctGerms().size() == 1){
-                    Optional<BloodCulturePRAISE> firstEvidenceForGerm = ((EpisodePRAISE) e).getEvidences().stream().findFirst();
-                    String bcId = firstEvidenceForGerm.get().getId();
-                    String bcMicroorgLocalId = firstEvidenceForGerm.get().microorgLocalId;
-                    String bcMicroorgSnomedCTConceptId = null;
-                    String bcMicroorgSpecifiedName = null;
-                    Boolean bcIsCc = firstEvidenceForGerm.get().isCommensal;
-
-                    String regex = "(.*?)\\s*\\((\\d+)\\)";
-                    Matcher matcher = Pattern.compile(regex).matcher(firstEvidenceForGerm.get().microorgLocalId);
-
-                    if(matcher.find()){
-                        bcMicroorgLocalId = matcher.group(1);
-                        bcMicroorgSpecifiedName = matcher.group(2);
-                    }else {
-                        bcMicroorgLocalId = "";
-                        bcMicroorgSpecifiedName = "";
-
-                    }
-
-
-                    csvPrinter.printRecord(hobId, hobEventDate, patientId, patientSex, patientBirthDate, patientDeathDate, bcId, hobBcStatus, bcMicroorgLocalId, bcMicroorgSnomedCTConceptId, bcMicroorgSpecifiedName, bcIsCc, hobPolymicrobial, hobCc, hobPathogen, hobAttrWardId, hobAttrWardECDCWard, hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup);
-
-                }else{
-                    for(String germ : e.getDistinctGerms()){
-                        Optional<BloodCulturePRAISE> firstEvidenceForGerm = ((EpisodePRAISE) e).getEvidences().stream().filter(evi -> evi.getLaboGermName().equals(germ)).findFirst();
-                        if(firstEvidenceForGerm.isPresent()){
-
-                            String bcId = firstEvidenceForGerm.get().getId();
-                            String bcMicroorgLocalId ;
-                            String bcMicroorgSpecifiedName;
-                            String bcMicroorgSnomedCTConceptId = "";
-
-                            String regex = "(.*?)\\s*\\((\\d+)\\)";
-                            Matcher matcher = Pattern.compile(regex).matcher(firstEvidenceForGerm.get().microorgLocalId);
-
-                            if(matcher.find()){
-                                bcMicroorgLocalId = matcher.group(1);
-                                bcMicroorgSpecifiedName = matcher.group(2);
-                            }else {
-                                bcMicroorgLocalId = "";
-                                bcMicroorgSpecifiedName = "";
-
-                            }
-
-
-                            Boolean bcIsCc = firstEvidenceForGerm.get().isCommensal;
-
-                            csvPrinter.printRecord(hobId, hobEventDate, patientId, patientSex, patientBirthDate, patientDeathDate, bcId, hobBcStatus, bcMicroorgLocalId, bcMicroorgSnomedCTConceptId, bcMicroorgSpecifiedName, bcIsCc, hobPolymicrobial, hobCc, hobPathogen, hobAttrWardId, hobAttrWardECDCWard, hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup);
-                        }else {
-                            throw new BSIException("Could not find germ " + germ);
-                        }
+                for (String germ : e.getDistinctGerms()) {
+                    Optional<BloodCulturePRAISE> firstEvidenceForGerm = praiseEpisode.getEvidences().stream()
+                            .filter(evi -> evi.getLaboGermName().equals(germ)).findFirst();
+                    if (firstEvidenceForGerm.isPresent()) {
+                        BloodCultureRecord record = createBloodCultureRecord(firstEvidenceForGerm.get(), hobId, hobEventDate,
+                                patientId, hobBcStatus, hobPolymicrobial, hobCc, hobPathogen, hobAttrWardId, hobAttrWardECDCWard,
+                                hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup, ((EpisodePRAISE) e).getDaysFromAdmissions());
+                        csvPrinter.printRecord(record.toArray());
+                    } else {
+                        throw new BSIException("Could not find germ " + germ);
                     }
                 }
             }
             csvPrinter.flush();
         }
+    }
 
+    private static BloodCultureRecord createBloodCultureRecord(BloodCulturePRAISE evidence, String hobId, String hobEventDate,
+            String patientId, String hobBcStatus, boolean hobPolymicrobial, boolean hobCc, boolean hobPathogen, String hobAttrWardId,
+            String hobAttrWardECDCWard, String hobAttrWardECDCWardPatient, String hobAttrWardLocalWardGroup, long daysFromAdmission) {
+        String bcId = evidence.getId();
+        String bcMicroorgLocalId = "";
+        String bcMicroorgSpecifiedName = "";
+        Boolean bcIsCc = evidence.isCommensal;
+
+        String regex = "(.*?)\\s*\\((\\d+)\\)";
+        Matcher matcher = Pattern.compile(regex).matcher(evidence.microorgLocalId);
+
+        if (matcher.find()) {
+            bcMicroorgLocalId = matcher.group(1);
+            bcMicroorgSpecifiedName = matcher.group(2);
+        }
+
+        return new BloodCultureRecord(hobId, hobEventDate, patientId, "", "", "", bcId,
+                hobBcStatus, bcMicroorgLocalId, "", bcMicroorgSpecifiedName, bcIsCc, hobPolymicrobial,
+                hobCc, hobPathogen, hobAttrWardId, hobAttrWardECDCWard, hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup, daysFromAdmission);
+    }
+
+
+    private static class BloodCultureRecord {
+        private String hobId;
+        private String hobEventDate;
+        private String patientId;
+        private String patientSex;
+        private String patientBirthDate;
+        private String patientDeathDate;
+        private String bcId;
+        private String hobBcStatus;
+        private String bcMicroorgLocalId;
+        private String bcMicroorgSnomedCTConceptId;
+        private String bcMicroorgSpecifiedName;
+        private Boolean bcIsCc;
+        private Boolean hobPolymicrobial;
+        private Boolean hobCc;
+        private Boolean hobPathogen;
+        private String hobAttrWardId;
+        private String hobAttrWardECDCWard;
+        private String hobAttrWardECDCWardPatient;
+        private String hobAttrWardLocalWardGroup;
+        private Long daysFromAdmission;
+
+        public BloodCultureRecord(String hobId, String hobEventDate, String patientId, String patientSex,
+                String patientBirthDate, String patientDeathDate, String bcId, String hobBcStatus, String bcMicroorgLocalId,
+                String bcMicroorgSnomedCTConceptId, String bcMicroorgSpecifiedName, Boolean bcIsCc, Boolean hobPolymicrobial,
+                Boolean hobCc, Boolean hobPathogen, String hobAttrWardId, String hobAttrWardECDCWard,
+                String hobAttrWardECDCWardPatient, String hobAttrWardLocalWardGroup, long daysFromAdmission) {
+            this.hobId = hobId;
+            this.hobEventDate = hobEventDate;
+            this.patientId = patientId;
+            this.patientSex = patientSex;
+            this.patientBirthDate = patientBirthDate;
+            this.patientDeathDate = patientDeathDate;
+            this.bcId = bcId;
+            this.hobBcStatus = hobBcStatus;
+            this.bcMicroorgLocalId = bcMicroorgLocalId;
+            this.bcMicroorgSnomedCTConceptId = bcMicroorgSnomedCTConceptId;
+            this.bcMicroorgSpecifiedName = bcMicroorgSpecifiedName;
+            this.bcIsCc = bcIsCc;
+            this.hobPolymicrobial = hobPolymicrobial;
+            this.hobCc = hobCc;
+            this.hobPathogen = hobPathogen;
+            this.hobAttrWardId = hobAttrWardId;
+            this.hobAttrWardECDCWard = hobAttrWardECDCWard;
+            this.hobAttrWardECDCWardPatient = hobAttrWardECDCWardPatient;
+            this.hobAttrWardLocalWardGroup = hobAttrWardLocalWardGroup;
+            this.daysFromAdmission = daysFromAdmission;
+        }
+
+
+        public String[] toArray() {
+            return new String[]{hobId, hobEventDate, patientId, patientSex, patientBirthDate, patientDeathDate, bcId, hobBcStatus,
+                    bcMicroorgLocalId, bcMicroorgSnomedCTConceptId, bcMicroorgSpecifiedName, bcIsCc.toString(), hobPolymicrobial.toString(), hobCc.toString() ,
+                    hobPathogen.toString(), hobAttrWardId, hobAttrWardECDCWard, hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup, daysFromAdmission.toString()};
+        }
     }
 
 }
