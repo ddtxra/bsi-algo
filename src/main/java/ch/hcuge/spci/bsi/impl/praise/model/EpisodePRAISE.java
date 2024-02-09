@@ -175,6 +175,10 @@ public class EpisodePRAISE implements Episode {
         return this.evidences.stream().anyMatch(e -> e.isCommensal);
     }
 
+    public Boolean containsPathogen() {
+        return this.evidences.stream().anyMatch(e -> !e.isCommensal);
+    }
+
     public void addSecondCSCEvidenceToMakeItAHOB(BloodCulturePRAISE bcp) {
 
         BloodCulturePRAISE firstEvidence = this.evidences.get(0);

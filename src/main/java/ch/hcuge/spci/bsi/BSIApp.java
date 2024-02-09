@@ -19,7 +19,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.swing.text.html.Option;
 
 public class BSIApp {
 
@@ -32,6 +36,8 @@ public class BSIApp {
 //    private static String outputFile = "output.csv";
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    private static final DateTimeFormatter sformatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
     private static Logger logger = LogManager.getLogger(BSIApp.class);
 
     public static void main(String args[]) throws IOException, InterruptedException {
@@ -54,7 +60,6 @@ public class BSIApp {
         File bloodCultureFile = new File(folder, CULTURE_FILENAME);
         File patientFile = new File(folder, PATIENT_FILENAME);
         File movementFile = new File(folder, MOVEMENTS_FILENAME);
-
 
         if (!bloodCultureFile.exists()) {
             logger.error("The " + CULTURE_FILENAME + " file does not exist in the provided folder.");
@@ -98,14 +103,18 @@ public class BSIApp {
         logger.info("--- " + hobEpisodes.size() + " HOB (hospital-onset bacteremia) episodes for " + hobEpisodes.stream().map(Episode::getPatientId).distinct().count() + " patients");
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).count() + " polymicrobial HOB episodes");
         logger.info("----- " + hobEpisodes.stream().filter(e -> ((EpisodePRAISE)e).containsCSC()).count() + " CSC HOB episodes");
-        var outputFile = folder + "/OUTPUT_PRAISE_ALL_" + currentTime.format(formatter) + ".CSV";
-        var hobOutputFile = folder + "/OUTPUT_PRAISE_HOBS_" + currentTime.format(formatter) + ".CSV";
+        var outputFile = folder + "/OUTPUT_ALL_" + currentTime.format(formatter) + ".CSV";
+        var hobOutputFile = folder + "/OUTPUT_HOBS_" + currentTime.format(formatter) + ".CSV";
+        var hobOutputForPraiseFile = folder + "/OUTPUT_PRAISE_HOBS_TEST.CSV";
 
         saveEpisodeFileForPraise(episodesComputed,outputFile);
         saveEpisodeFileForPraise(hobEpisodes,hobOutputFile);
+        saveEpisodeFileForPraiseInPraiseOutput(hobEpisodes, hobOutputForPraiseFile);
+
 
         logger.info("Saving all episodes file in " +  outputFile + " for debug");
         logger.info("Saving HOB episodes file in " +  hobOutputFile);
+        logger.info("Saving HOB output format for PRAISE " +  hobOutputForPraiseFile);
 
     }
 
@@ -258,6 +267,99 @@ public class BSIApp {
             for (Episode e : episodes) {
                 EpisodePRAISE ep = (EpisodePRAISE)e;
                 csvPrinter.printRecord(ep.getPatientId(), ep.getEpisodeDate().format(formatter), String.join("+", ep.getDistinctGerms()), ep.isHOB(), ep.containsCSC(), ep.isPolymicrobial(), ep.getClassification());
+            }
+            csvPrinter.flush();
+        }
+
+    }
+
+    private static void saveEpisodeFileForPraiseInPraiseOutput(List<Episode> episodes, String filePath) throws IOException {
+
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter(';')
+                        .withHeader("hobId", "hobEventDate", "patientId", "patientSex", "patientBirthDate", "patientDeathDate",
+                                "bcId", "hobBcStatus", "bcMicroorgLocalId", "bcMicroorgSnomedCTConceptId",
+                                "bcMicroorgSpecifiedName", "bcIsCc", "hobPolymicrobial", "hobCc",
+                                "hobPathogen", "hobAttrWardId", "hobAttrWardECDCWard", "hobAttrWardECDCWardPatient", "hobAttrWardLocalWardGroup"
+
+                        ));
+        ) {
+
+            for (Episode e : episodes) {
+
+                EpisodePRAISE praiseEpisode = (EpisodePRAISE) e;
+
+                String hobId = e.getPatientId() + "_" + e.getEpisodeDate().format(sformatter);
+                String hobEventDate = e.getEpisodeDate().format(formatter);
+                String patientId = e.getPatientId();
+                String patientSex = "";
+                String patientBirthDate = "";
+                String patientDeathDate = "";
+                String hobBcStatus = "MICROORG_EVENT";
+                Boolean hobPolymicrobial = e.isPolymicrobial(); //boolean	0 (no); 1 (yes)	[1..n]	if polymicrobial -> 1 = True = Yes
+                Boolean hobCc = ((EpisodePRAISE) e).containsCSC(); //boolean	0 (no); 1 (yes)	[1..n]	HOB contains a CSC
+                Boolean hobPathogen = ((EpisodePRAISE) e).containsPathogen(); //boolean	0 (no); 1 (yes)	[1..n]	HOB contains a recognized pathogen
+                String hobAttrWardId = ""; //stringWardID to which HOB is attributed
+                String hobAttrWardECDCWard = ""; // tring	value_set (ECDC classification list)	[1..n]	Ward type to what HOB is attributed: Consensus = ward type, patient specialty = optional.
+                String hobAttrWardECDCWardPatient = ""; // string	value_set (ECDC classification list)	[0..n]	Optional.
+                String hobAttrWardLocalWardGroup = ""; // string	value_set (locally defined)	[0..n]	Optional.
+
+
+                if(e.getDistinctGerms().size() == 1){
+                    Optional<BloodCulturePRAISE> firstEvidenceForGerm = ((EpisodePRAISE) e).getEvidences().stream().findFirst();
+                    String bcId = firstEvidenceForGerm.get().getId();
+                    String bcMicroorgLocalId = firstEvidenceForGerm.get().microorgLocalId;
+                    String bcMicroorgSnomedCTConceptId = null;
+                    String bcMicroorgSpecifiedName = null;
+                    Boolean bcIsCc = firstEvidenceForGerm.get().isCommensal;
+
+                    String regex = "(.*?)\\s*\\((\\d+)\\)";
+                    Matcher matcher = Pattern.compile(regex).matcher(firstEvidenceForGerm.get().microorgLocalId);
+
+                    if(matcher.find()){
+                        bcMicroorgLocalId = matcher.group(1);
+                        bcMicroorgSpecifiedName = matcher.group(2);
+                    }else {
+                        bcMicroorgLocalId = "";
+                        bcMicroorgSpecifiedName = "";
+
+                    }
+
+
+                    csvPrinter.printRecord(hobId, hobEventDate, patientId, patientSex, patientBirthDate, patientDeathDate, bcId, hobBcStatus, bcMicroorgLocalId, bcMicroorgSnomedCTConceptId, bcMicroorgSpecifiedName, bcIsCc, hobPolymicrobial, hobCc, hobPathogen, hobAttrWardId, hobAttrWardECDCWard, hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup);
+
+                }else{
+                    for(String germ : e.getDistinctGerms()){
+                        Optional<BloodCulturePRAISE> firstEvidenceForGerm = ((EpisodePRAISE) e).getEvidences().stream().filter(evi -> evi.getLaboGermName().equals(germ)).findFirst();
+                        if(firstEvidenceForGerm.isPresent()){
+
+                            String bcId = firstEvidenceForGerm.get().getId();
+                            String bcMicroorgLocalId ;
+                            String bcMicroorgSpecifiedName;
+                            String bcMicroorgSnomedCTConceptId = "";
+
+                            String regex = "(.*?)\\s*\\((\\d+)\\)";
+                            Matcher matcher = Pattern.compile(regex).matcher(firstEvidenceForGerm.get().microorgLocalId);
+
+                            if(matcher.find()){
+                                bcMicroorgLocalId = matcher.group(1);
+                                bcMicroorgSpecifiedName = matcher.group(2);
+                            }else {
+                                bcMicroorgLocalId = "";
+                                bcMicroorgSpecifiedName = "";
+
+                            }
+
+
+                            Boolean bcIsCc = firstEvidenceForGerm.get().isCommensal;
+
+                            csvPrinter.printRecord(hobId, hobEventDate, patientId, patientSex, patientBirthDate, patientDeathDate, bcId, hobBcStatus, bcMicroorgLocalId, bcMicroorgSnomedCTConceptId, bcMicroorgSpecifiedName, bcIsCc, hobPolymicrobial, hobCc, hobPathogen, hobAttrWardId, hobAttrWardECDCWard, hobAttrWardECDCWardPatient, hobAttrWardLocalWardGroup);
+                        }else {
+                            throw new BSIException("Could not find germ " + germ);
+                        }
+                    }
+                }
             }
             csvPrinter.flush();
         }
