@@ -17,6 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -88,6 +90,9 @@ public class BSIApp {
         //FOR PRAISE
         List<Culture> cultures = parsePRAISEMDSCultureFile(bloodCultureFile.getAbsolutePath(), movements);
 
+        //Apply filter for praise
+        //cultures = cultures.stream().filter(c -> c.getLaboSampleDate().isAfter(ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC))).toList();
+
         BSIClassifier classifier = new BSIClassifierPRAISE();
         logger.info("Algorithm implementation: PRAISE (" + classifier.getClass().getSimpleName() + ")");
         logger.info("- " + cultures.size() + " cultures " +  cultures.stream().filter(c -> ((BloodCulturePRAISE)c).isPositiveCulture()).count() + " (positives) processed between " + cultures.stream().min(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted) + " and " + cultures.stream().max(Comparator.comparing(Culture::getLaboSampleDate)).get().getLaboSampleDate().format(praiseDateFormatted)  + " for " + cultures.stream().map(
@@ -103,6 +108,9 @@ public class BSIApp {
         logger.info("--- " + hobEpisodes.size() + " HOB (hospital-onset bacteremia) episodes for " + hobEpisodes.stream().map(Episode::getPatientId).distinct().count() + " patients");
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).count() + " polymicrobial HOB episodes");
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsCSCForAll())).count() + " polymicrobial HOB episodes with only CC");
+
+        //For breakpoint Episode e1 = hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsCSCForAll())).findFirst().get();
+
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsPathogenForAll())).count() + " polymicrobial HOB episodes with only Pathogenes");
         logger.info("----- " + hobEpisodes.stream().filter(Episode::isPolymicrobial).filter(e -> (((EpisodePRAISE)e).containsCSC() || ((EpisodePRAISE)e).containsPathogen())).count() + " polymicrobial HOB episodes with mixed (CC + Pathogenes)");
 
